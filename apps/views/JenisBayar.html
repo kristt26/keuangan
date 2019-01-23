@@ -16,7 +16,7 @@
                         <tr>
                             <th>#</th>
                             <th>Jenis Pembayaran</th>
-                            <th>Description</th>
+                            <th>Sifat Pembayaran</th>
                             <th width="10%">Action</th>
                         </tr>
                     </thead>
@@ -24,7 +24,7 @@
                         <tr ng-repeat="item in DatasJenisBayar">
                             <td>{{$index+1}}</td>
                             <td>{{item.Jenis}}</td>
-                            <td>{{item.Deskription}}</td>
+                            <td>{{item.Sifat}}</td>
                             <td>
                                 <button id="modal-865424" data-toggle="modal" data-target="#EditJenisBayar" title="Edit" class="btn btn-success fa fa-pencil"></button>
                             </td>
@@ -52,7 +52,11 @@
                 <form ng-submit="Simpan()">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Jenis Pembayaran</label>
-                        <input class="form-control" type="text" ng-model="DataInput.nama_kategori" aria-describedby="emailHelp" placeholder="Jenis Pembayaran" required>
+                        <input class="form-control" type="text" ng-model="DataInput.Jenis" aria-describedby="emailHelp" placeholder="Jenis Pembayaran" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Sifat Pembayaran</label>
+                        <select class="form-control" ng-options="item as item.Sifat for item in Sifats track by item.Sifat" ng-model="SelectedSifats"></select>
                     </div>
                     <div>
                         <input type="submit" class="btn btn-primary" value="Simpan">

@@ -5,6 +5,7 @@ class JenisBayar
     private $table_name="jenisbayar";
     public $IdJenisBayar;
     public $Jenis;
+    public $Sifat;
 
     public function __construct($db) 
     {
@@ -27,14 +28,15 @@ class JenisBayar
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $this->Jenis = $row['Jenis'];
+        $this->Sifat = $row['Sifat'];
     }
 
     public function create()
     {
-        $query = "INSERT INTO ".$this->table_name." SET Jenis=?";
+        $query = "INSERT INTO ".$this->table_name." SET Jenis=?, Sifat=?";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $this->Jenis);
-
+        $stmt->bindParam(2, $this->Sifat);
         if($stmt->execute()){
             $this->IdJenisBayar= $this->conn->lastInsertId();
             return true;
@@ -46,10 +48,11 @@ class JenisBayar
 
     public function update()
     {
-        $query = "UPDATE ".$this->table_name." SET Jenis=? WHERE IdJenisBayar=?";
+        $query = "UPDATE ".$this->table_name." SET Jenis=?, Sifat=? WHERE IdJenisBayar=?";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $this->Jenis);
-        $stmt->bindParam(2, $this->IdJenisBayar);
+        $stmt->bindParam(2, $this->Sifat);
+        $stmt->bindParam(3, $this->IdJenisBayar);
 
         if($stmt->execute()){
             return true;

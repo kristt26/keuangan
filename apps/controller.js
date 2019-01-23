@@ -162,7 +162,90 @@ angular
     DTColumnBuilder,
     notificationService
 ) {
+    $scope.dtOptions = DTOptionsBuilder.newOptions()
+        .withPaginationType("full_numbers")
+        .withOption("order", [0, "asc"])
+        .withButtons([{
+                extend: 'excelHtml5',
+                customize: function(xlsx) {
+                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
 
+                    // jQuery selector to add a border to the third row
+                    $('row c[r*="3"]', sheet).attr('s', '25');
+                    // jQuery selector to set the forth row's background gray
+                    $('row c[r*="4"]', sheet).attr('s', '5');
+                }
+            },
+            {
+                extend: "csvHtml5",
+                fileName: "Data_Analysis",
+                exportOptions: {
+                    columns: ':visible'
+                },
+                exportData: { decodeEntities: true }
+            },
+            {
+                extend: "pdfHtml5",
+                fileName: "Data_Analysis",
+                title: "Data Analysis Report",
+                exportOptions: {
+                    columns: ':visible'
+                },
+                exportData: { decodeEntities: true }
+            },
+            {
+                extend: 'print',
+                //text: 'Print current page',
+                autoPrint: true,
+                title: "Data Seleksi",
+                exportOptions: {
+                    columns: ':visible'
+                }
+            }
+
+        ]);
+
+    $scope.dtColumns = [
+        DTColumnBuilder.newColumn("id").withTitle("ID"),
+        DTColumnBuilder.newColumn("firstName").withTitle("First name"),
+        DTColumnBuilder.newColumn("lastName").withTitle("Last name")
+    ];
+
+    $scope.DataInput={};
+    $scope.DatasJenisBayar = [];
+    $scope.Sifats = [{Sifat: "Umum"}, {Sifat:"Khusus"}];
+    $scope.SelectedSifats={};
+    $scope.Init=function(){
+        var UrlJenisBayar = "api/datas/read/ReadJenisBayar.php";
+        $http({
+            method: "GET",
+            url: UrlJenisBayar,
+        }).then(function(response){
+            $scope.DatasJenisBayar=response.data.records;
+        }, 
+        function(error){
+            alert(error.message);
+        })
+    }
+
+    $scope.Simpan = function(){
+        $scope.DataInput.Sifat=$scope.SelectedSifats.Sifat;
+        var Data = $scope.DataInput;
+        var UrlSimpan = "api/datas/create/CreateJenisBayar.php";
+        $http({
+            method: "POST",
+            url: UrlSimpan,
+            data: Data
+        }).then(function(response){
+            if (response.data.message > 0) {
+                $scope.DataInput.IdJenisBayar = response.data.message;
+                $scope.DatasJenisBayar.push(angular.copy($scope.DataInput));
+                notificationService.success("Successing text");
+            }
+        }, function(error){
+            notificationService.error("Gagal Simpan");
+        })
+    }
 })
 
 .controller("BayarUmumController", function(
