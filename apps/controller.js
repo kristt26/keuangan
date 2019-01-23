@@ -211,78 +211,78 @@ angular
         DTColumnBuilder.newColumn("lastName").withTitle("Last name")
     ];
 
-    $scope.DataInput={};
+    $scope.DataInput = {};
     $scope.DatasJenisBayar = [];
-    $scope.Sifats = [{Sifat: "Umum"}, {Sifat:"Khusus"}];
-    $scope.SelectedSifats={};
-    $scope.Init=function(){
+    $scope.Sifats = [{ Sifat: "Umum" }, { Sifat: "Khusus" }];
+    $scope.SelectedSifats = {};
+    $scope.Init = function() {
         var UrlJenisBayar = "api/datas/read/ReadJenisBayar.php";
         $http({
             method: "GET",
             url: UrlJenisBayar,
-        }).then(function(response){
-            $scope.DatasJenisBayar=response.data.records;
-        }, 
-        function(error){
-            alert(error.message);
-        })
+        }).then(function(response) {
+                $scope.DatasJenisBayar = response.data.records;
+            },
+            function(error) {
+                alert(error.message);
+            })
     }
 
-    $scope.Simpan = function(){
-        $scope.DataInput.Sifat=$scope.SelectedSifats.Sifat;
+    $scope.Simpan = function() {
+        $scope.DataInput.Sifat = $scope.SelectedSifats.Sifat;
         var Data = $scope.DataInput;
         var UrlSimpan = "api/datas/create/CreateJenisBayar.php";
         $http({
             method: "POST",
             url: UrlSimpan,
             data: Data
-        }).then(function(response){
+        }).then(function(response) {
             if (response.data.message > 0) {
                 $scope.DataInput.IdJenisBayar = response.data.message;
                 $scope.DatasJenisBayar.push(angular.copy($scope.DataInput));
                 notificationService.success("Successing text");
-                $scope.DataInput={};
+                $scope.DataInput = {};
             }
-        }, function(error){
+        }, function(error) {
             notificationService.error("Gagal Simpan");
         })
     }
 
-    $scope.DataEdit=function(item){
-        $scope.SelectedSifats.Sifat=item.Sifat;
-        $scope.DataInput.Jenis=item.Jenis;
-        $scope.DataInput.IdJenisBayar=item.IdJenisBayar;
+    $scope.DataEdit = function(item) {
+        $scope.SelectedSifats.Sifat = item.Sifat;
+        $scope.DataInput.Jenis = item.Jenis;
+        $scope.DataInput.IdJenisBayar = item.IdJenisBayar;
     }
 
-    $scope.Update = function(){
-        $scope.DataInput.Sifat=$scope.SelectedSifats.Sifat;
+    $scope.Update = function() {
+        $scope.DataInput.Sifat = $scope.SelectedSifats.Sifat;
         var Data = $scope.DataInput;
         var UrlUpdate = "api/datas/update/UpdateJenisBayar.php";
         $http({
             method: "POST",
             url: UrlUpdate,
             data: Data
-        }).then(function(response){
+        }).then(function(response) {
             if (response.data.message == "Success") {
-                angular.forEach($scope.DatasJenisBayar, function(value, key){
-                    if(value.IdJenisBayar==$scope.DataInput.IdJenisBayar){
-                        value.Jenis=$scope.DataInput.Jenis;
-                        value.Sifat=$scope.DataInput.Sifat;
+                angular.forEach($scope.DatasJenisBayar, function(value, key) {
+                    if (value.IdJenisBayar == $scope.DataInput.IdJenisBayar) {
+                        value.Jenis = $scope.DataInput.Jenis;
+                        value.Sifat = $scope.DataInput.Sifat;
                         notificationService.success("Berhasil Diubah");
                     }
                 })
-                $scope.DataInput={};
-                $scope.SelectedSifats={};
-            }else{
+                $scope.DataInput = {};
+                $scope.SelectedSifats = {};
+            } else {
                 notificationService.error("Perubahan gagal dilakukan");
             }
-        }, function(error){
+        }, function(error) {
             notificationService.error("Gagal Simpan");
         })
     }
 })
 
-.controller("BayarUmumController", function(
+.controller("KelolahPembayaranController", function(
     $scope,
     $http,
     DTOptionsBuilder,

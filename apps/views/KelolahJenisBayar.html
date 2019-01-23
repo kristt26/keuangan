@@ -1,0 +1,99 @@
+<div class="app-title">
+    <div>
+        <h1>Kelolah Jenis Pembayaran</h1>
+    </div>
+    <ul class="app-breadcrumb breadcrumb">
+        <button id="modal-865424" data-toggle="modal" data-target="#TambahBayarUmum" title="Tambah Bayar Umum" class="btn btn-success fa fa-plus"></button>
+    </ul>
+</div>
+<div class="row" ng-init="Init()">
+    <div class="clearfix"></div>
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="bs-component">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item"><a href="javascript:void(0);" class="nav-link active" data-toggle="tab" data-target="#profile">Profile</a></li>
+                    <li class="nav-item"><a href="javascript:void(0);" class="nav-link" data-toggle="tab" data-target="#home">Home</a></li>
+
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade" id="home">
+                        <div class="table-responsive">
+                            <table datatable="ng" id="zero_config" dt-options="dtOptions" dt-column-defs="dtColumnDefs" class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Angkatan</th>
+                                        <th>Jenis Pembayaran</th>
+                                        <th>Nominal</th>
+                                        <th width="10%">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in DatasBayarUmum">
+                                        <td>{{$index+1}}</td>
+                                        <td>{{item.Angkatan}}</td>
+                                        <td>{{item.Jenis}}</td>
+                                        <td>{{item.Nominal}}</td>
+                                        <td>
+                                            <button id="modal-865424" data-toggle="modal" data-target="#Edit" title="Edit" class="btn btn-success fa fa-pencil"></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade active show" id="profile">
+                        <div class="pull-right" style="border:1px;">
+                            <li class="app-search">
+                                <input class="app-search__input" type="search" placeholder="Search Mahasiswa">
+                                <button class="app-search__button"><i class="fa fa-search"></i></button>
+                            </li>
+                        </div>
+                        &nbsp;
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="TambahBayarUmum" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">
+                    Pembayaran Umum
+                </h5>
+                <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">×</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <form ng-submit="Simpan()">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Angkatan</label>
+                        <input class="form-control" type="text" ng-model="DataInput.Angkatan" aria-describedby="emailHelp" placeholder="Angkatan" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Nominal</label>
+                        <input class="form-control" type="text" ng-model="DataInput.Nominal" aria-describedby="emailHelp" placeholder="Nominal" required>
+                    </div>
+                    <div>
+                        <input type="submit" class="btn btn-primary" value="Simpan">
+                        <!-- <button data-dismiss="modal" type="submit" >
+                                Save changes
+                            </button> -->
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                Close
+                            </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</div>

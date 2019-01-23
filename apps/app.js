@@ -9,9 +9,9 @@ app.config(function($routeProvider) {  
             templateUrl: "apps/views/JenisBayar.html",
             controller: "JenisBayarController"
         })
-        .when("/BayarUmum", {
-            templateUrl: "apps/views/BayarUmum.html",
-            controller: "BayarUmumController"
+        .when("/KelolahPembayaran", {
+            templateUrl: "apps/views/KelolahJenisBayar.html",
+            controller: "KelolahPembayaranController"
         })
         .when("/BayarKhusus", {
             templateUrl: "apps/views/BayarKhusus.html",
