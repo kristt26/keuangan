@@ -26,7 +26,7 @@
                             <td>{{item.Jenis}}</td>
                             <td>{{item.Sifat}}</td>
                             <td>
-                                <button id="modal-865424" data-toggle="modal" data-target="#EditJenisBayar" title="Edit" class="btn btn-success fa fa-pencil"></button>
+                                <button id="modal-865424" data-toggle="modal" data-target="#EditJenisBayar" ng-click="DataEdit(item)" title="Edit" class="btn btn-success fa fa-pencil"></button>
                             </td>
                         </tr>
                     </tbody>
@@ -70,7 +70,41 @@
                 </form>
             </div>
         </div>
-
     </div>
+</div>
 
+<div class="modal fade" id="EditJenisBayar" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">
+                    Edit Jenis Pembayaran
+                </h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form ng-submit="Update()">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Jenis Pembayaran</label>
+                        <input class="form-control" type="text" ng-model="DataInput.Jenis" aria-describedby="emailHelp" placeholder="Jenis Pembayaran" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Sifat Pembayaran</label>
+                        <select class="form-control" ng-options="item as item.Sifat for item in Sifats track by item.Sifat" ng-model="SelectedSifats"></select>
+                    </div>
+                    <div>
+                        <input type="submit" class="btn btn-primary" value="Simpan">
+                        <!-- <button data-dismiss="modal" type="submit" >
+                            Save changes
+                        </button> -->
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>

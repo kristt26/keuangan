@@ -241,6 +241,40 @@ angular
                 $scope.DataInput.IdJenisBayar = response.data.message;
                 $scope.DatasJenisBayar.push(angular.copy($scope.DataInput));
                 notificationService.success("Successing text");
+                $scope.DataInput={};
+            }
+        }, function(error){
+            notificationService.error("Gagal Simpan");
+        })
+    }
+
+    $scope.DataEdit=function(item){
+        $scope.SelectedSifats.Sifat=item.Sifat;
+        $scope.DataInput.Jenis=item.Jenis;
+        $scope.DataInput.IdJenisBayar=item.IdJenisBayar;
+    }
+
+    $scope.Update = function(){
+        $scope.DataInput.Sifat=$scope.SelectedSifats.Sifat;
+        var Data = $scope.DataInput;
+        var UrlUpdate = "api/datas/update/UpdateJenisBayar.php";
+        $http({
+            method: "POST",
+            url: UrlUpdate,
+            data: Data
+        }).then(function(response){
+            if (response.data.message == "Success") {
+                angular.forEach($scope.DatasJenisBayar, function(value, key){
+                    if(value.IdJenisBayar==$scope.DataInput.IdJenisBayar){
+                        value.Jenis=$scope.DataInput.Jenis;
+                        value.Sifat=$scope.DataInput.Sifat;
+                        notificationService.success("Berhasil Diubah");
+                    }
+                })
+                $scope.DataInput={};
+                $scope.SelectedSifats={};
+            }else{
+                notificationService.error("Perubahan gagal dilakukan");
             }
         }, function(error){
             notificationService.error("Gagal Simpan");
