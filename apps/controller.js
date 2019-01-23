@@ -70,7 +70,46 @@ angular
 ) {
     $scope.dtOptions = DTOptionsBuilder.newOptions()
         .withPaginationType("full_numbers")
-        .withOption("order", [1, "desc"]);
+        .withOption("order", [1, "desc"])
+        .withButtons([{
+                extend: 'excelHtml5',
+                customize: function(xlsx) {
+                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
+
+                    // jQuery selector to add a border to the third row
+                    $('row c[r*="3"]', sheet).attr('s', '25');
+                    // jQuery selector to set the forth row's background gray
+                    $('row c[r*="4"]', sheet).attr('s', '5');
+                }
+            },
+            {
+                extend: "csvHtml5",
+                fileName: "Data_Analysis",
+                exportOptions: {
+                    columns: ':visible'
+                },
+                exportData: { decodeEntities: true }
+            },
+            {
+                extend: "pdfHtml5",
+                fileName: "Data_Analysis",
+                title: "Data Analysis Report",
+                exportOptions: {
+                    columns: ':visible'
+                },
+                exportData: { decodeEntities: true }
+            },
+            {
+                extend: 'print',
+                //text: 'Print current page',
+                autoPrint: true,
+                title: "Data Seleksi",
+                exportOptions: {
+                    columns: ':visible'
+                }
+            }
+
+        ]);
 
     $scope.dtColumns = [
         DTColumnBuilder.newColumn("id").withTitle("ID"),
