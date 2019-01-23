@@ -1,0 +1,76 @@
+<div class="app-title">
+    <div>
+        <h1>Data Pejabat STIMIK Sepuluh Nopember</h1>
+    </div>
+    <ul class="app-breadcrumb breadcrumb">
+        <button id="modal-865424" data-toggle="modal" data-target="#Add1011" title="Tambah Pejabat" class="btn btn-success fa fa-plus"></button>
+    </ul>
+</div>
+<div class="row" ng-init="Init()">
+    <div class="clearfix"></div>
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="table-responsive">
+                <table datatable="ng" id="zero_config" dt-options="dtOptions" dt-column-defs="dtColumnDefs" class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th width="30%">Pejabat</th>
+                            <th>Jabatan Struktural</th>
+                            <th>Status</th>
+                            <th width="10%">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in DatasPejabat">
+                            <td>{{item.nama_pengguna}}</td>
+                            <td>{{item.nm_struktural}}</td>
+                            <td>{{item.status}}</td>
+                            <td>
+                                <button id="modal-865424" data-toggle="modal" data-target="#TambahKategori" title="Edit" class="btn btn-success fa fa-pencil"></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="Add1011" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">
+                    Tambah Pejabat Stuktural
+                </h5>
+                <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">×</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <form ng-submit="Simpan()">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Pejabat</label>
+                        <select class="form-control" ng-options="item as item.nama_pengguna for item in DatasPengguna track by item.idpengguna" ng-model="SelectedPengguna"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Jabatan</label>
+                        <select class="form-control" ng-options="item as item.nm_struktural for item in DatasStruktural track by item.idstruktural" ng-model="SelectedStruktural"></select>
+                    </div>
+                    <div>
+                        <input type="submit" class="btn btn-primary" value="Simpan">
+                        <!-- <button data-dismiss="modal" type="submit" >
+                                Save changes
+                            </button> -->
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                Close
+                            </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</div>
