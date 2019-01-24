@@ -289,7 +289,91 @@ angular
     DTColumnBuilder,
     notificationService
 ) {
+    $scope.dtOptions = DTOptionsBuilder.newOptions()
+        .withPaginationType("full_numbers")
+        .withOption("order", [0, "asc"])
+        .withButtons([{
+                extend: 'excelHtml5',
+                customize: function(xlsx) {
+                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
 
+                    // jQuery selector to add a border to the third row
+                    $('row c[r*="3"]', sheet).attr('s', '25');
+                    // jQuery selector to set the forth row's background gray
+                    $('row c[r*="4"]', sheet).attr('s', '5');
+                }
+            },
+            {
+                extend: "csvHtml5",
+                fileName: "Data_Analysis",
+                exportOptions: {
+                    columns: ':visible'
+                },
+                exportData: { decodeEntities: true }
+            },
+            {
+                extend: "pdfHtml5",
+                fileName: "Data_Analysis",
+                title: "Data Analysis Report",
+                exportOptions: {
+                    columns: ':visible'
+                },
+                exportData: { decodeEntities: true }
+            },
+            {
+                extend: 'print',
+                //text: 'Print current page',
+                autoPrint: true,
+                title: "Data Seleksi",
+                exportOptions: {
+                    columns: ':visible'
+                }
+            }
+
+        ]);
+
+    $scope.dtColumns = [
+        DTColumnBuilder.newColumn("id").withTitle("ID"),
+        DTColumnBuilder.newColumn("firstName").withTitle("First name"),
+        DTColumnBuilder.newColumn("lastName").withTitle("Last name")
+    ];
+    $scope.DatasTahun = [];
+    $scope.DataInput = {};
+    $scope.SelectedAngkatan = {};
+
+    $scope.Init = function() {
+        var UrlTahun = "api/datas/read/ReadTahun.php";
+        $http({
+            method: "GET",
+            url: UrlTahun
+        }).then(function(response) {
+            $scope.DatasTahun = response.data.records;
+
+        }, function(error) {
+            // notificationService.error("Gagal Mengambil Data");
+        })
+    }
+
+    $scope.ShowData = function() {
+
+    }
+
+    $scope.TambahAngkatan = function() {
+        var UrlTambahAngkatan = "api/datas/create/CreateBayarUmum.php";
+        var Data = $scope.DataInput;
+        $http({
+            method: "POST",
+            url: UrlTambahAngkatan,
+            data: Data
+        }).then(function(response) {
+            if (response.data[0].message == "Success") {
+                notificationService.success(response.data[0].message);
+            }
+
+        }, function(error) {
+            notificationService.error("Data Gagal di Tambah");
+        })
+    }
 })
 
 .controller("BayarKhususController", function(

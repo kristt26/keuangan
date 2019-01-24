@@ -21,6 +21,31 @@ class BayarUmum
         return $stmt;
     }
 
+    public function readAngkatan()
+    {
+        $query = "ReadBayarUmum()";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt;
+    }
+
+    public function CekAngkatan()
+    {
+        $query = "CALL CekAngakatan(?)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $this->Angkatan, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt;
+    }
+
+    public function AmbilAngkatan()
+    {
+        $query = "CALL AmbilAngkatan()";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt;
+    }
+
     public function readOne()
     {
         $query = "SELECT * FROM ".$this->table_name." WHERE IdBayarUmum=?";

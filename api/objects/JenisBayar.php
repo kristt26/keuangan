@@ -31,6 +31,15 @@ class JenisBayar
         $this->Sifat = $row['Sifat'];
     }
 
+    public function readBySifat()
+    {
+        $query = "CALL AmbilJenisBayar(:Sifat)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":Sifat", $this->Sifat, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt;
+    }
+
     public function create()
     {
         $query = "INSERT INTO ".$this->table_name." SET Jenis=?, Sifat=?";
