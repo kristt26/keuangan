@@ -26,8 +26,6 @@ if(!empty($data->Jenis) && !empty($data->Sifat)){
 }else
 {
     http_response_code(400);
- 
-    // tell the user
     echo json_encode(array("message" => "Unable to create product. Data is incomplete."));
 }
  
