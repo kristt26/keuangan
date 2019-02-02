@@ -12,28 +12,27 @@
         <div class="tile">
             <div class="bs-component">
                 <ul class="nav nav-tabs">
-                    <li class="nav-item"><a href="javascript:void(0);" class="nav-link active" data-toggle="tab" data-target="#profile">Home</a></li>
-                    <li class="nav-item"><a href="javascript:void(0);" class="nav-link" data-toggle="tab" data-target="#home">Profile</a></li>
+                    <li class="nav-item"><a href="javascript:void(0);" class="nav-link active" data-toggle="tab" data-target="#home">Bayar Umum</a></li>
+                    <li class="nav-item"><a href="javascript:void(0);" class="nav-link" data-toggle="tab" data-target="#profile">Bayar Khusus</a></li>
                 </ul>
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade active show" id="home">
                         <div class="tile-title-w-btn" style="margin-top:15px;">
                             <form role="form" class="form-inline">
                                 <div class="form-group">
-                                    <label for="exampleInputEmail1" style="margin-right:15px;">
+                                    <!-- <label for="exampleInputEmail1" style="margin-right:15px;">
                                                 Angkatan
-                                            </label>
+                                            </label> -->
                                     <!-- <select class="form-control" ng-options="item as item.Angkatan for item in DatasTahun track by item.Angkatan" ng-model="SelectedAngkatan" ng-change="ShowData()"></select> -->
                                 </div>
                             </form>
-                            <p><a class="btn btn-primary icon-btn" href="" id="modal-865424" data-toggle="modal" data-target="#TambahAngkatan" title="Tambah Angkatan"><i class="fa fa-plus"></i>Add Angkatan</a></p>
+                            <p><a class="btn btn-primary icon-btn" href="" id="modal-865424" data-toggle="modal" data-target="#TambahAngkatan" ng-click="ReadJenis('Umum')" title="Tambah Angkatan"><i class="fa fa-plus"></i>Add Angkatan</a></p>
                         </div>
 
                         <div class="table-responsive">
                             <table datatable="ng" id="zero_config" dt-options="dtOptions" dt-column-defs="dtColumnDefs" class="table table-striped table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>No</th>
                                         <th>Angkatan</th>
                                         <th>Jenis Pembayaran</th>
                                         <th>Nominal</th>
@@ -42,12 +41,11 @@
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="item in DatasBayarUmum">
-                                        <td>{{$index+1}}</td>
                                         <td>{{item.Angkatan}}</td>
-                                        <td>{{item.Jenis}}</td>
-                                        <td>{{item.Nominal}}</td>
+                                        <td>{{item.JenisBayar[0].Jenis}}</td>
+                                        <td>{{item.Nominal | currency : "Rp. " : 2}}</td>
                                         <td>
-                                            <button id="modal-865424" data-toggle="modal" data-target="#Edit" title="Edit" class="btn btn-success fa fa-pencil"></button>
+                                            <button id="modal-865424" data-toggle="modal" data-target="#Edit" title="Edit" ng-click="SelectedEdit(item)" class="btn btn-success fa fa-pencil"></button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -55,11 +53,38 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="profile">
-                        <div class="pull-right" style="border:1px;">
-                            <li class="app-search">
-                                <input class="app-search__input" type="search" placeholder="Search Mahasiswa">
-                                <button class="app-search__button"><i class="fa fa-search"></i></button>
-                            </li>
+                        <div class="tile-title-w-btn" style="margin-top:15px;">
+                            <form role="form" class="form-inline">
+                                <div class="form-group">
+                                    <!-- <label for="exampleInputEmail1" style="margin-right:15px;">
+                                                        Angkatan
+                                                    </label> -->
+                                    <!-- <select class="form-control" ng-options="item as item.Angkatan for item in DatasTahun track by item.Angkatan" ng-model="SelectedAngkatan" ng-change="ShowData()"></select> -->
+                                </div>
+                            </form>
+                            <p><a class="btn btn-primary icon-btn" href="" id="modal-865424" data-toggle="modal" ng-click="ReadJenis('Khusus')" data-target="#TambahAngkatan" title="Tambah Angkatan"><i class="fa fa-plus"></i>Add TA</a></p>
+                        </div>
+                        <div class="table-responsive">
+                            <table datatable="ng" id="zero_config" dt-options="dtOptions" dt-column-defs="dtColumnDefs" class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Tahun Akademik</th>
+                                        <th>Jenis Pembayaran</th>
+                                        <th>Nominal</th>
+                                        <th width="10%">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in DatasBayarKhusus">
+                                        <td>{{item.TA}}</td>
+                                        <td>{{item.JenisBayar[0].Jenis}}</td>
+                                        <td>{{item.Nominal | currency : "Rp. " : 2}}</td>
+                                        <td>
+                                            <button id="modal-865424" data-toggle="modal" data-target="#EditTA" title="Edit" ng-click="SelectedEdit(item)" class="btn btn-success fa fa-pencil"></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                         &nbsp;
                     </div>
@@ -71,35 +96,51 @@
 
 </div>
 
-<div class="modal fade" id="TambahBayarUmum" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+
+<div class="modal fade" id="TambahAngkatan" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="myModalLabel">
+                <h5 class="modal-title" id="myModalLabel" ng-show="JenisMenu=='Umum'">
                     Pembayaran Umum
                 </h5>
+                <h5 class="modal-title" id="myModalLabel" ng-show="JenisMenu=='Khusus'">
+                    Pembayaran Khusus
+                </h5>
                 <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true">×</span>
-                    </button>
+                            <span aria-hidden="true">×</span>
+                        </button>
             </div>
             <div class="modal-body">
-                <form ng-submit="Simpan()">
+                <form ng-submit="TambahAngkatan()" ng-show="JenisMenu=='Umum'">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Angkatan</label>
-                        <input class="form-control" type="text" ng-model="DataInput.Angkatan" aria-describedby="emailHelp" placeholder="Angkatan" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Nominal</label>
-                        <input class="form-control" type="text" ng-model="DataInput.Nominal" aria-describedby="emailHelp" placeholder="Nominal" required>
+                        <input class="form-control" type="text" ng-model="DataInput.Angkatan" aria-describedby="emailHelp" placeholder="Angkatan Ex. 2012" required>
                     </div>
                     <div>
                         <input type="submit" class="btn btn-primary" value="Simpan">
                         <!-- <button data-dismiss="modal" type="submit" >
-                                Save changes
-                            </button> -->
+                                    Save changes
+                                </button> -->
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                Close
-                            </button>
+                                    Close
+                                </button>
+                    </div>
+                </form>
+                <form ng-submit="TambahAngkatan()" ng-show="JenisMenu=='Khusus'">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Tahun Akademik</label>
+                        <input class="form-control" type="text" ng-model="DataInput.TA" aria-describedby="emailHelp" placeholder="Tahun Akademik Ex. 2012/2013-1" required>
+                    </div>
+                    <div>
+                        <input type="submit" class="btn btn-primary" value="Simpan">
+                        <!-- <button data-dismiss="modal" type="submit" >
+                                        Save changes
+                                    </button> -->
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                        Close
+                                    </button>
                     </div>
                 </form>
             </div>
@@ -109,22 +150,62 @@
 
 </div>
 
-<div class="modal fade" id="TambahAngkatan" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="Edit" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="myModalLabel">
-                    Pembayaran Umum
+                    {{DatasInput.JenisBayar[0].Jenis}} Angkatan {{DatasInput.Angkatan}}
                 </h5>
                 <button type="button" class="close" data-dismiss="modal">
                             <span aria-hidden="true">×</span>
                         </button>
             </div>
             <div class="modal-body">
-                <form ng-submit="TambahAngkatan()">
+                <form ng-submit="UpdateNominal()">
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Angkatan</label>
-                        <input class="form-control" type="text" ng-model="DataInput.Angkatan" aria-describedby="emailHelp" placeholder="Angkatan" required>
+                        <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text">Rp. &nbsp;</span></div>
+                            <input class="form-control" type="text" currency-input="" ng-model="DatasInput.Nominal" aria-describedby="emailHelp" placeholder="Nominal" required>
+                        </div>
+                    </div>
+                    <div>
+                        <input type="submit" class="btn btn-primary" value="Simpan">
+                        <!-- <button data-dismiss="modal" type="submit" >
+                                    Save changes
+                                </button> -->
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                    Close
+                                </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="modal fade" id="EditTA" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">
+                    {{DatasInput.JenisBayar[0].Jenis}} Tahun Akademik {{DatasInput.TA}}
+                </h5>
+                <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">×</span>
+                        </button>
+            </div>
+            <div class="modal-body">
+                <form ng-submit="UpdateNominal()">
+                    <div class="form-group">
+                        <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text">Rp. &nbsp;</span></div>
+                            <input class="form-control" type="text" currency-input="" ng-model="DatasInput.Nominal" aria-describedby="emailHelp" placeholder="Nominal" required>
+                        </div>
                     </div>
                     <div>
                         <input type="submit" class="btn btn-primary" value="Simpan">

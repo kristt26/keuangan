@@ -15,7 +15,7 @@ class BayarUmum
 
     public function read()
     {
-        $query = "SELECT * FROM ".$this->table_name."";
+        $query = "CALL ReadBayarUmum()";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt;
@@ -23,7 +23,7 @@ class BayarUmum
 
     public function readAngkatan()
     {
-        $query = "ReadBayarUmum()";
+        $query = "CALL ReadBayarUmum()";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt;
@@ -31,9 +31,18 @@ class BayarUmum
 
     public function CekAngkatan()
     {
-        $query = "CALL CekAngakatan(?)";
+        $query = "Select Angkatan from bayarumum WHERE Angkatan=:Angkatan";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(1, $this->Angkatan, PDO::PARAM_STR);
+        $stmt->bindParam(":Angkatan", $this->Angkatan);
+        $stmt->execute();
+        return $stmt;
+    }
+
+    public function GetBayarUmumByAngkatan()
+    {
+        $query = "CALL GetBayarUmumByAngkatan(:Angkatan)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":Angkatan", $this->Angkatan, PDO::PARAM_STR);
         $stmt->execute();
         return $stmt;
     }
@@ -60,19 +69,22 @@ class BayarUmum
 
     public function create()
     {
-        $query = "INSERT INTO ".$this->table_name." SET Angkatan=?, Nominal=?, IdJenisBayar=?";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(1, $this->Angkatan);
-        $stmt->bindParam(2, $this->Nominal);
-        $stmt->bindParam(3, $this->IdJenisBayar);
-
-        if($stmt->execute()){
-            $this->IdBayarUmum= $this->conn->lastInsertId();
-            return true;
-        }else
-        {
-            return false;
-        }
+            $query = "INSERT INTO ".$this->table_name." SET Angkatan=:Angkatan, Nominal=:Nominal, IdJenisBayar=:IdJenisBayar";
+            $stmt = $this->conn->prepare($query, array(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true));
+            $stmt->bindParam(":Angkatan", $this->Angkatan);
+            $stmt->bindParam(":Nominal", $this->Nominal);
+            $stmt->bindParam(":IdJenisBayar", $this->IdJenisBayar);
+            if($stmt->execute()){
+                $this->IdBayarUmum= $this->conn->lastInsertId();
+                return true;
+            }else{
+                return false;
+            }
+            
+            
+        
+            
+        
     }
 
     public function update()
@@ -83,6 +95,21 @@ class BayarUmum
         $stmt->bindParam(2, $this->Nominal);
         $stmt->bindParam(3, $this->IdJenisBayar);
         $stmt->bindParam(4, $this->IdBayarUmum);
+
+        if($stmt->execute()){
+            return true;
+        }else
+        {
+            return false;
+        }
+    }
+
+    public function updateNominal()
+    {
+        $query = "UPDATE ".$this->table_name." SET Nominal=? WHERE IdBayarUmum=?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $this->Nominal);
+        $stmt->bindParam(2, $this->IdBayarUmum);
 
         if($stmt->execute()){
             return true;

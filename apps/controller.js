@@ -116,7 +116,7 @@ angular
         DTColumnBuilder.newColumn("firstName").withTitle("First name"),
         DTColumnBuilder.newColumn("lastName").withTitle("Last name")
     ];
-    $scope.DatasKategori = [];
+    $scope.DatasMahasiswa = [];
     $scope.DataInput = {};
     $scope.Simpan = function() {
         var Data = $scope.DataInput;
@@ -140,18 +140,16 @@ angular
     };
 
     $scope.Init = function() {
-        var Kategoriurl = "api/datas/read/ReadKategori.php";
+        var UrlGetMahasiswa = "api/datas/read/ReadMahasiswa.php";
         $http({
-            method: "Get",
-            url: Kategoriurl
-        }).then(
-            function(response) {
-                $scope.DatasKategori = response.data.records;
-            },
-            function(error) {
-                alert(error.message);
-            }
-        );
+            method: "GET",
+            url: UrlGetMahasiswa
+        }).then(function(response) {
+            if (response.data.message != undefined) {
+                notificationService.error(response.data.message);
+            } else
+                $scope.DatasMahasiswa = response.data.records;
+        })
     };
 })
 
@@ -291,7 +289,7 @@ angular
 ) {
     $scope.dtOptions = DTOptionsBuilder.newOptions()
         .withPaginationType("full_numbers")
-        .withOption("order", [0, "asc"])
+        .withOption("order", [0, "desc"])
         .withButtons([{
                 extend: 'excelHtml5',
                 customize: function(xlsx) {
@@ -332,14 +330,16 @@ angular
 
         ]);
 
-    $scope.dtColumns = [
-        DTColumnBuilder.newColumn("id").withTitle("ID"),
-        DTColumnBuilder.newColumn("firstName").withTitle("First name"),
-        DTColumnBuilder.newColumn("lastName").withTitle("Last name")
-    ];
+    // $scope.dtColumns = [
+    //     DTColumnBuilder.newColumn("id").withTitle("ID"),
+    //     DTColumnBuilder.newColumn("firstName").withTitle("First name"),
+    //     DTColumnBuilder.newColumn("lastName").withTitle("Last name")
+    // ];
     $scope.DatasTahun = [];
     $scope.DataInput = {};
     $scope.SelectedAngkatan = {};
+    $scope.DatasBayarUmum = [];
+    $scope.DatasBayarKhusus = [];
 
     $scope.Init = function() {
         var UrlTahun = "api/datas/read/ReadTahun.php";
@@ -348,30 +348,109 @@ angular
             url: UrlTahun
         }).then(function(response) {
             $scope.DatasTahun = response.data.records;
+        }, function(error) {
+            // notificationService.error("Gagal Mengambil Data");
+        })
 
+        var UrlBayarUmum = "api/datas/read/ReadBayarUmum.php";
+        $http({
+            method: "GET",
+            url: UrlBayarUmum
+        }).then(function(response) {
+            $scope.DatasBayarUmum = response.data.records;
+        }, function(error) {
+            // notificationService.error("Gagal Mengambil Data");
+        })
+
+        var UrlBayarKhusus = "api/datas/read/ReadBayarKhusus.php";
+        $http({
+            method: "GET",
+            url: UrlBayarKhusus
+        }).then(function(response) {
+            $scope.DatasBayarKhusus = response.data.records;
         }, function(error) {
             // notificationService.error("Gagal Mengambil Data");
         })
     }
+    $scope.JenisMenu;
 
-    $scope.ShowData = function() {
+    $scope.ReadJenis = function(item) {
+        $scope.JenisMenu = item;
+    }
+    $scope.SelectedEdit = function(item) {
+        $scope.DatasInput = angular.copy(item);
 
     }
 
     $scope.TambahAngkatan = function() {
-        var UrlTambahAngkatan = "api/datas/create/CreateBayarUmum.php";
-        var Data = $scope.DataInput;
+        if ($scope.JenisMenu == "Umum") {
+            var UrlTambahAngkatan = "api/datas/create/CreateBayarUmum.php";
+            var Data = $scope.DataInput;
+            $http({
+                method: "POST",
+                url: UrlTambahAngkatan,
+                data: Data
+            }).then(function(response) {
+                if (response.data[0].message == "Success") {
+                    angular.forEach(response.data[0].records, function(value, key) {
+                        $scope.DatasBayarUmum.push(value);
+                    })
+                    notificationService.success(response.data[0].message);
+                    $scope.DataInput = {};
+                }
+
+            }, function(error) {
+                notificationService.error("Data Gagal di Tambah");
+            })
+        } else {
+            var UrlTambahTA = "api/datas/create/CreateBayarKhusus.php";
+            var Data = $scope.DataInput;
+            $http({
+                method: "POST",
+                url: UrlTambahTA,
+                data: Data
+            }).then(function(response) {
+                if (response.data[0].message == "Success") {
+                    angular.forEach(response.data[0].records, function(value, key) {
+                        $scope.DatasBayarKhusus.push(value);
+                    })
+                    notificationService.success(response.data[0].message);
+                    $scope.DataInput = {};
+                }
+
+            }, function(error) {
+                notificationService.error("Data Gagal di Tambah");
+            })
+        }
+
+    }
+
+    $scope.UpdateNominal = function() {
+        var Data = $scope.DatasInput;
+        var Url = "api/datas/update/UpdateNominal.php";
         $http({
             method: "POST",
-            url: UrlTambahAngkatan,
+            url: Url,
             data: Data
         }).then(function(response) {
-            if (response.data[0].message == "Success") {
-                notificationService.success(response.data[0].message);
+            if (response.data.message == "Khusus") {
+                angular.forEach($scope.DatasBayarKhusus, function(value, key) {
+                    if (value.IdBayarKhusus == $scope.DatasInput.IdBayarKhusus) {
+                        value.Nominal = $scope.DatasInput.Nominal;
+                        notificationService.success("Berhasil");
+                    }
+                })
+            } else {
+                angular.forEach($scope.DatasBayarUmum, function(value, key) {
+                    if (value.IdBayarUmum == $scope.DatasInput.IdBayarUmum) {
+                        value.Nominal = $scope.DatasInput.Nominal;
+                        notificationService.success("Berhasil")
+                    }
+                })
             }
 
         }, function(error) {
-            notificationService.error("Data Gagal di Tambah");
+            notificationService.error("Nominal Jenis Bayar Gagal di Ubah");
         })
     }
 })
@@ -403,7 +482,277 @@ angular
     DTColumnBuilder,
     notificationService
 ) {
+    $scope.dtOptions = DTOptionsBuilder.newOptions()
+        .withPaginationType("full_numbers")
+        .withOption("order", [0, "desc"])
+        .withButtons([{
+                extend: 'excelHtml5',
+                customize: function(xlsx) {
+                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
 
+                    // jQuery selector to add a border to the third row
+                    $('row c[r*="3"]', sheet).attr('s', '25');
+                    // jQuery selector to set the forth row's background gray
+                    $('row c[r*="4"]', sheet).attr('s', '5');
+                }
+            },
+            {
+                extend: "csvHtml5",
+                fileName: "Data_Analysis",
+                exportOptions: {
+                    columns: ':visible'
+                },
+                exportData: { decodeEntities: true }
+            },
+            {
+                extend: "pdfHtml5",
+                fileName: "Data_Analysis",
+                title: "Data Analysis Report",
+                exportOptions: {
+                    columns: ':visible'
+                },
+                exportData: { decodeEntities: true }
+            },
+            {
+                extend: 'print',
+                //text: 'Print current page',
+                autoPrint: true,
+                title: "Data Seleksi",
+                exportOptions: {
+                    columns: ':visible'
+                }
+            }
+
+        ]);
+
+    $scope.DataInput = {};
+    $scope.DatasMahasiswa;
+    $scope.DataInput;
+    $scope.ShowCari = true;
+    $scope.HideCari = false;
+    $scope.Temp;
+    $scope.DatasAmbilMahasiswa = {};
+    $scope.ShowData = false;
+    $scope.HideData = true;
+    $scope.DataTotal = 0;
+    $scope.SetStatus = "TampilUmum";
+    $scope.ShowDataKhusus = false;
+    $scope.HideDataKhusus = true;
+    $scope.SetDataProses = "Umum";
+
+
+    $scope.CariMahasiswa = function() {
+        var CekData = false;
+        angular.forEach($scope.DatasMahasiswa, function(value, key) {
+            if (value.NPM == $scope.DataCari) {
+                $scope.Temp = value;
+                $scope.Temp.SetStatus = $scope.SetStatus;
+                CekData = true;
+            }
+        })
+        if (CekData == true) {
+            var Data = $scope.Temp;
+            var UrlCari = "api/datas/read/ReadOneMahasiswa.php";
+            $http({
+                method: "POST",
+                url: UrlCari,
+                data: Data
+
+            }).then(function(response) {
+                if (response.status == 200) {
+                    $scope.DatasAmbilMahasiswa = response.data;
+
+                    if ($scope.SetStatus == "TampilUmum") {
+                        angular.forEach($scope.DatasAmbilMahasiswa.BayarUmum, function(value, key) {
+                            $scope.DataTotal += parseInt(value.Nominal);
+                            value.Check = true;
+                            value.SetDisabled = false;
+
+                        })
+                        $scope.ShowData = true;
+                        $scope.HideData = false;
+                    } else {
+                        angular.forEach($scope.DatasAmbilMahasiswa.BayarKhusus, function(value, key) {
+                            $scope.DataTotal += parseInt(value.Nominal);
+                            value.Check = true;
+                            value.SetDisabled = false;
+                        })
+                        $scope.ShowDataKhusus = true;
+                        $scope.HideDataKhusus = false;
+                    }
+
+                } else {
+                    alert(response.data.message);
+                }
+
+            })
+        } else {
+            notificationService.error("Mahasiswa Belum Terdaftar");
+        }
+    }
+    $scope.SetShowCari = function(item) {
+        if (item == "TampilUmum") {
+            $scope.ShowCari == true;
+            $scope.HideCari = false;
+            $scope.ShowData = false;
+            $scope.HideData = true;
+            $scope.SetStatus = angular.copy(item);
+            $scope.SetDataProses = "Umum";
+        } else if (item == "TampilKhusus") {
+            $scope.ShowCari == true;
+            $scope.HideCari = false;
+            $scope.ShowDataKhusus = false;
+            $scope.HideDataKhusus = true;
+            $scope.SetStatus = angular.copy(item);
+            $scope.SetDataProses = "Khusus";
+        } else {
+            $scope.SetStatus = "Tambahan";
+            $scope.ShowCari = true;
+            $scope.HideCari = false;
+            $scope.ShowData = false;
+            $scope.HideData = true;
+            $scope.ShowDataKhusus = false;
+            $scope.HideDataKhusus = true;
+            $scope.SetStatus;
+            $scope.SetDataProses;
+        }
+    }
+    $scope.Init = function() {
+        var UrlGetMahasiswa = "api/datas/read/ReadMahasiswa.php";
+        $http({
+            method: "GET",
+            url: UrlGetMahasiswa
+        }).then(function(response) {
+            if (response.data.message != undefined) {
+                notificationService.error(response.data.message);
+            } else
+                $scope.DatasMahasiswa = response.data.records;
+        })
+    }
+    $scope.Simpan = function() {
+        var Data = $scope.DataInput;
+        var UrlCreateMahasiswa = "api/datas/create/CreateMahasiswa.php";
+        $http({
+            method: "POST",
+            url: UrlCreateMahasiswa,
+            data: Data
+        }).then(function(response) {
+            if (response.status == 200) {
+                $scope.DataInput.IdMahasiswa = response.data.message;
+                $scope.DatasMahasiswa.push(angular.copy($scope.DataInput));
+                notificationService.success("Mahasiswa berhasil ditambahkan!!!");
+                $scope.DataInput = {};
+            } else {
+                notificationService.error(response.data.message);
+            }
+
+        })
+    }
+
+    $scope.DataProses = {};
+    $scope.HitungTotal = function() {
+        $scope.DataTotal = 0;
+        angular.forEach($scope.DatasAmbilMahasiswa.BayarUmum, function(value, key) {
+            if (value.Check == true)
+                $scope.DataTotal += parseInt(value.Nominal);
+        })
+    }
+    $scope.HitungTotaCheck = function(item) {
+        if (item.Check == true) {
+            item.Check = false;
+            item.SetDisabled = true;
+        } else {
+            item.Check = true;
+            item.SetDisabled = false;
+        }
+
+
+        if ($scope.DatasAmbilMahasiswa.BayarUmum.length != 0) {
+            $scope.DataTotal = 0;
+            angular.forEach($scope.DatasAmbilMahasiswa.BayarUmum, function(value, key) {
+                if (value.Check == true)
+                    $scope.DataTotal += parseInt(value.Nominal);
+            })
+        } else {
+            $scope.DataTotal = 0;
+            angular.forEach($scope.DatasAmbilMahasiswa.BayarKhusus, function(value, key) {
+                if (value.Check == true)
+                    $scope.DataTotal += parseInt(value.Nominal);
+            })
+        }
+
+    }
+
+
+    $scope.Proses = function() {
+        $scope.DataInput.IdMahasiswa = $scope.DatasAmbilMahasiswa.IdMahasiswa;
+        $scope.DataInput.TA = $scope.DatasAmbilMahasiswa.TAAktif.TA;
+        $scope.DataInput.Jumlah = $scope.DataTotal;
+        var Data = $scope.DataInput;
+        var UrlProses;
+        if ($scope.SetDataProses == "Umum")
+            UrlProses = "api/datas/create/CreateDetailBayar.php";
+        else
+            UrlProses = "api/datas/update/UpdateDetailBayar.php";
+
+        $http({
+            method: "POST",
+            url: UrlProses,
+            data: Data
+        }).then(function(response) {
+            if (response.status == 201) {
+                $scope.DataInput = {};
+                $scope.DatasMahasiswa;
+                $scope.DataInput;
+                $scope.ShowCari = true;
+                $scope.HideCari = false;
+                $scope.Temp;
+                $scope.DatasAmbilMahasiswa = {};
+                $scope.ShowData = false;
+                $scope.HideData = true;
+                $scope.ShowDataKhusus = false;
+                $scope.HideDataKhusus = true;
+                $scope.DataTotal = 0;
+                $scope.DataCari;
+                notificationService.success(response.data.message);
+            } else {
+                notificationService.error(response.data.message);
+            }
+        })
+
+    }
+
+    $scope.SelectItem = function(item) {
+        $scope.DataInput = angular.copy(item);
+    }
+
+    $scope.ClearData = function() {
+        $scope.DataInput = {};
+    }
+    $scope.Update = function() {
+        var UrlUpdateMahasiswa = "api/datas/update/UpdateMahasiswa.php";
+        $http({
+            method: "POST",
+            url: UrlUpdateMahasiswa,
+            data: $scope.DataInput
+        }).then(function(response) {
+            if (response.status == 200) {
+                angular.forEach($scope.DatasMahasiswa, function(value, key) {
+                    if (value.IdMahasiswa == $scope.DataInput.IdMahasiswa) {
+                        value.NPM = angular.copy($scope.DataInput.NPM);
+                        value.NamaMahasiswa = angular.copy($scope.DataInput.NamaMahasiswa);
+                        value.Angkatan = angular.copy($scope.DataInput.Angkatan);
+                        value.Alamat = angular.copy($scope.DataInput.Alamat);
+                        value.Kontak = angular.copy($scope.DataInput.Kontak);
+                    }
+                })
+                $scope.DataInput = {};
+                notificationService.success(response.data.message);
+            } else {
+                notificationService.error(response.data.message);
+            }
+        })
+    }
 })
 
 .controller("PenggunaController", function(

@@ -1,11 +1,12 @@
 <?php
-class JenisBayar
+class TahunAkademik
 {
     private $conn;
-    private $table_name="jenisbayar";
-    public $IdJenisBayar;
-    public $Jenis;
-    public $Sifat;
+    private $table_name="tahunakademik";
+    public $IdTahunAkademik;
+    public $TA;
+    public $Status;
+    public $IdStatus;
 
     public function __construct($db) 
     {
@@ -15,14 +16,6 @@ class JenisBayar
     public function read()
     {
         $query = "SELECT * FROM ".$this->table_name."";
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-        return $stmt;
-    }
-
-    public function GetJenisBayar()
-    {
-        $query = "CALL GetJenisBayar()";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt;
@@ -39,11 +32,10 @@ class JenisBayar
         $this->Sifat = $row['Sifat'];
     }
 
-    public function readBySifat()
+    public function readByStatus()
     {
-        $query = "CALL AmbilJenisBayar(:Sifat)";
+        $query = "CALL GetStatusAktif()";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(":Sifat", $this->Sifat, PDO::PARAM_STR);
         $stmt->execute();
         return $stmt;
     }
@@ -57,14 +49,21 @@ class JenisBayar
         return $stmt;
     }
 
+    public function GetTAAktif()
+    {
+        $query = "CALL GetTAAktif()";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt;
+    }
+
     public function create()
     {
-        $query = "INSERT INTO ".$this->table_name." SET Jenis=?, Sifat=?";
+        $query = "INSERT INTO ".$this->table_name." SET TA=?, Status=?";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(1, $this->Jenis);
-        $stmt->bindParam(2, $this->Sifat);
+        $stmt->bindParam(1, $this->TA);
+        $stmt->bindParam(2, $this->Status);
         if($stmt->execute()){
-            $this->IdJenisBayar= $this->conn->lastInsertId();
             return true;
         }else
         {
@@ -74,12 +73,11 @@ class JenisBayar
 
     public function update()
     {
-        $query = "UPDATE ".$this->table_name." SET Jenis=?, Sifat=? WHERE IdJenisBayar=?";
+        $query = "UPDATE ".$this->table_name." SET Status=:Status WHERE Status=:DataStatus";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(1, $this->Jenis);
-        $stmt->bindParam(2, $this->Sifat);
-        $stmt->bindParam(3, $this->IdJenisBayar);
-
+        $this->IdStatus= "Aktif";
+        $stmt->bindParam(":Status", $this->Status);
+        $stmt->bindParam(":DataStatus", $this->IdStatus);
         if($stmt->execute()){
             return true;
         }else

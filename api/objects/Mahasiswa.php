@@ -7,6 +7,8 @@ class Mahasiswa
     public $NPM;
     public $NamaMahasiswa;
     public $Angkatan;
+    public $Alamat;
+    public $Kontak;
 
     public function __construct($db) 
     {
@@ -15,7 +17,7 @@ class Mahasiswa
 
     public function read()
     {
-        $query = "SELECT * FROM ".$this->table_name."";
+        $query = "CALL GetMahasiswa()";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt;
@@ -33,13 +35,25 @@ class Mahasiswa
         $this->Angkatan = $row['Angkatan'];
     }
 
+
+    public function readData()
+    {
+        $query = "CALL GetMahasiswaByNama(:NPM)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":DataNama", $this->NPM, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt; 
+    }
+
     public function create()
     {
-        $query = "INSERT INTO ".$this->table_name." SET NPM=?, NamaMahasiswa=?, Angkatan=?";
+        $query = "INSERT INTO ".$this->table_name." SET NPM=?, NamaMahasiswa=?, Angkatan=?, Alamat=?, Kontak=?";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $this->NPM);
         $stmt->bindParam(2, $this->NamaMahasiswa);
         $stmt->bindParam(3, $this->Angkatan);
+        $stmt->bindParam(4, $this->Alamat);
+        $stmt->bindParam(5, $this->Kontak);
 
         if($stmt->execute()){
             $this->IdMahasiswa= $this->conn->lastInsertId();
@@ -52,12 +66,14 @@ class Mahasiswa
 
     public function update()
     {
-        $query = "UPDATE ".$this->table_name." SET NPM=?, NamaMahasiswa=?, Angkatan=? WHERE IdMahasiswa=?";
+        $query = "UPDATE ".$this->table_name." SET NPM=?, NamaMahasiswa=?, Angkatan=?, Alamat=?, Kontak=? WHERE IdMahasiswa=?";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $this->NPM);
         $stmt->bindParam(2, $this->NamaMahasiswa);
         $stmt->bindParam(3, $this->Angkatan);
-        $stmt->bindParam(4, $this->IdMahasiswa);
+        $stmt->bindParam(4, $this->Alamat);
+        $stmt->bindParam(5, $this->Kontak);
+        $stmt->bindParam(6, $this->IdMahasiswa);
 
         if($stmt->execute()){
             return true;

@@ -21,16 +21,30 @@ class DetailBayar
         return $stmt;
     }
 
+    public function CekRegistrasi()
+    {
+        $query = "CALL CekRegistrasi(:TAValue, :Mahasiswa)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":TAValue", $this->TA, PDO::PARAM_STR);
+        $stmt->bindParam(":Mahasiswa", $this->IdMahasiswa, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt;
+    }
+    
+
     public function readOne()
     {
-        $query = "SELECT * FROM ".$this->table_name." WHERE IdDetail=?";
+        $query = "CALL GetOneDetailBayar(:TA, :IdMahasiswa)";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(1, $this->IdDetail);
+        $stmt->bindParam(":TA", $this->TA, PDO::PARAM_STR);
+        $stmt->bindParam(":IdMahasiswa", $this->IdMahasiswa, PDO::PARAM_INT);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->IdDetail=$row["IdDetail"];
         $this->TA = $row['TA'];
         $this->Jumlah = $row['Jumlah'];
         $this->IdMahasiswa = $row['IdMahasiswa'];
+        $stmt=null;
     }
 
     public function create()
