@@ -38,7 +38,7 @@ class User
     public function CheckSession()
     {
         session_start();
-        if(!isset($_SESSION['nama_pengguna']))
+        if(!isset($_SESSION['Nama']))
         {
             return false;
         }else{
