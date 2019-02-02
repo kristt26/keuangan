@@ -16,10 +16,13 @@
         <div class="tile">
             <div class="bs-component">
                 <ul class="nav nav-tabs">
-                    <li class="nav-item"><a href="javascript:void(0);" class="nav-link active" data-toggle="tab" ng-click="SetShowCari(item='TampilUmum')" data-target="#profile">Create Pembayaran</a></li>
-                    <li class="nav-item"><a href="javascript:void(0);" class="nav-link" data-toggle="tab" ng-click="SetShowCari(item='TampilKhusus')" data-target="#khusus">Pembayaran Lainnya</a></li>
+                    <li class="nav-item"><a href="javascript:void(0);" class="nav-link active" data-toggle="tab"
+                            ng-click="SetShowCari(item='TampilUmum')" data-target="#profile">Create Pembayaran</a></li>
+                    <li class="nav-item"><a href="javascript:void(0);" class="nav-link" data-toggle="tab" ng-click="SetShowCari(item='TampilKhusus')"
+                            data-target="#khusus">Pembayaran Lainnya</a></li>
                     <!-- <li class="nav-item"><a href="javascript:void(0);" class="nav-link" data-toggle="tab" ng-click="SetShowCari(item='Hilang')" data-target="#home">Daftar Mahasiswa</a></li> -->
-                    <li class="nav-item"><a href="javascript:void(0);" class="nav-link" data-toggle="tab" ng-click="SetShowCari(item='Hilang')" data-target="#mahasiswalama">Entri Pembayaran Mahasiswa Lama</a></li>
+                    <li class="nav-item"><a href="javascript:void(0);" class="nav-link" data-toggle="tab" ng-click="SetShowCari(item='Hilang')"
+                            data-target="#mahasiswalama">Entri Pembayaran Mahasiswa Lama</a></li>
 
 
                 </ul>
@@ -28,13 +31,15 @@
                         <div class="row" style="margin-top:15px; margin-bottom: 20px; font-size: 15px;">
                             <div class="col-sm-3">
                                 <b>
-                                            NPM <br> Nama Mahasiswa <br> Angkatan <br> Tahun Akademik Aktif
-                                        </b>
+                                    NPM <br> Nama Mahasiswa <br> Angkatan <br> Tahun Akademik Aktif
+                                </b>
                             </div>
                             <div class="col-sm-6">
                                 <b>
-                                        : &nbsp; {{DatasAmbilMahasiswa.NPM}} <br> : &nbsp; {{DatasAmbilMahasiswa.NamaMahasiswa}} <br> : &nbsp; {{DatasAmbilMahasiswa.Angkatan}} <br> : &nbsp; {{DatasAmbilMahasiswa.TAAktif.TA}}
-                                        </b>
+                                    : &nbsp; {{DatasAmbilMahasiswa.NPM}} <br> : &nbsp;
+                                    {{DatasAmbilMahasiswa.NamaMahasiswa}} <br> : &nbsp;
+                                    {{DatasAmbilMahasiswa.Angkatan}} <br> : &nbsp; {{DatasAmbilMahasiswa.TAAktif.TA}}
+                                </b>
                             </div>
 
                         </div>
@@ -48,13 +53,15 @@
 
                         </h2>
                         <div class="bs-component">
-                            <form class="form-horizontal">
+                            <form class="form-horizontal" ng-submit="SimpanDataLama()">
                                 <div class="form-group row">
                                     <label class="control-label col-md-2">Total Tagihan</label>
                                     <div class="col-md-3">
                                         <div class="input-group">
                                             <div class="input-group-prepend"><span class="input-group-text">Rp. &nbsp;</span></div>
-                                            <input class="form-control" type="text" style="text-align:right;" currency-input="" ng-model="DataTotal" aria-describedby="emailHelp" placeholder="Nominal" required>
+                                            <input class="form-control" type="text" style="text-align:right;"
+                                                currency-input="" ng-model="DataInput.TotalTagihan" aria-describedby="emailHelp"
+                                                placeholder="Nominal" required>
                                         </div>
                                     </div>
                                 </div>
@@ -63,7 +70,9 @@
                                     <div class="col-md-3">
                                         <div class="input-group">
                                             <div class="input-group-prepend"><span class="input-group-text">Rp. &nbsp;</span></div>
-                                            <input class="form-control" type="text" style="text-align:right;" currency-input="" ng-model="DataTotal" aria-describedby="emailHelp" placeholder="Nominal" required>
+                                            <input class="form-control" type="text" style="text-align:right;"
+                                                currency-input="" ng-model="DataInput.TotalPembayaran" aria-describedby="emailHelp"
+                                                placeholder="Nominal" required>
                                         </div>
                                     </div>
                                 </div>
@@ -72,7 +81,9 @@
                                     <div class="col-md-3">
                                         <div class="input-group">
                                             <div class="input-group-prepend"><span class="input-group-text">Rp. &nbsp;</span></div>
-                                            <input class="form-control" type="text" style="text-align:right;" currency-input="" ng-model="DataTotal" aria-describedby="emailHelp" placeholder="Nominal" required>
+                                            <input class="form-control" type="text" style="text-align:right;"
+                                                currency-input="" ng-model="DataInput.TotalTunggakan" aria-describedby="emailHelp"
+                                                placeholder="Nominal" required>
                                         </div>
                                     </div>
                                 </div>
@@ -95,13 +106,16 @@
                             <div class="row" style="margin-top:15px;">
                                 <div class="col-sm-2">
                                     <b>
-                                    NPM <br> Nama Mahasiswa <br> Angkatan <br> Tahun Akademik Aktif
-                                </b>
+                                        NPM <br> Nama Mahasiswa <br> Angkatan <br> Tahun Akademik Aktif
+                                    </b>
                                 </div>
                                 <div class="col-sm-6">
                                     <b>
-                                : &nbsp; {{DatasAmbilMahasiswa.NPM}} <br> : &nbsp; {{DatasAmbilMahasiswa.NamaMahasiswa}} <br> : &nbsp; {{DatasAmbilMahasiswa.Angkatan}} <br> : &nbsp; {{DatasAmbilMahasiswa.TAAktif.TA}}
-                                </b>
+                                        : &nbsp; {{DatasAmbilMahasiswa.NPM}} <br> : &nbsp;
+                                        {{DatasAmbilMahasiswa.NamaMahasiswa}} <br> : &nbsp;
+                                        {{DatasAmbilMahasiswa.Angkatan}} <br> : &nbsp;
+                                        {{DatasAmbilMahasiswa.TAAktif.TA}}
+                                    </b>
                                 </div>
 
                             </div>
@@ -113,107 +127,134 @@
                                             <ul class="nav nav-pills flex-column mail-nav">
                                                 <li class="nav-item" ng-repeat="item in DatasAmbilMahasiswa.BayarUmum">
                                                     <div class="nav-link">
-                                                        <input type="checkbox" ng-model="item.Check" ng-click="HitungTotaCheck(item)"> {{item.JenisBayar[0].Jenis}}
+                                                        <input type="checkbox" ng-model="item.Check" ng-click="HitungTotaCheck(item)">
+                                                        {{item.JenisBayar[0].Jenis}}
                                                         <span class="float-right">
                                                             <div class="input-group">
-                                                                    <div class="input-group-prepend"><span class="input-group-text">Rp. &nbsp;</span></div>
-                                                    <input class="form-control" ng-disabled="item.SetDisabled" type="text" currency-input="" style="text-align:right;" ng-model="item.Nominal" ng-change="HitungTotal()" aria-describedby="emailHelp" placeholder="Nominal" required>
+                                                                <div class="input-group-prepend"><span class="input-group-text">Rp.
+                                                                        &nbsp;</span></div>
+                                                                <input class="form-control" ng-disabled="item.SetDisabled"
+                                                                    type="text" currency-input="" style="text-align:right;"
+                                                                    ng-model="item.Nominal" ng-change="HitungTotal()"
+                                                                    aria-describedby="emailHelp" placeholder="Nominal"
+                                                                    required>
+                                                            </div>
+                                                        </span>
+                                                    </div>
+                                                </li>
+
+
+                                            </ul>
+                                            <ul class="nav nav-pills flex-column mail-nav">
+                                                <li class="nav-item">
+                                                    <div class="nav-link">
+                                                        <b>
+                                                            <font size="4px">Total</font>
+                                                        </b>
+                                                        <span class="float-right">
+                                                            <div class="input-group">
+                                                                <div class="input-group-prepend"><span class="input-group-text">Rp.
+                                                                        &nbsp;</span></div>
+                                                                <input class="form-control" ng-disabled="checked" type="text"
+                                                                    style="text-align:right;" currency-input=""
+                                                                    ng-model="DataTotal" aria-describedby="emailHelp"
+                                                                    placeholder="Nominal" required>
+                                                            </div>
+                                                        </span>
+                                                    </div>
+                                                </li>
+
+
+                                            </ul>
+
                                         </div>
-                                        </span>
                                     </div>
-                                    </li>
-
-
-                                    </ul>
-                                    <ul class="nav nav-pills flex-column mail-nav">
-                                        <li class="nav-item">
-                                            <div class="nav-link">
-                                                <b><font size="4px">Total</font></b>
-                                                <span class="float-right">
-                                                                <div class="input-group">
-                                                                        <div class="input-group-prepend"><span class="input-group-text">Rp. &nbsp;</span></div>
-                                            <input class="form-control" ng-disabled="checked" type="text" style="text-align:right;" currency-input="" ng-model="DataTotal" aria-describedby="emailHelp" placeholder="Nominal" required>
                                 </div>
-                                </span>
+
                             </div>
-                            </li>
-
-
-                            </ul>
-
+                            <input type="submit" class="btn btn-primary pull-right" value="Proses" ng-click="Proses()">
                         </div>
+                        &nbsp;
+                    </div>
+                    <div class="tab-pane fade active show" id="khusus">
+                        <div ng-show="ShowDataKhusus" ng-hide="HideDataKhusus">
+                            <div class="row" style="margin-top:15px;">
+                                <div class="col-sm-2">
+                                    <b>
+                                        NPM <br> Nama Mahasiswa <br> Angkatan <br> Tahun Akademik Aktif
+                                    </b>
+                                </div>
+                                <div class="col-sm-6">
+                                    <b>
+                                        : &nbsp; {{DatasAmbilMahasiswa.NPM}} <br> : &nbsp;
+                                        {{DatasAmbilMahasiswa.NamaMahasiswa}} <br> : &nbsp;
+                                        {{DatasAmbilMahasiswa.Angkatan}} <br> : &nbsp;
+                                        {{DatasAmbilMahasiswa.TAAktif.TA}}
+                                    </b>
+                                </div>
+
+                            </div>
+                            <div class="row" style="margin-top:15px;">
+                                <div class="col-md-8">
+                                    <div class="tile p-0">
+                                        <h5 class="tile-title folder-head" style="font-size:15px;">Jenis Pembayaran</h5>
+                                        <div class="tile-body">
+                                            <ul class="nav nav-pills flex-column mail-nav">
+                                                <li class="nav-item" ng-repeat="item in DatasAmbilMahasiswa.BayarKhusus">
+                                                    <div class="nav-link">
+                                                        <input type="checkbox" ng-model="item.Check" ng-click="HitungTotaCheck(item)">
+                                                        {{item.JenisBayar[0].Jenis}}
+                                                        <span class="float-right">
+                                                            <div class="input-group">
+                                                                <div class="input-group-prepend"><span class="input-group-text">Rp.
+                                                                        &nbsp;</span></div>
+                                                                <input class="form-control" ng-disabled="item.SetDisabled"
+                                                                    type="text" currency-input="" style="text-align:right;"
+                                                                    ng-model="item.Nominal" ng-change="HitungTotal()"
+                                                                    aria-describedby="emailHelp" placeholder="Nominal"
+                                                                    required>
+                                                            </div>
+                                                        </span>
+                                                    </div>
+                                                </li>
+
+
+                                            </ul>
+                                            <ul class="nav nav-pills flex-column mail-nav">
+                                                <li class="nav-item">
+                                                    <div class="nav-link">
+                                                        <b>
+                                                            <font size="4px">Total</font>
+                                                        </b>
+                                                        <span class="float-right">
+                                                            <div class="input-group">
+                                                                <div class="input-group-prepend"><span class="input-group-text">Rp.
+                                                                        &nbsp;</span></div>
+                                                                <input class="form-control" ng-disabled="checked" type="text"
+                                                                    style="text-align:right;" currency-input=""
+                                                                    ng-model="DataTotal" aria-describedby="emailHelp"
+                                                                    placeholder="Nominal" required>
+                                                            </div>
+                                                        </span>
+                                                    </div>
+                                                </li>
+
+
+                                            </ul>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <input type="submit" class="btn btn-primary pull-right" value="Proses" ng-click="Proses()">
+                        </div>
+                        &nbsp;
                     </div>
                 </div>
-
             </div>
-            <input type="submit" class="btn btn-primary pull-right" value="Proses" ng-click="Proses()">
-        </div>
-        &nbsp;
-    </div>
-    <div class="tab-pane fade active show" id="khusus">
-        <div ng-show="ShowDataKhusus" ng-hide="HideDataKhusus">
-            <div class="row" style="margin-top:15px;">
-                <div class="col-sm-2">
-                    <b>
-                        NPM <br> Nama Mahasiswa <br> Angkatan <br> Tahun Akademik Aktif
-                    </b>
-                </div>
-                <div class="col-sm-6">
-                    <b>
-                    : &nbsp; {{DatasAmbilMahasiswa.NPM}} <br> : &nbsp; {{DatasAmbilMahasiswa.NamaMahasiswa}} <br> : &nbsp; {{DatasAmbilMahasiswa.Angkatan}} <br> : &nbsp; {{DatasAmbilMahasiswa.TAAktif.TA}}
-                    </b>
-                </div>
-
-            </div>
-            <div class="row" style="margin-top:15px;">
-                <div class="col-md-8">
-                    <div class="tile p-0">
-                        <h5 class="tile-title folder-head" style="font-size:15px;">Jenis Pembayaran</h5>
-                        <div class="tile-body">
-                            <ul class="nav nav-pills flex-column mail-nav">
-                                <li class="nav-item" ng-repeat="item in DatasAmbilMahasiswa.BayarKhusus">
-                                    <div class="nav-link">
-                                        <input type="checkbox" ng-model="item.Check" ng-click="HitungTotaCheck(item)"> {{item.JenisBayar[0].Jenis}}
-                                        <span class="float-right">
-                                                <div class="input-group">
-                                                        <div class="input-group-prepend"><span class="input-group-text">Rp. &nbsp;</span></div>
-                                    <input class="form-control" ng-disabled="item.SetDisabled" type="text" currency-input="" style="text-align:right;" ng-model="item.Nominal" ng-change="HitungTotal()" aria-describedby="emailHelp" placeholder="Nominal" required>
-                        </div>
-                        </span>
-                    </div>
-                    </li>
-
-
-                    </ul>
-                    <ul class="nav nav-pills flex-column mail-nav">
-                        <li class="nav-item">
-                            <div class="nav-link">
-                                <b><font size="4px">Total</font></b>
-                                <span class="float-right">
-                                                    <div class="input-group">
-                                                            <div class="input-group-prepend"><span class="input-group-text">Rp. &nbsp;</span></div>
-                            <input class="form-control" ng-disabled="checked" type="text" style="text-align:right;" currency-input="" ng-model="DataTotal" aria-describedby="emailHelp" placeholder="Nominal" required>
-                </div>
-                </span>
-            </div>
-            </li>
-
-
-            </ul>
-
         </div>
     </div>
-</div>
-
-</div>
-<input type="submit" class="btn btn-primary pull-right" value="Proses" ng-click="Proses()">
-</div>
-&nbsp;
-</div>
-</div>
-</div>
-</div>
-</div>
 
 </div>
 
@@ -225,26 +266,30 @@
                     Tambah Mahasiswa
                 </h5>
                 <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true">×</span>
-                    </button>
+                    <span aria-hidden="true">×</span>
+                </button>
             </div>
             <div class="modal-body">
                 <form ng-submit="Simpan()">
                     <div class="form-group">
                         <label for="exampleInputEmail1">NPM</label>
-                        <input class="form-control" type="text" ng-model="DataInput.NPM" aria-describedby="" placeholder="NPM" required>
+                        <input class="form-control" type="text" ng-model="DataInput.NPM" aria-describedby=""
+                            placeholder="NPM" required>
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Nama Mahasiswa</label>
-                        <input class="form-control" type="text" ng-model="DataInput.NamaMahasiswa" aria-describedby="" placeholder="Nama Mahasiswa" required>
+                        <input class="form-control" type="text" ng-model="DataInput.NamaMahasiswa" aria-describedby=""
+                            placeholder="Nama Mahasiswa" required>
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Angkatan</label>
-                        <input class="form-control" type="text" ng-model="DataInput.Angkatan" aria-describedby="" placeholder="Angkatan" required>
+                        <input class="form-control" type="text" ng-model="DataInput.Angkatan" aria-describedby=""
+                            placeholder="Angkatan" required>
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Kontak</label>
-                        <input class="form-control" type="text" ng-model="DataInput.Kontak" aria-describedby="" placeholder="Kontak" required>
+                        <input class="form-control" type="text" ng-model="DataInput.Kontak" aria-describedby=""
+                            placeholder="Kontak" required>
                     </div>
                     <div class="form-group">
                         <label for="">Alamat</label>
@@ -256,8 +301,8 @@
                                 Save changes
                             </button> -->
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                Close
-                            </button>
+                            Close
+                        </button>
                     </div>
                 </form>
             </div>
@@ -273,26 +318,30 @@
                     Edit Mahasiswa
                 </h5>
                 <button type="button" class="close" data-dismiss="modal">
-                            <span aria-hidden="true">×</span>
-                        </button>
+                    <span aria-hidden="true">×</span>
+                </button>
             </div>
             <div class="modal-body">
                 <form ng-submit="Update()">
                     <div class="form-group">
                         <label for="exampleInputEmail1">NPM</label>
-                        <input class="form-control" type="text" ng-model="DataInput.NPM" aria-describedby="" placeholder="NPM" required>
+                        <input class="form-control" type="text" ng-model="DataInput.NPM" aria-describedby=""
+                            placeholder="NPM" required>
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Nama Mahasiswa</label>
-                        <input class="form-control" type="text" ng-model="DataInput.NamaMahasiswa" aria-describedby="" placeholder="Nama Mahasiswa" required>
+                        <input class="form-control" type="text" ng-model="DataInput.NamaMahasiswa" aria-describedby=""
+                            placeholder="Nama Mahasiswa" required>
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Angkatan</label>
-                        <input class="form-control" type="text" ng-model="DataInput.Angkatan" aria-describedby="" placeholder="Angkatan" required>
+                        <input class="form-control" type="text" ng-model="DataInput.Angkatan" aria-describedby=""
+                            placeholder="Angkatan" required>
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Kontak</label>
-                        <input class="form-control" type="text" ng-model="DataInput.Kontak" aria-describedby="" placeholder="Kontak" required>
+                        <input class="form-control" type="text" ng-model="DataInput.Kontak" aria-describedby=""
+                            placeholder="Kontak" required>
                     </div>
                     <div class="form-group">
                         <label for="">Alamat</label>
@@ -304,8 +353,8 @@
                                     Save changes
                                 </button> -->
                         <button type="button" class="btn btn-secondary" ng-click="ClearData()" data-dismiss="modal">
-                                    Close
-                                </button>
+                            Close
+                        </button>
                     </div>
                 </form>
             </div>

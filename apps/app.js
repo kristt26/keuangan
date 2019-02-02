@@ -33,23 +33,11 @@ app.config(function($routeProvider) {  
             templateUrl: "apps/views/Pengguna.html",
             controller: "PenggunaController"
         })
-        .when("/Struktural", {
-            templateUrl: "apps/views/Struktural.html",
-            controller: "StrukturalController"
+        .when("/Pembayaran", {
+            templateUrl: "apps/views/PembayaranMahasiswa.html",
+            controller: "PembayaranMahasiswaController"
         })
-        .when("/Pejabat", {
-            templateUrl: "apps/views/Pejabat.html",
-            controller: "PejabatController"
-        })
-        .when("/Mailbox", {
-            templateUrl: "apps/views/Mailbox.html",
-            controller: "MailboxController"
-        })
-        .when("/Compose", {
-            templateUrl: "apps/views/Compose.html",
-            controller: "ComposeController"
-        })
-
+        
     .otherwise({ redirectTo: '/Main' })
 
 })

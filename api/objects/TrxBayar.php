@@ -24,6 +24,16 @@ class TrxBayar
         return $stmt;
     }
 
+    public function readByMahasiswa()
+    {
+        $query = "CALL GetTrxBayarByMahasiswa(:IdMahasiswa, :TA)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":IdMahasiswa", $this->IdMahasiswa, PDO::PARAM_INT);
+        $stmt->bindParam(":TA", $this->TA, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt;
+    }
+
     public function readOne()
     {
         $query = "SELECT * FROM ".$this->table_name." WHERE IdTrxBayar=?";

@@ -8,6 +8,7 @@ class MasterBayar
     public $Total;
     public $Bayar;
     public $Tunggakan;
+    public $IdMahasiswa;
 
     public function __construct($db) 
     {
@@ -35,14 +36,24 @@ class MasterBayar
         $this->Tunggakan = $row['Tunggakan'];
     }
 
+    public function readByMahasiswa()
+    {
+        $query = "CALL GetMasterBayarByMahasiswa(:IdMahasiswa)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":IdMahasiswa", $this->IdMahasiswa, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt;
+    }
+
     public function create()
     {
-        $query = "INSERT INTO ".$this->table_name." SET TA=?, Total=?, Bayar=?, Tunggakan=?";
+        $query = "INSERT INTO ".$this->table_name." SET TA=?, Total=?, Bayar=?, Tunggakan=?, IdMahasiswa=?";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $this->TA);
         $stmt->bindParam(2, $this->Total);
         $stmt->bindParam(3, $this->Bayar);
         $stmt->bindParam(4, $this->Tunggakan);
+        $stmt->bindParam(5, $this->IdMahasiswa);
 
         if($stmt->execute()){
             $this->IdMasterBayar= $this->conn->lastInsertId();
