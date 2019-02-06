@@ -1,3 +1,37 @@
-<div class="row">
-    <h2>{{session.nama_pengguna}}</h2>
+<div ng-init="Init()">
+
+    <div class="app-title text-white bg-dark row h-100 justify-content-center align-items-center text-center">
+        <div>
+            <h1>Sistem Keuangan Mahasiswa <br> STIMIK Sepuluh Nopember Papua</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="widget-small primary"><img src="assets/img/logo/invoice1.png" width="20%" height="20%">
+                <div class="info">
+                    <h4>Total Tagihan</h4>
+                    <p><b>{{DataMaster.Total | currency:"Rp. ":0}}</b></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="widget-small info"><img src="assets/img/logo/get_paid_icon.png" width="20%" height="20%">
+                <div class="info">
+                    <h4>Total Dibayar</h4>
+                    <p><b>{{DataMaster.Bayar | currency:"Rp. ":0}}</b></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="widget-small danger"><img src="assets/img/logo/mortgage1.png" width="20%" height="20%">
+                <div class="info">
+                    <h4>Total Tunggakan</h4>
+                    <p><b>{{DataMaster.Tunggakan | currency:"Rp. ":0}}</b></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class=" row col-md-12  justify-content-center">
+        <div data-loading></div>
+    </div>
 </div>

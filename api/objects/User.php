@@ -8,6 +8,8 @@ class User
     public $Password;
     public $Level;
     public $Nama;
+    public $Email;
+    public $Status;
 
     public function __construct($db) 
     {
@@ -24,15 +26,17 @@ class User
 
     public function login()
     {
-        $query = "SELECT * FROM ".$this->table_name." WHERE Username=? and Password=?";
+        $query = "SELECT * FROM ".$this->table_name." WHERE Username=? and Password=? and Status=?";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $this->Username);
         $stmt->bindParam(2, $this->Password);
+        $stmt->bindParam(3, $this->Status);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $this->IdUser = $row['IdUser'];
         $this->Level = $row['Level'];
         $this->Nama = $row['Nama'];
+        $this->Email = $row['Email'];
         return $stmt;
     }
 
@@ -61,12 +65,14 @@ class User
     
     public function create()
     {
-        $query = "INSERT INTO ".$this->table_name." SET nama_pengguna=?, username=?, password=?, email=?";
+        $query = "INSERT INTO ".$this->table_name." SET Username=?, Password=?, Level=?, Email=?, Nama=?, Status=?";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(1, $this->nama_pengguna);
-        $stmt->bindParam(2, $this->username);
-        $stmt->bindParam(3, $this->password);
-        $stmt->bindParam(4, $this->email);
+        $stmt->bindParam(1, $this->Username);
+        $stmt->bindParam(2, $this->Password);
+        $stmt->bindParam(3, $this->Level);
+        $stmt->bindParam(4, $this->Email);
+        $stmt->bindParam(5, $this->Nama);
+        $stmt->bindParam(6, $this->Status);
 
         if($stmt->execute()){
             $this->IdUser= $this->conn->lastInsertId();
@@ -79,7 +85,7 @@ class User
 
     public function update()
     {
-        $query = "UPDATE ".$this->table_name." SET nama_pengguna=?, username=?, password=?, email=? WHERE IdUser=?";
+        $query = "UPDATE ".$this->table_name." SET Status=?, username=?, password=?, email=? WHERE IdUser=?";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $this->nama_pengguna);
         $stmt->bindParam(2, $this->username);
@@ -87,6 +93,20 @@ class User
         $stmt->bindParam(4, $this->email);
         $stmt->bindParam(5, $this->IdUser);
 
+        if($stmt->execute()){
+            return true;
+        }else
+        {
+            return false;
+        }
+    }
+
+    public function updateStatus()
+    {
+        $query = "UPDATE ".$this->table_name." SET Status=? WHERE IdUser=?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $this->Status);
+        $stmt->bindParam(2, $this->IdUser);
         if($stmt->execute()){
             return true;
         }else
@@ -107,6 +127,14 @@ class User
         {
             return false;
         }
+    }
+
+    public function log()
+    {
+        session_start();
+        session_unset();
+        session_destroy();
+        return true;
     }
 }
 

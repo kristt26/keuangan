@@ -47,9 +47,19 @@ class MasterBayar
 
     public function readByTA()
     {
-        $query = "CALL GetMasterBayarByTA(:IdMahasiswa)";
+        $query = "CALL GetMasterBayarByTA(:IdMahasiswa, :TA)";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":IdMahasiswa", $this->IdMahasiswa, PDO::PARAM_INT);
+        $stmt->bindParam(":TA", $this->TA, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt;
+    }
+
+    public function readTA()
+    {
+        $query = "CALL GetMasterBayarTA(:TA)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":TA", $this->TA, PDO::PARAM_STR);
         $stmt->execute();
         return $stmt;
     }

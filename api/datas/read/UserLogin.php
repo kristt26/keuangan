@@ -10,9 +10,9 @@ $database = new Database();
 $db = $database->getConnection();
 $user = new User($db);
 $data=json_decode(file_get_contents("php://input"));
-
 $user->Username = $data->username;
 $user->Password = md5($data->password);
+$user->Status = "Aktif";
 $stmt = $user->login();
 $row = $stmt->rowCount();
 

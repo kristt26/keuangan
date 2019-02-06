@@ -15307,14 +15307,14 @@ be a descendant of the grid when it is being dragged.
 }
 
 .login-content .logo {
-    margin-bottom: 40px;
-    font-family: "Niconne";
+    margin-bottom: 0px;
+    font-family:"Monotype Corsiva";
     color: #fff;
 }
 
 .login-content .logo h1 {
-    font-size: 52px;
-    font-weight: 400;
+    font-size: 40px;
+    font-weight: 300;
 }
 
 .login-content .login-box {

@@ -41,6 +41,14 @@ app.config(function ($routeProvider) {
             templateUrl: "apps/views/PembayaranMahasiswa.html",
             controller: "PembayaranMahasiswaController"
         })
+        .when("/User", {
+            templateUrl: "apps/views/User.html",
+            controller: "UserController"
+        })
+        .when("/LogOut", {
+            templateUrl: "apps/views/Main.html",
+            controller: "LogController"
+        })
 
         .otherwise({ redirectTo: '/Main' })
 
