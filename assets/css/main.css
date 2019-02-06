@@ -5913,6 +5913,10 @@ button.close {
     pointer-events: none;
 }
 
+.modal-lg {
+    max-width: 1100px;
+}
+
 .modal.fade .modal-dialog {
     -webkit-transition: -webkit-transform 0.3s ease-out;
     transition: -webkit-transform 0.3s ease-out;

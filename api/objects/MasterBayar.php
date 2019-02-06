@@ -45,6 +45,15 @@ class MasterBayar
         return $stmt;
     }
 
+    public function readByTA()
+    {
+        $query = "CALL GetMasterBayarByTA(:IdMahasiswa)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":IdMahasiswa", $this->IdMahasiswa, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt;
+    }
+
     public function create()
     {
         $query = "INSERT INTO ".$this->table_name." SET TA=?, Total=?, Bayar=?, Tunggakan=?, IdMahasiswa=?";

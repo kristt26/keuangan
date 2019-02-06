@@ -11,24 +11,55 @@ include_once '../../objects/MasterBayar.php';
 include_once '../../objects/TrxBayar.php';
 include_once '../../objects/DetailBayar.php';
 include_once '../../objects/Mahasiswa.php';
+include_once '../../objects/DetailBayarUmum.php';
+include_once '../../objects/DetailBayarKhusus.php';
+include_once '../../objects/User.php';
+include_once '../../objects/JenisBayar.php';
+include_once '../../objects/BayarUmum.php';
+include_once '../../objects/BayarKhusus.php';
 
 $database = new Database();
 $db       = $database->getConnection();
-
 $ta          = new TahunAkademik($db);
 $masterbayar = new MasterBayar($db);
 $trxbayar    = new TrxBayar($db);
 $detailbayar = new DetailBayar($db);
 $mahasiswa   = new Mahasiswa($db);
-
+$user        = new User($db);
+$detailbayarumum = new DetailBayarUmum($db);
+$detailbayarkhusus = new DetailBayarKhusus($db);
+$jenisbayar    = new JenisBayar($db);
+$bayarumum     = new BayarUmum($db);
+$bayarkhusus   = new BayarKhusus($db);
 $data       = json_decode(file_get_contents("php://input"));
-$stmt       = $ta->GetTAAktif();
+$stmt       = $ta->read();
 $row        = $stmt->fetchALL(PDO::FETCH_ASSOC);
-$TaAktif    = (object)$row[0];
+$TaAktif    = (object)$row;
 $stmt       = null;
+$stmt       = $user->read();
+$row        = $stmt->fetchALL(PDO::FETCH_ASSOC);
+$DatasUser  = (object)$row;
+$stmt       = null;
+$stmt       = $jenisbayar->read();
+$row        = $stmt->fetchALL(PDO::FETCH_ASSOC);
+$DatasJenisBayar  = (object)$row;
+$stmt       = null;
+$stmt       = $bayarumum->read();
+$row        = $stmt->fetchALL(PDO::FETCH_ASSOC);
+$DatasBayarUmum  = (object)$row;
+$stmt       = null;
+$stmt       = $bayarkhusus->read();
+$row        = $stmt->fetchALL(PDO::FETCH_ASSOC);
+$DatasBayarKhusus  = (object)$row;
+$stmt       = null;
+
 $DatasArray = array(
     'Mahasiswa' => array(),
-    'TAAktif'   => $TaAktif,
+    'DataTA'    => $TaAktif,
+    'User'      => $DatasUser,
+    'JenisBayar'=> $DatasJenisBayar,
+    'BayarUmum' => $DatasBayarUmum,
+    'BayarKhusus'=> $DatasBayarKhusus
 );
 $stmt           = $mahasiswa->read();
 $row            = $stmt->fetchALL(PDO::FETCH_ASSOC);
@@ -54,11 +85,29 @@ foreach ($DatasMahasiswa as &$value) {
         $trxbayar->TA          = $value1["TA"];
         $stmt                  = $trxbayar->readByMahasiswa();
         $row                   = $stmt->fetchALL(PDO::FETCH_ASSOC);
-        $DataBayar             = (object)$row;
+        $DataBayar             = $row;
+        $stmt                  = null;
+        $detailbayarumum->TA = $value1["TA"];
+        $detailbayarumum->IdMahasiswa = $value1["IdMahasiswa"];
+        $stmt                  = $detailbayarumum->readOne();
+        $row                   = $stmt->fetchALL(PDO::FETCH_ASSOC);
+        $DataBayarUmum         = $row;
+        $stmt                  = null;
+        $detailbayarkhusus->TA = $value1["TA"];
+        $detailbayarkhusus->IdMahasiswa = $value1["IdMahasiswa"];
+        $stmt                  = $detailbayarkhusus->readOne();
+        $row                   = $stmt->fetchALL(PDO::FETCH_ASSOC);
+        $DataBayarKhusus       = $row;
         $stmt                  = null;
         $ItemMaster            = array(
             "IdMasterBayar" => $value1["IdMasterBayar"],
-            "TrxBayar" => $DataBayar,
+            "TA"            => $value1["TA"],
+            "Total"         => $value1["Total"],
+            "Bayar"         => $value1["Bayar"],
+            "Tunggakan"     => $value1["Tunggakan"],
+            "TrxBayar"      => $DataBayar,
+            "BayarUmum"     => $DataBayarUmum,
+            "BayarKhusus"   => $DataBayarKhusus
         );
         array_push($ItemMahasiswa["MasterBayar"], $ItemMaster);
     }

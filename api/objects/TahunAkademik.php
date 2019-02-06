@@ -15,7 +15,7 @@ class TahunAkademik
 
     public function read()
     {
-        $query = "SELECT * FROM ".$this->table_name."";
+        $query = "CALL GetTahunAkademik()";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt;

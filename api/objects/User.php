@@ -16,7 +16,7 @@ class User
 
     public function read()
     {
-        $query = "SELECT * FROM ".$this->table_name."";
+        $query = "CALL GetUser()";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt;
@@ -30,6 +30,7 @@ class User
         $stmt->bindParam(2, $this->Password);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->IdUser = $row['IdUser'];
         $this->Level = $row['Level'];
         $this->Nama = $row['Nama'];
         return $stmt;

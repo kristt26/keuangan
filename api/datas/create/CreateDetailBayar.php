@@ -8,11 +8,21 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 // include database and object file
 include_once '../../../api/config/database.php';
 include_once '../../../api/objects/DetailBayar.php';
+include_once '../../../api/objects/DetailBayarUmum.php';
 
 $database = new Database();
 $db = $database->getConnection();
 $detailbayar = new DetailBayar($db);
+$detailbayarumum = new DetailBayarUmum($db);
 $data = json_decode(file_get_contents("php://input"));
+foreach ($data->SendBayarUmum as &$value) {
+    $detailbayarumum->IdMahasiswa = $data->IdMahasiswa;
+    $detailbayarumum->Nominal = $value->Nominal;
+    $detailbayarumum->TA = $data->TA;
+    $detailbayarumum->IdBayarUmum = $value->IdBayarUmum;
+    $detailbayarumum->create();
+}
+
     $detailbayar->TA = $data->TA;
     $detailbayar->IdMahasiswa = $data->IdMahasiswa;
     $detailbayar->Jumlah = $data->Jumlah;

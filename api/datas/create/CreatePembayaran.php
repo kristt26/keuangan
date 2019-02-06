@@ -7,23 +7,25 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
  
 // include database and object file
 include_once '../../../api/config/database.php';
-include_once '../../../api/objects/MasterBayar.php';
+include_once '../../../api/objects/TrxBayar.php';
+session_start();
 
 $database = new Database();
 $db = $database->getConnection();
-$masterbayar = new MasterBayar($db);
+$trxbayar = new TrxBayar($db);
 $data = json_decode(file_get_contents("php://input"));
-$masterbayar->IdMahasiswa = $data->IdMahasiswa;
-$masterbayar->TA = $data->TAAktif->TA;
-$masterbayar->Total = $data->TotalTagihan;
-$masterbayar->Bayar = $data->TotalPembayaran;
-$masterbayar->Tunggakan = $data->TotalTunggakan;
-if($masterbayar->create()){
+$trxbayar->TglBayar = $data->TglBayar;
+$trxbayar->TA = $data->TA->TA;
+$trxbayar->JumlahBayar = $data->JumlahBayar;
+$trxbayar->IdMahasiswa = $data->IdMahasiswa;
+$trxbayar->IdPetugas = $_SESSION["IdUser"];
+$trxbayar->Description = $data->Description;
+if($trxbayar->create()){
     http_response_code(200);
-    echo json_encode(array("message" => $masterbayar->IdMasterBayar));
+    echo json_encode(array("IdTrxBayar" => $trxbayar->IdTrxBayar, "IdPetugas" => $trxbayar->IdPetugas));
 }else{
     http_response_code(503);
-    echo json_encode(array("message" => "Unable to create Master Bayar"));
+    echo json_encode(array("message" => "Unable to create Pembayaran"));
 }
 
 ?>
