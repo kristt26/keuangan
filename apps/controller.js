@@ -164,7 +164,7 @@ angular
             }).then(function(response) {
                 if (response.status == 200) {
                     $scope.DataInput.IdUser = response.data.message;
-                    $scope.DatasUser.push(angular.copy($scope.DatasUser));
+                    $scope.DatasUser.push(angular.copy($scope.DataInput));
                 }
             })
             $scope.DatasUser = {};
