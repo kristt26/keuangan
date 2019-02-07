@@ -167,7 +167,7 @@ angular
                     $scope.DatasUser.push(angular.copy($scope.DataInput));
                 }
             })
-            $scope.DatasUser = {};
+            $scope.DataInput = {};
         }
         $scope.UpdateStatus = function(item) {
             var Data = {};
