@@ -166,8 +166,9 @@ angular
                     $scope.DataInput.IdUser = response.data.message;
                     $scope.DatasUser.push(angular.copy($scope.DataInput));
                 }
+                $scope.DataInput = {};
             })
-            $scope.DataInput = {};
+
         }
         $scope.UpdateStatus = function(item) {
             var Data = {};
