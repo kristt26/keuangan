@@ -25,7 +25,7 @@ angular
             }, function(error) {})
     })
 
-.controller("MainController", function($scope, $http) {
+    .controller("MainController", function ($scope, $http) {
         $scope.DataMaster = {};
 
         $scope.Init = function() {
@@ -139,13 +139,13 @@ angular
         $scope.DatasUser = [];
         $scope.DataInput = {};
         $scope.DataLevel = [{ Id: "1", Level: "Ketua" }, { Id: "2", Level: "Puket III" }, { Id: "3", Level: "Pendataan" }, { Id: "4", Level: "Pembayaran" }];
-        $scope.Init = function() {
+        $scope.Init = function () {
             $http({
                 method: "GET",
                 url: "api/datas/read/ReadUser.php"
-            }).then(function(response) {
+            }).then(function (response) {
                 if (response.status == 200) {
-                    angular.forEach(response.data, function(value, key) {
+                    angular.forEach(response.data, function (value, key) {
                         if (value.Status == "Aktif")
                             value.Check = true;
                         else
@@ -155,22 +155,21 @@ angular
                 }
             });
         }
-        $scope.Simpan = function() {
+        $scope.Simpan = function () {
             $scope.DataInput.Check = true;
             $http({
                 method: "POST",
                 url: "api/datas/create/CreateUser.php",
                 data: $scope.DataInput
-            }).then(function(response) {
+            }). then(function (response) {
                 if (response.status == 200) {
                     $scope.DataInput.IdUser = response.data.message;
                     $scope.DatasUser.push(angular.copy($scope.DataInput));
                 }
                 $scope.DataInput = {};
             })
-
         }
-        $scope.UpdateStatus = function(item) {
+        $scope.UpdateStatus = function (item) {
             var Data = {};
             if (item.Status == "Aktif") {
                 Data.IdUser = angular.copy(item.IdUser);
@@ -185,9 +184,9 @@ angular
                 method: "POST",
                 url: "api/datas/update/UpdateStatusUser.php",
                 data: Data
-            }).then(function(response) {
+            }).then(function (response) {
                 if (response.status == 200) {
-                    angular.forEach($scope.DatasUser, function(value, key) {
+                    angular.forEach($scope.DatasUser, function (value, key) {
                         if (value.IdUser == Data.IdUser) {
                             value.Status = Data.Status;
                             value.Check = Data.Check;
