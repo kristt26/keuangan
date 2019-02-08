@@ -21,6 +21,7 @@ if(!empty($data->Angkatan)){
     $stmt = $bayarumum->CekAngkatan();
     $num = $stmt->rowCount();
     $stmt->fetchALL();
+    $stmt=null;
     if($num==0){
         $jenisbayar->Sifat="Umum";
         $stmtt = $jenisbayar->readBySifat();
