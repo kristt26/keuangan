@@ -24,7 +24,7 @@ angular
                 window.location.href = "index.html";
             }, function (error) { })
     })
-    
+
     .controller("MainController", function ($scope, $http) {
         $scope.DataMaster = {};
 
@@ -79,6 +79,31 @@ angular
 
             }, function (error) {
                 alert(error.data.message);
+            })
+        }
+
+    })
+    .controller("EditprofilController", function ($scope, $http, notificationService) {
+        $scope.session = {};
+        var Urlauth = "api/datas/read/auth.php";
+        $http({
+            method: "get",
+            url: Urlauth,
+        }).then(function (response) {
+            if (response.data.Session == false) {
+                window.location.href = 'index.html';
+            } else
+                $scope.session = response.data.Session;
+        })
+        $scope.Simpan = function(){
+            $http({
+                method: "POST",
+                url: "api/datas/update/UpdateProfile.php",
+                data: $scope.session
+            }).then(function(response){
+                if(response.status==200){
+                    notificationService.success(response.data.message);
+                }
             })
         }
 
@@ -138,60 +163,60 @@ angular
             DTColumnBuilder.newColumn("firstName").withTitle("First name"),
             DTColumnBuilder.newColumn("lastName").withTitle("Last name")
         ];
-        $scope.DatasUser=[];
-        $scope.DataInput={};
-        $scope.DataLevel=[{Id:"1", Level: "Ketua"}, {Id:"2", Level: "Puket III"}, {Id:"3", Level: "Pendataan"},{Id:"4", Level: "Pembayaran"}];
-        $scope.Init=function(){
+        $scope.DatasUser = [];
+        $scope.DataInput = {};
+        $scope.DataLevel = [{ Id: "1", Level: "Ketua" }, { Id: "2", Level: "Puket III" }, { Id: "3", Level: "Pendataan" }, { Id: "4", Level: "Pembayaran" }];
+        $scope.Init = function () {
             $http({
                 method: "GET",
                 url: "api/datas/read/ReadUser.php"
-            }).then(function(response){
-                if(response.status==200){
-                    angular.forEach(response.data, function(value, key){
-                        if(value.Status=="Aktif")
-                            value.Check=true;
+            }).then(function (response) {
+                if (response.status == 200) {
+                    angular.forEach(response.data, function (value, key) {
+                        if (value.Status == "Aktif")
+                            value.Check = true;
                         else
-                            value.Check=false;
+                            value.Check = false;
                     })
                     $scope.DatasUser = response.data;
                 }
             });
         }
-        $scope.Simpan = function(){
-            $scope.DataInput.Check=true;
+        $scope.Simpan = function () {
+            $scope.DataInput.Check = true;
             $http({
                 method: "POST",
                 url: "api/datas/create/CreateUser.php",
                 data: $scope.DataInput
-            }),then(function(response){
-                if(response.status==200){
+            }), then(function (response) {
+                if (response.status == 200) {
                     $scope.DataInput.IdUser = response.data.message;
                     $scope.DatasUser.push(angular.copy($scope.DatasUser));
                 }
             })
-            $scope.DatasUser={};
+            $scope.DatasUser = {};
         }
-        $scope.UpdateStatus=function(item){
+        $scope.UpdateStatus = function (item) {
             var Data = {};
-            if(item.Status=="Aktif"){
-                Data.IdUser=angular.copy(item.IdUser);
-                Data.Status="Tidak Aktif";
-                Data.Check=false;                
-            }else{
-                Data.IdUser=angular.copy(item.IdUser);
-                Data.Status="Aktif";
-                Data.Check=true;
+            if (item.Status == "Aktif") {
+                Data.IdUser = angular.copy(item.IdUser);
+                Data.Status = "Tidak Aktif";
+                Data.Check = false;
+            } else {
+                Data.IdUser = angular.copy(item.IdUser);
+                Data.Status = "Aktif";
+                Data.Check = true;
             }
             $http({
                 method: "POST",
                 url: "api/datas/update/UpdateStatusUser.php",
                 data: Data
-            }).then(function(response){
-                if(response.status==200){
-                    angular.forEach($scope.DatasUser,function(value, key){
-                        if(value.IdUser==Data.IdUser){
-                            value.Status=Data.Status;
-                            value.Check=Data.Check;
+            }).then(function (response) {
+                if (response.status == 200) {
+                    angular.forEach($scope.DatasUser, function (value, key) {
+                        if (value.IdUser == Data.IdUser) {
+                            value.Status = Data.Status;
+                            value.Check = Data.Check;
                         }
                     })
                 }

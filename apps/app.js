@@ -49,6 +49,10 @@ app.config(function ($routeProvider) {
             templateUrl: "apps/views/Main.html",
             controller: "LogController"
         })
+        .when("/EditProfile", {
+            templateUrl: "apps/views/EditProfile.html",
+            controller: "EditprofilController"
+        })
 
         .otherwise({ redirectTo: '/Main' })
 

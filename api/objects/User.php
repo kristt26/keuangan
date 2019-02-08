@@ -62,6 +62,17 @@ class User
         $this->Level = $row['Level'];
         $this->IdUser = $row['IdUser'];
     }
+
+    public function readUser()
+    {
+        $query = "CALL GetUserByUsername(:Username)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $this->Username, PDO::PARAM_STR);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $IdUser = $row['IdUser'];
+        return $IdUser;
+    }
     
     public function create()
     {
@@ -106,6 +117,20 @@ class User
         $query = "UPDATE ".$this->table_name." SET Status=? WHERE IdUser=?";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $this->Status);
+        $stmt->bindParam(2, $this->IdUser);
+        if($stmt->execute()){
+            return true;
+        }else
+        {
+            return false;
+        }
+    }
+
+    public function updatePassword()
+    {
+        $query = "UPDATE ".$this->table_name." SET Password=? WHERE IdUser=?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $this->Password);
         $stmt->bindParam(2, $this->IdUser);
         if($stmt->execute()){
             return true;
