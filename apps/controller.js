@@ -90,7 +90,7 @@ angular
     ) {
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withPaginationType("full_numbers")
-            .withOption("order", [1, "desc"])
+            .withOption("order", [0, "asc"])
             .withButtons([{
                     extend: 'excelHtml5',
                     customize: function(xlsx) {
