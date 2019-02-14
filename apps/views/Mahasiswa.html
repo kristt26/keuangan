@@ -2,9 +2,9 @@
     <div>
         <h1>Mahasiswa</h1>
     </div>
-    <ul class="app-breadcrumb breadcrumb">
+    <!-- <ul class="app-breadcrumb breadcrumb">
         <button id="modal-865424" data-toggle="modal" data-target="#TambahMahasiswa" title="Tambah Mahasiswa" class="btn btn-success fa fa-plus"></button>
-    </ul>
+    </ul> -->
 </div>
 <div class="row" ng-init="Init()">
     <div class="clearfix"></div>
@@ -71,7 +71,7 @@
                 <form ng-submit="Simpan()">
                     <div class="form-group">
                         <label for="exampleInputEmail1">NPM</label>
-                        <input class="form-control" type="text" ng-model="DataInput.NPM" aria-describedby="" placeholder="NPM" required>
+                        <input class="form-control" type="text" ng-model="DataInput.NPM" maxlength="9" minlength="9" aria-describedby="" placeholder="NPM" required>
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Nama Mahasiswa</label>
@@ -79,11 +79,11 @@
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Angkatan</label>
-                        <input class="form-control" type="text" ng-model="DataInput.Angkatan" aria-describedby="" placeholder="Angkatan" required>
+                        <input class="form-control" type="text" ng-model="DataInput.Angkatan" maxlength="4" minlength="4" aria-describedby="" placeholder="Angkatan" required>
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Kontak</label>
-                        <input class="form-control" type="text" ng-model="DataInput.Kontak" aria-describedby="" placeholder="Kontak" required>
+                        <input class="form-control" type="text" ng-model="DataInput.Kontak" maxlength="15" aria-describedby="" placeholder="Kontak" required>
                     </div>
                     <div class="form-group">
                         <label for="">Alamat</label>

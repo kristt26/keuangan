@@ -206,7 +206,7 @@ angular
     ) {
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withPaginationType("full_numbers")
-            .withOption("order", [1, "desc"])
+            .withOption("order", [0, "desc"])
             .withButtons([{
                     extend: 'excelHtml5',
                     customize: function(xlsx) {
@@ -267,12 +267,14 @@ angular
                         $scope.DataInput.IdMahasiswa = response.data.message;
                         $scope.DatasMahasiswa.push(angular.copy($scope.DataInput));
                         notificationService.success("Successing");
+                        $scope.DataInput = {};
                     }
                 },
                 function(error) {
                     notificationService.error("Gagal Simpan");
                 }
             );
+
         };
 
         $scope.Init = function() {
@@ -289,8 +291,8 @@ angular
         };
         $scope.Delete = function(item) {
             SweetAlert.swal({
-                    title: "Are you sure?",
-                    text: "Your will not be able to recover this imaginary file!",
+                    title: "Anda Yakin?",
+                    text: "Kamu akan menghapus data Mahasiswa: " + item.NamaMahasiswa,
                     type: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#DD6B55",
@@ -306,12 +308,15 @@ angular
                             url: "api/datas/delete/DeleteMahasiswa.php",
                             data: item
                         }).then(function(response) {
-                            var index = $scope.DatasMahasiswa.indexOf(item);
-                            $scope.DatasMahasiswa.splice(index, 1);
-                            notificationService.success(response.data.message);
+                            if (response.status == 200) {
+                                var index = $scope.DatasMahasiswa.indexOf(item);
+                                $scope.DatasMahasiswa.splice(index, 1);
+                                notificationService.success(response.data.message);
+                            } else
+                                notificationService.error(response.data.message);
 
                         }, function(error) {
-                            notificationService.error(response.data.message);
+                            notificationService.error(error.data.message);
                         })
                     }
                 });

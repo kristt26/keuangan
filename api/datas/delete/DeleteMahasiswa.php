@@ -21,7 +21,7 @@ if($mahasiswa->delete()){
     echo json_encode(array("message" => "Data Terhapus"));
 }else{
     http_response_code(503);
-    echo json_encode(array("message" => "Gagal Hapus"));
+    echo json_encode(array("message" => "Mahasiswa Bersangkutan Tidak bisa di Hapus"));
 }
 
 ?>
