@@ -851,11 +851,15 @@ angular
     }
 
     $scope.DataProses = {};
+    $scope.DataTampung = {};
     $scope.HitungTotal = function() {
         $scope.DataTotal = 0;
-        angular.forEach($scope.DatasAmbilMahasiswa.BayarUmum, function(value, key) {
-            if (value.Check == true)
+        $scope.DataTampung = angular.copy($scope.DatasAmbilMahasiswa.BayarUmum);
+        angular.forEach($scope.DataTampung, function(value, key) {
+            if (value.Check == true && value.Jumlah != "") {
+                value.Nominal = parseInt(value.Nominal) * parseInt(value.Jumlah);
                 $scope.DataTotal += parseInt(value.Nominal);
+            }
         })
     }
     $scope.HitungTotaCheck = function(item) {
