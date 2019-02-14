@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="Apps">
+<html lang="en" ng-app="Appsindex">
 
 <head>
     <meta name="description" content="Vali is a responsive and free admin theme built with Bootstrap 4, SASS and PUG.js. It's fully customizable and modular.">
@@ -67,82 +67,50 @@
     <!-- <script src="assets/css/viewer.css"></script> -->
     <script src="assets/js/angular/angular-pdfjs-viewer.js"></script>
 
-    <script src="apps/app.js"></script>
-    <script src="apps/controller.js"></script>
+    <script src="apps/appindex.js"></script>
+    <!-- <script src="apps/controller.js"></script> -->
+    <style>
+        @media (max-width: 767px) {
+            .app {
+                overflow-x: hidden;
+            }
+            .app .app-sidebar {
+                left: -230px;
+            }
+            .app .app-sidebar__overlay {
+                visibility: hidden;
+            }
+            .app-content {
+                margin-left: 0px;
+            }
+        }
+        
+        .app-content {
+            min-height: calc(100vh - 50px);
+            margin-top: 50px;
+            padding: 30px;
+            margin-left: 0;
+            background-color: #E5E5E5;
+            -webkit-transition: margin-left 0.3s ease;
+            -o-transition: margin-left 0.3s ease;
+            transition: margin-left 0.3s ease;
+        }
+    </style>
 </head>
 
-<body class="app sidebar-mini rtl">
+<body class="app sidebar-mini rtl" ng-controller="IndexController">
     <!-- Navbar-->
     <header class="app-header">
-        <a class="app-header__logo" href="index.html"><img src="assets/img/logo/Logo.png" width="20%">Keuangan</a>
+        <!-- <a class="app-header__logo" href="index.html"><img src="assets/img/logo/Logo.png" width="20%">Keuangan</a> -->
         <!-- Sidebar toggle button-->
-        <a class="app-sidebar__toggle" href="javascript:void(0);" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
+        <!-- <a class="app-sidebar__toggle" href="javascript:void(0);" data-toggle="sidebar" aria-label="Hide Sidebar"></a> -->
         <!-- Navbar Right Menu-->
         <ul class="app-nav">
-            <!-- <li class="app-search">
+            <li class="app-search">
                 <input class="app-search__input" type="search" placeholder="Search">
                 <button class="app-search__button"><i class="fa fa-search"></i></button>
-            </li> -->
-            <!--Notification Menu-->
-            <li class="dropdown"><a class="app-nav__item" href="#" data-toggle="dropdown" aria-label="Show notifications"><i
-                        class="fa fa-bell-o fa-lg"></i></a>
-                <ul class="app-notification dropdown-menu dropdown-menu-right">
-                    <li class="app-notification__title">You have 4 new notifications.</li>
-                    <div class="app-notification__content">
-                        <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><span
-                                        class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i
-                                            class="fa fa-envelope fa-stack-1x fa-inverse"></i></span></span>
-                                <div>
-                                    <p class="app-notification__message">Lisa sent you a mail</p>
-                                    <p class="app-notification__meta">2 min ago</p>
-                                </div>
-                            </a></li>
-                        <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><span
-                                        class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-danger"></i><i
-                                            class="fa fa-hdd-o fa-stack-1x fa-inverse"></i></span></span>
-                                <div>
-                                    <p class="app-notification__message">Mail server not working</p>
-                                    <p class="app-notification__meta">5 min ago</p>
-                                </div>
-                            </a></li>
-                        <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><span
-                                        class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-success"></i><i
-                                            class="fa fa-money fa-stack-1x fa-inverse"></i></span></span>
-                                <div>
-                                    <p class="app-notification__message">Transaction complete</p>
-                                    <p class="app-notification__meta">2 days ago</p>
-                                </div>
-                            </a></li>
-                        <div class="app-notification__content">
-                            <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><span
-                                            class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i
-                                                class="fa fa-envelope fa-stack-1x fa-inverse"></i></span></span>
-                                    <div>
-                                        <p class="app-notification__message">Lisa sent you a mail</p>
-                                        <p class="app-notification__meta">2 min ago</p>
-                                    </div>
-                                </a></li>
-                            <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><span
-                                            class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-danger"></i><i
-                                                class="fa fa-hdd-o fa-stack-1x fa-inverse"></i></span></span>
-                                    <div>
-                                        <p class="app-notification__message">Mail server not working</p>
-                                        <p class="app-notification__meta">5 min ago</p>
-                                    </div>
-                                </a></li>
-                            <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><span
-                                            class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-success"></i><i
-                                                class="fa fa-money fa-stack-1x fa-inverse"></i></span></span>
-                                    <div>
-                                        <p class="app-notification__message">Transaction complete</p>
-                                        <p class="app-notification__meta">2 days ago</p>
-                                    </div>
-                                </a></li>
-                        </div>
-                    </div>
-                    <li class="app-notification__footer"><a href="#">See all notifications.</a></li>
-                </ul>
             </li>
+            <!--Notification Menu-->
             <!-- User Menu-->
             <li class="dropdown"><a class="app-nav__item" href="javascript:void(0);" data-toggle="dropdown" aria-label="Open Profile Menu"><i
                         class="fa fa-user fa-lg"></i></a>
@@ -155,19 +123,7 @@
         </ul>
     </header>
     <!-- Sidebar menu-->
-    <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
-    <aside class="app-sidebar">
-        <div class="app-sidebar__user" ng-controller="UserSession">
-            <img class="app-sidebar__user-avatar" src="https://s3.amazonaws.com/uifaces/faces/twitter/jsa/48.jpg" alt="User Image">
-            <div>
-                <p class="app-sidebar__user-name">{{session.Nama}}</p>
-                <p class="app-sidebar__user-designation">{{session.Level}}</p>
-            </div>
-        </div>
-        <ul class="app-menu">
-            <li><a class="app-menu__item" href="#!Laporan"><i class="app-menu__icon fa fa-file-text"></i><span class="app-menu__label">Laporan</span></a></li>
-        </ul>
-    </aside>
+
     <main class="app-content">
 
         <div>
