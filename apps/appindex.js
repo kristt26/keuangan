@@ -1,59 +1,42 @@
-var app = angular.module("Appsindex", ["datatables", "datatables.buttons"]);
+var app = angular.module("Appsindex", []);
 app.controller("IndexController", function(
     $http,
-    $scope,
-    DTOptionsBuilder,
-    DTColumnBuilder,
+    $scope
 ) {
-    $scope.dtOptions = DTOptionsBuilder.newOptions()
-        .withPaginationType("full_numbers")
-        .withOption("order", [1, "desc"])
-        .withButtons([{
-                extend: 'excelHtml5',
-                customize: function(xlsx) {
-                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
+    $scope.ShowPembayaran = false;
+    $scope.HidePembayaran = true;
+    $scope.url = "apps/views/Index.html";
+    $scope.Init = function() {
+        var UrlTahun = "api/datas/read/ReadTahun.php";
+        $http({
+            method: "GET",
+            url: UrlTahun
+        }).then(function(response) {
+            $scope.DatasTahun = response.data.records;
+        }, function(error) {
+            // notificationService.error("Gagal Mengambil Data");
+        })
 
-                    // jQuery selector to add a border to the third row
-                    $('row c[r*="3"]', sheet).attr('s', '25');
-                    // jQuery selector to set the forth row's background gray
-                    $('row c[r*="4"]', sheet).attr('s', '5');
-                }
-            },
-            {
-                extend: "csvHtml5",
-                fileName: "Data_Analysis",
-                exportOptions: {
-                    columns: ':visible'
-                },
-                exportData: { decodeEntities: true }
-            },
-            {
-                extend: "pdfHtml5",
-                fileName: "Data_Analysis",
-                title: "Data Analysis Report",
-                exportOptions: {
-                    columns: ':visible'
-                },
-                exportData: { decodeEntities: true }
-            },
-            {
-                extend: 'print',
-                //text: 'Print current page',
-                autoPrint: true,
-                title: "Data Seleksi",
-                exportOptions: {
-                    columns: ':visible'
-                }
-            }
+        var UrlBayarUmum = "api/datas/read/ReadBayarUmum.php";
+        $http({
+            method: "GET",
+            url: UrlBayarUmum
+        }).then(function(response) {
+            $scope.DatasBayarUmum = response.data.records;
+        }, function(error) {
+            // notificationService.error("Gagal Mengambil Data");
+        })
 
-        ]);
-
-    $scope.dtColumns = [
-        DTColumnBuilder.newColumn("id").withTitle("ID"),
-        DTColumnBuilder.newColumn("firstName").withTitle("First name"),
-        DTColumnBuilder.newColumn("lastName").withTitle("Last name")
-    ];
-
+        var UrlBayarKhusus = "api/datas/read/ReadBayarKhusus.php";
+        $http({
+            method: "GET",
+            url: UrlBayarKhusus
+        }).then(function(response) {
+            $scope.DatasBayarKhusus = response.data.records;
+        }, function(error) {
+            // notificationService.error("Gagal Mengambil Data");
+        })
+    }
 
 });
 

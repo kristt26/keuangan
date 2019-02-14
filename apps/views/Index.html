@@ -1,0 +1,197 @@
+<div class="bs-component" style="margin-top:70px;margin-left: 50px;">
+    <div ng-show="ShowPengumuman" ng-hide="HidePengumuman">
+        <div class="box box-primary">
+            <div class="box-body no-padding">
+                <div class="mailbox-read-info">
+                    <h4>PENGUMUMAN</h4>
+                    <h5>DARI: Bagian Keuangan
+                        <span class="mailbox-read-time pull-right">
+                            <font size="2pt">{{Itemread.tg_surat}}</font>
+                        </span></h5>
+                    <h5>
+                        <font size="2pt">Perihal: {{ShowTembusan}}</font>
+                    </h5>
+                </div>
+
+                <div class="mailbox-read-message">
+                    <h3>Isi Pengumuman</h3>
+                    <h5>
+                        Testing
+                    </h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div ng-show="ShowPembayaran" ng-hide="HidePembayaran">
+        <h3 class="tile-title" style="margin-left: 50px;">Data Pembayaran Mahasiswa</h3>
+        <div class="row" style="margin:20px 50px 0px 50px; font-size: 13px;">
+            <div class="col-sm-3">
+                <b>
+                    NPM <br> Nama Mahasiswa <br> Angkatan
+                </b>
+            </div>
+            <div class="col-sm-6">
+                <b>
+                    : &nbsp; {{DataInformation.NPM}} <br> : &nbsp;
+                    {{DataInformation.NamaMahasiswa}} <br> : &nbsp;
+                    {{DataInformation.Angkatan}}
+                </b>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;">Tahun Akademik</th>
+                        <th style="text-align:center;">Total Pembayar</th>
+                        <th style="text-align:center;">Total Dibayar</th>
+                        <th style="text-align:center;">Tunggakan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in DataInformation.MasterBayar">
+                        <td>{{item.TA}}</td>
+                        <td style="text-align:right;"><a href="" id="modal-865424" data-toggle="modal" data-target="#DetailTotalTagihan" title="Detail Tagihan" ng-click="ShowDataTagihan(item)">{{item.Total
+                                    | currency:"Rp. ":0}}</a></td>
+                        <td style="text-align:right;"><a href="" id="modal-865424" ng-click="ShowDataPembayaran(item)" data-toggle="modal" data-target="#DetailTotalBayar" title="Detail Pembayaran">{{item.Bayar
+                                    | currency:"Rp. ":0}}</a></td>
+                        <td style="text-align:right;">{{item.Tunggakan | currency:"Rp. ":0}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Total</b></td>
+                        <td style="text-align:right;"><b>{{DataTotal.Total | currency:"Rp.
+                                    ":0}}</b></td>
+                        <td style="text-align:right;"><b>{{DataTotal.Bayar | currency:"Rp.
+                                    ":0}}</b></td>
+                        <td style="text-align:right;"><b>{{DataTotal.Tunggakan |
+                                    currency:"Rp. ":0}}</b></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div data-loading></div>
+</div>
+<div class="modal fade" id="DetailTotalTagihan" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">
+                    Detail Pembayaran Tahun Akademik {{DatasTagihan.TA}}
+                </h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div>
+                            <h4>Pembayaran Khusus</h4>
+                        </div>
+                        <div class="table-responsive" ng-show="ShowDetailPembayaran" ng-hide="HideDetailPembayaran">
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th style="text-align:center;">Jenis</th>
+                                        <th style="text-align:center;">Nominal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in DatasTagihan.BayarKhusus">
+                                        <td>{{$index+1}}</td>
+                                        <td>{{item.Jenis}}</td>
+                                        <td style="text-align:right;">{{item.Nominal | currency:"Rp. ":0}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><b>Total</b></td>
+                                        <td style="text-align:right;">
+                                            <b>{{TotalBayar.BayarKhusus | currency:"Rp. ":0}}</b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div>
+                            <h4>Pembayaran Umum</h4>
+                        </div>
+                        <div class="table-responsive" ng-show="ShowDetailPembayaran" ng-hide="HideDetailPembayaran">
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th style="text-align:center;">Jenis</th>
+                                        <th style="text-align:center;">Nominal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in DatasTagihan.BayarUmum">
+                                        <td>{{$index+1}}</td>
+                                        <td>{{item.Jenis}}</td>
+                                        <td style="text-align:right;">{{item.Nominal | currency:"Rp. ":0}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><b>Total</b></td>
+                                        <td style="text-align:right;">
+                                            <b>{{TotalBayar.BayarUmum | currency:"Rp. ":0}}</b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary" ng-click="ClearData()" data-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="DetailTotalBayar" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">
+                    Detail Pembayaran T.A. {{}}
+                </h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive" ng-show="ShowDetailPembayaran" ng-hide="HideDetailPembayaran">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th style="text-align:center;">Tgl. Bayar</th>
+                                <th style="text-align:center;">Keterangan</th>
+                                <th style="text-align:center;">Jumlah Bayar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in DetailBayar.TrxBayar">
+                                <td>{{$index+1}}</td>
+                                <td>{{item.TglBayar}}</td>
+                                <td>{{item.Description}}</td>
+                                <td style="text-align:right;">{{item.JumlahBayar | currency:"Rp. ":0}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"><b>Total</b></td>
+                                <td style="text-align:right;"><b>{{DetailBayar.Total | currency:"Rp. ":0}}</b>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button type="button" class="btn btn-secondary" ng-click="ClearData()" data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

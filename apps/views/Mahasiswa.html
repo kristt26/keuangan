@@ -43,6 +43,7 @@
                             <td>{{item.Kontak}}</td>
                             <td>
                                 <button id="modal-865424" data-toggle="modal" data-target="#EditMahasiswa" ng-click="SelectItem(item)" title="Edit" class="btn btn-success fa fa-pencil"></button>
+                                <button ng-click="Delete(item)" title="Delete" class="btn btn-danger fa fa-times"></button>
                             </td>
                         </tr>
                     </tbody>
@@ -55,6 +56,7 @@
 
 <div class="modal fade" id="TambahMahasiswa" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
+
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="myModalLabel">
@@ -65,6 +67,7 @@
                 </button>
             </div>
             <div class="modal-body">
+                <div data-loading></div>
                 <form ng-submit="Simpan()">
                     <div class="form-group">
                         <label for="exampleInputEmail1">NPM</label>

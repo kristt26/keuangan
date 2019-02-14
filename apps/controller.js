@@ -9,7 +9,7 @@ angular
             })
             .then(function(response) {
                 if (response.data.Session == false) {
-                    window.location.href = 'index.html';
+                    window.location.href = 'Login_administration.html';
                 } else
                     $scope.session = response.data.Session;
             }, function(error) {})
@@ -25,7 +25,7 @@ angular
             }, function(error) {})
     })
 
-    .controller("MainController", function ($scope, $http) {
+.controller("MainController", function($scope, $http) {
         $scope.DataMaster = {};
 
         $scope.Init = function() {
@@ -90,7 +90,7 @@ angular
     ) {
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withPaginationType("full_numbers")
-            .withOption("order", [1, "desc"])
+            .withOption("order", [0, "asc"])
             .withButtons([{
                     extend: 'excelHtml5',
                     customize: function(xlsx) {
@@ -139,13 +139,13 @@ angular
         $scope.DatasUser = [];
         $scope.DataInput = {};
         $scope.DataLevel = [{ Id: "1", Level: "Ketua" }, { Id: "2", Level: "Puket III" }, { Id: "3", Level: "Pendataan" }, { Id: "4", Level: "Pembayaran" }];
-        $scope.Init = function () {
+        $scope.Init = function() {
             $http({
                 method: "GET",
                 url: "api/datas/read/ReadUser.php"
-            }).then(function (response) {
+            }).then(function(response) {
                 if (response.status == 200) {
-                    angular.forEach(response.data, function (value, key) {
+                    angular.forEach(response.data, function(value, key) {
                         if (value.Status == "Aktif")
                             value.Check = true;
                         else
@@ -155,13 +155,13 @@ angular
                 }
             });
         }
-        $scope.Simpan = function () {
+        $scope.Simpan = function() {
             $scope.DataInput.Check = true;
             $http({
                 method: "POST",
                 url: "api/datas/create/CreateUser.php",
                 data: $scope.DataInput
-            }). then(function (response) {
+            }).then(function(response) {
                 if (response.status == 200) {
                     $scope.DataInput.IdUser = response.data.message;
                     $scope.DatasUser.push(angular.copy($scope.DataInput));
@@ -169,7 +169,7 @@ angular
                 $scope.DataInput = {};
             })
         }
-        $scope.UpdateStatus = function (item) {
+        $scope.UpdateStatus = function(item) {
             var Data = {};
             if (item.Status == "Aktif") {
                 Data.IdUser = angular.copy(item.IdUser);
@@ -184,9 +184,9 @@ angular
                 method: "POST",
                 url: "api/datas/update/UpdateStatusUser.php",
                 data: Data
-            }).then(function (response) {
+            }).then(function(response) {
                 if (response.status == 200) {
-                    angular.forEach($scope.DatasUser, function (value, key) {
+                    angular.forEach($scope.DatasUser, function(value, key) {
                         if (value.IdUser == Data.IdUser) {
                             value.Status = Data.Status;
                             value.Check = Data.Check;
@@ -201,7 +201,8 @@ angular
         $http,
         DTOptionsBuilder,
         DTColumnBuilder,
-        notificationService
+        notificationService,
+        SweetAlert
     ) {
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withPaginationType("full_numbers")
@@ -286,6 +287,36 @@ angular
                     $scope.DatasMahasiswa = response.data.records;
             })
         };
+        $scope.Delete = function(item) {
+            SweetAlert.swal({
+                    title: "Are you sure?",
+                    text: "Your will not be able to recover this imaginary file!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    cancelButtonText: "No, cancel plx!",
+                    closeOnConfirm: true,
+                    closeOnCancel: true
+                },
+                function(isConfirm) {
+                    if (isConfirm) {
+                        $http({
+                            method: "POST",
+                            url: "api/datas/delete/DeleteMahasiswa.php",
+                            data: item
+                        }).then(function(response) {
+                            var index = $scope.DatasMahasiswa.indexOf(item);
+                            $scope.DatasMahasiswa.splice(index, 1);
+                            notificationService.success(response.data.message);
+
+                        }, function(error) {
+                            notificationService.error(response.data.message);
+                        })
+                    }
+                });
+
+        }
     })
 
 .controller("JenisBayarController", function(
@@ -1382,262 +1413,94 @@ angular
 
         }
     })
-
-
-.controller("MailboxController", function($scope, $http, DataFactory) {
-    $scope.DatasSuratInternal = [];
-    $scope.session = {};
-    $scope.DataService = new dataFactory();
-    $scope.DataSend = new dataFactory();
-    $scope.Itemread = {};
-    $scope.Init = function() {
-        var Urlauth = "api/datas/read/auth.php";
-        $http({
-                method: "get",
-                url: Urlauth,
-            })
-            .then(function(response) {
-                if (response.data.Session == false) {
-                    window.location.href = 'index.html';
-                } else
-                    $scope.session = response.data.Session;
-                var Url = "api/datas/read/ReadSuratInternal.php";
-                $http({
-                    method: "POST",
-                    url: Url,
-                    data: $scope.session
-                }).then(function(response) {
-                    $scope.DatasSuratInternal = response.data.records;
-                    var b = $scope.DatasSuratInternal[0].tujuan;
-                    $scope.DataService.init(b);
-                    var a = $scope.DatasSuratInternal[1].pengirim;
-                    $scope.DataSend.init(a);
-                }, function(error) {
-                    alert(error.data.message);
-                })
-            }, function(error) {})
-
-
-    }
-
-    $scope.tinymceModel = 'Initial content';
-
-    $scope.getContent = function() {
-        console.log('Editor content:', $scope.tinymceModel);
-    };
-
-    $scope.setContent = function() {
-        $scope.tinymceModel = 'Time: ' + (new Date());
-    };
-
-    $scope.tinymceOptions = {
-        plugins: 'advlist autolink link image code lists charmap print preview',
-        toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code',
-        skin: 'lightgray',
-        theme: 'modern'
-    };
-
-    $scope.ShowTembusan = "";
-    $scope.pdf = {};
-    $scope.read = function(item) {
-        $scope.Itemread = item;
-        var panjang = $scope.Itemread.tembusan.length;
-        angular.forEach(item.tembusan, function(value, key) {
-            if (panjang == key + 1)
-                $scope.ShowTembusan += value.nama_pejabat + " | " + value.nama_struktural;
-            else
-                $scope.ShowTembusan += value.nama_pejabat + " | " + value.nama_struktural + ",";
-        })
-
-        var paths = "../surat/assets/berkas/" + $scope.Itemread.berkas;
-        $http.get(paths, {
-            responseType: 'arraybuffer'
-        }).then(function(response) {
-            $scope.pdf.data = new Uint8Array(response.data);
-            var binstr = Array.prototype.map.call($scope.pdf.data, function(ch) {
-                return String.fromCharCode(ch);
-            }).join('');
-            $scope.pdf.basee = btoa(binstr);
-        });
-        $scope.pdf.src = $scope.Itemread.berkas;
-
-        function bufferToBase64(buf) {
-
-        }
-        $scope.Url = "apps/views/Read.html";
-    }
-
-
-
-    $scope.Url = "apps/views/Inbox.html";
-    $scope.Inbox = function() {
-        $scope.Url = "apps/views/Inbox.html";
-    }
-    $scope.Sent = function() {
-        $scope.Url = "apps/views/Sent.html";
-    }
-
-
-})
-
-.controller("ComposeController", function(
-    $http, $scope, $sce, Services
-) {
-    $scope.DataSession = Services;
-    // $scope.DataSession.Aun();
-    $scope.DatasInput = {};
-
-    $scope.DatasKategori = [];
-    $scope.DatasTembusan = [];
-    $scope.Tembusans = [];
-    $scope.DatasPenerima = {};
-    $scope.SelectedTembusan = {};
-    $scope.DatasPejabat = [];
-    $scope.SelectedKategori = {};
-    $scope.session = {};
-    $scope.Init = function() {
-        var Urlauth = "api/datas/read/auth.php";
-        $http({
-                method: "get",
-                url: Urlauth,
-            })
-            .then(function(response) {
-                if (response.data.Session == false) {
-                    window.location.href = 'index.html';
-                } else
-                    $scope.session = response.data.Session;
-            }, function(error) {})
-
-        var UrlKategori = "api/datas/read/ReadKategori.php";
-        $http({
-            method: "GET",
-            url: UrlKategori
-        }).then(function(response) {
-            $scope.DatasKategori = response.data.records;
-        }, function(error) {
-            alert(error.data.message);
-        })
-
-        var Url = "api/datas/read/ReadPejabat.php";
-        $http({
-            method: "Get",
-            url: Url
-        }).then(
-            function(response) {
-                $scope.DatasPejabat = response.data.records;
-                angular.forEach($scope.DatasPejabat, function(value, key) {
-                    if (value.idpengguna == $scope.session.idpengguna) {
-                        var index = $scope.DatasPejabat.findIndex(DatasPejabat => DatasPejabat.idpengguna == $scope.session.idpengguna);
-                        $scope.DatasPejabat.splice(index, 1);
-                        $scope.Tembusans = angular.copy($scope.DatasPejabat);
-                    }
-                })
-            },
-            function(error) {
-                alert(error.data.message);
-            }
-        );
-
-    }
-    $scope.datasample;
-    $scope.ShowBerkas = false;
-    $scope.uploadedFile = function(element) {
-        var reader = new FileReader();
-        reader.onload = function(event) {
-            $scope.$apply(function($scope) {
-                $scope.files = element.files;
-                $scope.datasample = event.target.result;
-                if ($scope.datasample != undefined || $scope.datasample != "") {
-                    $scope.ShowBerkas = true;
+    .controller("IndexController", function(
+        $scope,
+        $http,
+        notificationService
+    ) {
+        $scope.DataInformation = [];
+        $scope.DataPembayaran = [];
+        $scope.DataCari = "";
+        $scope.DataTotal = {};
+        $scope.ShowPengumuman = true;
+        $scope.HidePengumuman = false;
+        $scope.ShowPembayaran = false;
+        $scope.HidePembayran = true;
+        $scope.Init = function() {
+            $http({
+                method: "GET",
+                url: "api/datas/read/ReadDataPembayaran.php"
+            }).then(function(response) {
+                if (response.status == 200) {
+                    $scope.DataPembayaran = response.data;
                 }
-                // //var datasource = src[1];
-
-                // var file = new Blob([$scope.datasample], { type: 'application/pdf' });
-                // var fileURL = URL.createObjectURL(file);
-                // $scope.src = $sce.trustAsResourceUrl(fileURL);
-            });
+            })
+            $scope.ShowPengumuman = true;
+            $scope.HidePengumuman = false;
+            $scope.ShowPembayaran = false;
+            $scope.HidePembayran = true;
         }
-        reader.readAsDataURL(element.files[0]);
-    }
-
-    $scope.PilihTembusan = function() {
-        $scope.DatasTembusan.push(angular.copy($scope.SelectedTembusan));
-        var index = $scope.Tembusans.findIndex(Tembusans => Tembusans.idpengguna == $scope.SelectedTembusan.idpengguna);
-        $scope.Tembusans.splice(index, 1);
-        $scope.SelectedTembusan = {};
-    }
-
-    $scope.TemPenerima = {};
-    $scope.PilihPenerima = function() {
-        if ($scope.TemPenerima.idpengguna == undefined) {
-            $scope.TemPenerima = angular.copy($scope.DatasPenerima);
-            var index = $scope.Tembusans.findIndex(Tembusans => Tembusans.idpengguna == $scope.DatasPenerima.idpengguna);
-            $scope.Tembusans.splice(index, 1);
-        } else {
-            if ($scope.TemPenerima.idpengguna != $scope.DatasPenerima.idpengguna) {
-                $scope.DatasPejabat.push(angular.copy($scope.TemPenerima));
-                $scope.TemPenerima = angular.copy($scope.DatasPenerima);
-                var index = $scope.Tembusans.findIndex(Tembusans => Tembusans.idpengguna == $scope.DatasPenerima.idpengguna);
-                $scope.Tembusans.splice(index, 1);
+        $scope.CariInformasi = function() {
+            $scope.DataInformation = [];
+            $scope.DataTotal.Total = 0;
+            $scope.DataTotal.Bayar = 0;
+            $scope.DataTotal.Tunggakan = 0;
+            var a = false;
+            angular.forEach($scope.DataPembayaran.Mahasiswa, function(value, key) {
+                if (value.NPM == $scope.DataCari) {
+                    $scope.DataInformation = angular.copy(value);
+                    angular.forEach($scope.DataInformation.MasterBayar, function(value1, key1) {
+                        $scope.DataTotal.Total += parseInt(value1.Total);
+                        $scope.DataTotal.Bayar += parseInt(value1.Bayar);
+                        $scope.DataTotal.Tunggakan += parseInt(value1.Tunggakan);
+                    })
+                    a = true;
+                }
+            })
+            if (a == false) {
+                $scope.ShowPengumuman = true;
+                $scope.HidePengumuman = false;
+                $scope.ShowPembayaran = false;
+                $scope.HidePembayran = true;
+            } else {
+                $scope.ShowPengumuman = false;
+                $scope.HidePengumuman = true;
+                $scope.ShowPembayaran = true;
+                $scope.HidePembayran = false;
             }
         }
-
-    }
-
-    $scope.HapusTembusan = function(item) {
-        var index = $scope.DatasTembusan.findIndex(DatasTembusan => DatasTembusan.idpengguna == item.idpengguna);
-        $scope.DatasTembusan.splice(index, 1);
-        $scope.Tembusans.push(item);
-    }
-
-    $scope.Simpan = function() {
-        $http({
-            url: "http://localhost/surat/api/datas/create/uploadBerkas.php", //or your add enquiry services
-            method: "POST",
-            processData: true,
-            headers: { 'Content-Type': undefined },
-            data: $scope.formdata,
-            transformRequest: function(data) {
-                var formData = new FormData();
-                var file = $scope.files[0];
-                //var data = $base64.encode(file);
-                formData.append("file_upload", file); //pass the key name by which we will recive the file
-                angular.forEach(data, function(value, key) {
-                    formData.append(key, value);
-                });
-
-                return formData;
-            }
-        }).then(function(response) {
-            if (response.data.message == "Success") {
-                $scope.DatasInput.berkas = response.data.namefile;
-                $scope.DatasInput.tujuan = $scope.DatasPenerima.idpejabat;
-                $scope.DatasInput.NamaTujuan = $scope.DatasPenerima.nama_pengguna;
-                $scope.DatasInput.StrukturalTujuan = $scope.DatasPenerima.nm_struktural;
-                $scope.DatasInput.pengirim = $scope.session.idpejabat;
-                $scope.DatasInput.NamaPengirim = $scope.session.nama_pengguna;
-                $scope.DatasInput.StrukturalPengirim = $scope.session.nm_struktural;
-                $scope.DatasInput.idkategori_surat = $scope.SelectedKategori.idkategori_surat;
-                $scope.DatasInput.nama_kategori = $scope.SelectedKategori.nama_kategori;
-                $scope.DatasInput.tembusan = $scope.DatasTembusan;
-                $scope.DatasInput.status = "false";
-                var Url = "api/datas/create/CreateSuratInternal.php";
-                $http({
-                    method: "POST",
-                    url: Url,
-                    data: $scope.DatasInput
-                }).then(function(response) {
-                    if (response.data.message == "Sender") {
-                        alert("Pesan Terkirim");
-                        window.location.href = 'pejabat.html#!/Mailbox';
+        $scope.TotalBayar = {};
+        $scope.ShowDataTagihan = function(item) {
+            $scope.DatasTagihan = item;
+            $scope.TotalBayar.BayarKhusus = 0;
+            $scope.TotalBayar.IndexBayarKhusus;
+            $scope.TotalBayar.BayarUmum = 0;
+            $scope.TotalBayar.IndexBayarUmum;
+            angular.forEach($scope.DatasTagihan.BayarKhusus, function(value, key) {
+                angular.forEach($scope.DataPembayaran.BayarKhusus, function(value1, key1) {
+                    if (value.IdBayarKhusus == value1.IdBayarKhusus) {
+                        angular.forEach($scope.DataPembayaran.JenisBayar, function(value2, key2) {
+                            if (value1.IdJenisBayar == value2.IdJenisBayar) {
+                                value.Jenis = value2.Jenis;
+                            }
+                        })
                     }
-
-                }, function(error) {
-                    alert(error.data.message);
                 })
-            }
-        }, function(error) {
-            alert(error.message);
-        })
-    }
-});
+                $scope.TotalBayar.BayarKhusus += parseInt(value.Nominal);
+            })
+            $scope.TotalBayar.IndexBayarKhusus = $scope.DatasTagihan.BayarKhusus.length;
+            angular.forEach($scope.DatasTagihan.BayarUmum, function(value, key) {
+                angular.forEach($scope.DataPembayaran.BayarUmum, function(value1, key1) {
+                    if (value.IdBayarUmum == value1.IdBayarUmum) {
+                        angular.forEach($scope.DataPembayaran.JenisBayar, function(value2, key2) {
+                            if (value1.IdJenisBayar == value2.IdJenisBayar) {
+                                value.Jenis = value2.Jenis;
+                            }
+                        })
+                    }
+                })
+                $scope.TotalBayar.BayarUmum += parseInt(value.Nominal);
+            })
+            $scope.TotalBayar.IndexBayarUmum = $scope.DatasTagihan.BayarUmum.length + 1;
+        }
+    });
