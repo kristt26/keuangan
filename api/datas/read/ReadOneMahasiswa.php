@@ -63,6 +63,7 @@ if($data->SetStatus==="TampilUmum"){
                     "IdBayarUmum"=> $IdBayarUmum,
                     "Angkatan" => $Angkatan,
                     "Nominal"=>$Nominal,
+                    "Jumlah"=>1,
                     "JenisBayar"=>array()
                 );
                 foreach ($DataJenisBayar as &$value) {
