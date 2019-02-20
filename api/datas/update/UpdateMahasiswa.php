@@ -18,6 +18,7 @@ $mahasiswa->NamaMahasiswa = $data->NamaMahasiswa;
 $mahasiswa->Angkatan = $data->Angkatan;
 $mahasiswa->Alamat =  $data->Alamat;
 $mahasiswa->Kontak = $data->Kontak;
+$mahasiswa->IdMahasiswa= $data->IdMahasiswa;
 if($mahasiswa->update()){
     http_response_code(200);
     echo json_encode(array("message" => "Mahasiswa berhasil diubah!!!"));

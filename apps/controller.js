@@ -289,6 +289,50 @@ angular
                     $scope.DatasMahasiswa = response.data.records;
             })
         };
+        $scope.SelectItem=function(item){
+            $scope.DataInput = angular.copy(item);
+            
+        }
+        $scope.Update = function(){
+            SweetAlert.swal({
+                title: "Anda Yakin?",
+                text: "Kamu akan menghapus data Mahasiswa: " + $scope.DataInput.NamaMahasiswa,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, cancel plx!",
+                closeOnConfirm: true,
+                closeOnCancel: true
+            },
+            function(isConfirm) {
+                if (isConfirm) {
+                    $http({
+                        method: "POST",
+                        url: "api/datas/update/UpdateMahasiswa.php",
+                        data: $scope.DataInput
+                    }).then(function(response){
+                        if (response.status == 200) {
+                            angular.forEach($scope.DatasMahasiswa, function(value, key){
+                                if(value.IdMahasiswa==$scope.DataInput.IdMahasiswa){
+                                    value.NPM = $scope.DataInput.NPM;
+                                    value.NamaMahasiswa = $scope.DataInput.NamaMahasiswa;
+                                    value.Angkatan = $scope.DataInput.Angkatan;
+                                    value.Alamat = $scope.DataInput.Alamat;
+                                    value.Kontak = $scope.DataInput.Kontak;
+                                }
+                            })
+                            notificationService.success(response.data.message);
+                            $scope.DataInput={};
+                        } else
+                            notificationService.error(response.data.message);
+                    }, function(error){
+                        notificationService.error(error.data.message);
+                    })
+                }
+            });
+            
+        }
         $scope.Delete = function(item) {
             SweetAlert.swal({
                     title: "Anda Yakin?",
