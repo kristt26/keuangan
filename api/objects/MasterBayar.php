@@ -57,7 +57,7 @@ class MasterBayar
 
     public function readTA()
     {
-        $query = "CALL GetMasterBayarTA(:TA)";
+        $query = "CALL GetMasterBayar()";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":TA", $this->TA, PDO::PARAM_STR);
         $stmt->execute();

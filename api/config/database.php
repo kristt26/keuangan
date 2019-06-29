@@ -3,14 +3,14 @@ class Database{
  
     // specify your own database credentials
     // private $host = "localhost";
-    // private $db_name = "keuangan_stimik";
+    // private $db_name = "dbkeuangan";
     // private $username = "root";
     // private $password = "";
     // public $conn;
-    private $host = "den1.mysql1.gear.host";
+    private $host = "localhost";
     private $db_name = "dbkeuangan";
-    private $username = "dbkeuangan";
-    private $password = "Kh9wcu!_42nZ";
+    private $username = "root";
+    private $password = "";
     public $conn;
  
     // get the database connection
