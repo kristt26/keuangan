@@ -46,7 +46,7 @@ app.config(function($routeProvider) {
             controller: "UserController"
         })
         .when("/LogOut", {
-            templateUrl: "apps/views/Main.html",
+            templateUrl: "apps/views/Log.html",
             controller: "LogController"
         })
         .when("/EditProfile", {

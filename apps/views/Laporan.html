@@ -43,7 +43,6 @@
                                                     <th>Total Pembayaran</th>
                                                     <th>Total Dibayar</th>
                                                     <th>Tunggakan</th>
-                                                    <th width="10%">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -53,20 +52,16 @@
                                                     <td>{{item.Total | currency:"Rp. ":0}}</td>
                                                     <td>{{item.Bayar | currency:"Rp. ":0}}</td>
                                                     <td>{{item.Tunggakan | currency:"Rp. ":0}}</td>
-                                                    <td>
-                                                        <button id="modal-865424" data-toggle="modal" data-target="#Edit"
-                                                            title="Edit" ng-click="SelectedEdit(item)" class="btn btn-success fa fa-pencil"></button>
-                                                    </td>
+                                                   
                                                 </tr>
+
                                                 <tr>
                                                     <td><b>Total</b></td>
                                                     <td></td>
                                                     <td><b>{{TotalTA.Total | currency:"Rp. ":0}}</b></td>
                                                     <td><b>{{TotalTA.Bayar | currency:"Rp. ":0}}</b></td>
                                                     <td><b>{{TotalTA.Tunggakan | currency:"Rp. ":0}}</b></td>
-                                                    <td>
-
-                                                    </td>
+                                                   
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -93,7 +88,7 @@
                                                     <th>Total Bayar</th>
                                                     <th>Total Dibayar</th>
                                                     <th>Total Tunggakan</th>
-                                                    <th width="10%">Action</th>
+                                                    
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -102,20 +97,18 @@
                                                     <td>{{item.Total | currency:"Rp. ":0}}</td>
                                                     <td>{{item.Bayar | currency:"Rp. ":0}}</td>
                                                     <td>{{item.Tunggakan | currency:"Rp. ":0}}</td>
-                                                    <td>
-                                                        <button id="modal-865424" data-toggle="modal" data-target="#Edit"
-                                                            title="Edit" ng-click="SelectedEdit(item)" class="btn btn-success fa fa-pencil"></button>
-                                                    </td>
+                                                    
                                                 </tr>
-                                                <tr>
+					<tfood>
+						<tr>
                                                     <td><b>Total</b></td>
                                                     <td><b>{{TotalTA.Total | currency:"Rp. ":0}}</b></td>
                                                     <td><b>{{TotalTA.Bayar | currency:"Rp. ":0}}</b></td>
                                                     <td><b>{{TotalTA.Tunggakan | currency:"Rp. ":0}}</b></td>
-                                                    <td>
-
-                                                    </td>
+                                                   
                                                 </tr>
+					</tfood>
+                                                
                                             </tbody>
                                         </table>
                                     </div>

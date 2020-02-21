@@ -74,6 +74,7 @@ foreach ($DatasMahasiswa as &$value) {
         "Alamat"        => $value["Alamat"],
         "Kontak"        => $value["Kontak"],
         "MasterBayar"   => array(),
+        "MasterBayarKhusus"   => array()
     );
     $masterbayar->IdMahasiswa = $value["IdMahasiswa"];
     $stmt                     = $masterbayar->readByMahasiswa();
@@ -110,6 +111,7 @@ foreach ($DatasMahasiswa as &$value) {
             "BayarKhusus"   => $DataBayarKhusus
         );
         array_push($ItemMahasiswa["MasterBayar"], $ItemMaster);
+
     }
     array_push($DatasArray["Mahasiswa"], $ItemMahasiswa);
 }

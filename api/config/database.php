@@ -7,10 +7,10 @@ class Database{
     // private $username = "root";
     // private $password = "";
     // public $conn;
-    private $host = "den1.mysql1.gear.host";
+    private $host = "lokal.stimiksepnop.ac.id";
     private $db_name = "dbkeuangan";
-    private $username = "dbkeuangan";
-    private $password = "Kh9wcu!_42nZ";
+    private $username = "root";
+    private $password = "admin@db1011";
     public $conn;
  
     // get the database connection

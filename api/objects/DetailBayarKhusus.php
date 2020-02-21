@@ -60,6 +60,21 @@ class DetailBayarKhusus
         }
     }
 
+    public function Ubah()
+    {
+        $query = "UPDATE ".$this->table_name." SET Nominal=? WHERE IdDetailBayarKhusus=?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $this->Nominal);
+        $stmt->bindParam(2, $this->IdDetailBayarKhusus);
+        if($stmt->execute()){
+            return true;
+        }else
+        {
+            return false;
+        }
+    }
+
+
     public function update()
     {
         $query = "UPDATE ".$this->table_name." SET TA=?, Jumlah=?, IdMahasiswa=? WHERE IdDetail=?";
