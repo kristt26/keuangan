@@ -60,6 +60,18 @@ class DetailBayarKhusus
         }
     }
 
+    public function CekData()
+    {
+        $query = "call CekDetailBayarKhusus(:IdMahasiswa, :TA, :IdBayarKhusus)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":IdMahasiswa", $this->IdMahasiswa, PDO::PARAM_INT);
+        $stmt->bindParam(":TA", $this->TA, PDO::PARAM_STR);
+        $stmt->bindParam(":IdBayarKhusus", $this->IdBayarKhusus, PDO::PARAM_STR);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row["Jumlah"];
+    }
+
     public function Ubah()
     {
         $query = "UPDATE ".$this->table_name." SET Nominal=? WHERE IdDetailBayarKhusus=?";
@@ -94,10 +106,11 @@ class DetailBayarKhusus
 
     public function delete()
     {
-        $query = "DELETE FROM ".$this->table_name." WHERE IdDetail=?";
+        $query = "CALL DeleteDetailBayarKhusus(:IdMahasiswa, :TA, :IdBayarKhusus)";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(1, $this->IdDetail);
-
+        $stmt->bindParam(":IdMahasiswa", $this->IdMahasiswa, PDO::PARAM_INT);
+        $stmt->bindParam(":TA", $this->TA, PDO::PARAM_STR);
+        $stmt->bindParam(":IdBayarKhusus", $this->IdBayarKhusus, PDO::PARAM_INT);
         if($stmt->execute()){
             return true;
         }else

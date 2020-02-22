@@ -1005,10 +1005,7 @@ angular
                     $scope.DataInput.SendBayarKhusus = $scope.DatasAmbilMahasiswa.BayarKhusus;
                     UrlProses = "api/datas/update/UpdateBayarKhusus.php";
                 }
-
             }
-
-
             $http({
                 method: "POST",
                 url: UrlProses,
@@ -1224,14 +1221,21 @@ angular
             $scope.DataTotal.Total = 0;
             $scope.DataTotal.Bayar = 0;
             $scope.DataTotal.Tunggakan = 0;
+            
             var a = false;
             angular.forEach($scope.DataPembayaran.Mahasiswa, function (value, key) {
                 if (value.NPM == $scope.DataCari) {
                     $scope.DataInformation = angular.copy(value);
                     angular.forEach($scope.DataInformation.MasterBayar, function (value1, key1) {
+                        $scope.DataBayarKhusus = 0;
+                        angular.forEach(value1.BayarKhusus, function(value2){
+                            $scope.DataBayarKhusus += parseInt(angular.copy(value2.Nominal));
+                        })
+
                         $scope.DataTotal.Total += parseInt(value1.Total);
                         $scope.DataTotal.Bayar += parseInt(value1.Bayar);
                         $scope.DataTotal.Tunggakan += parseInt(value1.Tunggakan);
+                        value1.Total = parseInt(value1.Total);
                     })
                     a = true;
                 }

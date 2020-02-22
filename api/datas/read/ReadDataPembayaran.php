@@ -100,6 +100,7 @@ foreach ($DatasMahasiswa as &$value) {
         $row                   = $stmt->fetchALL(PDO::FETCH_ASSOC);
         $DataBayarKhusus       = $row;
         $stmt                  = null;
+
         $ItemMaster            = array(
             "IdMasterBayar" => $value1["IdMasterBayar"],
             "TA"            => $value1["TA"],

@@ -9,6 +9,7 @@ include_once '../../config/database.php';
 include_once '../../objects/TahunAkademik.php';
 include_once '../../objects/BayarUmum.php';
 include_once '../../objects/BayarKhusus.php';
+include_once '../../objects/DetailBayarKhusus.php';
 include_once '../../objects/DetailBayar.php';
 include_once '../../objects/JenisBayar.php';
 
@@ -20,6 +21,7 @@ $bayarumum = new BayarUmum($db);
 $bayarkhusus = new BayarKhusus($db);
 $detailbayar= new DetailBayar($db);
 $jenisbayar = new JenisBayar($db);
+$detailBayarKhusus = new DetailBayarKhusus($db);
 
 $data = json_decode(file_get_contents("php://input"));
 $stmt= $ta->GetTAAktif();
@@ -35,7 +37,8 @@ $ItemMahasiswa = array(
     "Kontak" => $data->Kontak,
     "TAAktif" => $TaAktif,
     "BayarUmum" => array(),
-    "BayarKhusus" => array()
+    "BayarKhusus" => array(),
+    "DetailBayarKhusus"=>array()
 );
 $stmt = $jenisbayar->GetJenisBayar();
 $DataJenisBayar = $stmt->fetchALL(PDO::FETCH_ASSOC);
@@ -80,8 +83,14 @@ if($data->SetStatus==="TampilUmum"){
         echo json_encode($ItemMahasiswa);
     }
 }else{
+        $detailBayarKhusus->IdMahasiswa = $data->IdMahasiswa;
+        $detailBayarKhusus->TA = $TaAktif->TA;
+        $stmt = $detailBayarKhusus->readOne();
+        $datadetail = $stmt->fetchALL(PDO::FETCH_ASSOC);
+        $stmt = null;
         $bayarkhusus->TA = $TaAktif->TA;
         $stmt = $bayarkhusus->GetBayarKhususByAngkatan();
+        
         $Cek = $stmt->rowCount();
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
             {
