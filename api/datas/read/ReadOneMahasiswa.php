@@ -86,7 +86,7 @@ if($data->SetStatus==="TampilUmum"){
         $detailBayarKhusus->IdMahasiswa = $data->IdMahasiswa;
         $detailBayarKhusus->TA = $TaAktif->TA;
         $stmt = $detailBayarKhusus->readOne();
-        $datadetail = $stmt->fetchALL(PDO::FETCH_ASSOC);
+        $ItemMahasiswa['DetailBayarKhusus'] = $stmt->fetchALL(PDO::FETCH_ASSOC);
         $stmt = null;
         $bayarkhusus->TA = $TaAktif->TA;
         $stmt = $bayarkhusus->GetBayarKhususByAngkatan();

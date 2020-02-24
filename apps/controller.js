@@ -834,13 +834,21 @@ angular
                         } else if ($scope.SetStatus == "TampilKhusus") {
                             $scope.DataTotal = 0;
                             angular.forEach($scope.DatasAmbilMahasiswa.BayarKhusus, function (value, key) {
-                                if (parseInt(value.Nominal) > 0) {
-                                    $scope.StatusUpdate = true;
+                                if($scope.DatasAmbilMahasiswa.DetailBayarKhusus.length>0){
+                                    angular.forEach($scope.DatasAmbilMahasiswa.DetailBayarKhusus, function(detail){
+                                        if (value.IdBayarKhusus==detail.IdBayarKhusus) {
+                                            $scope.DataTotal += parseInt(value.Nominal);
+                                            value.Check = true;
+                                            value.SetDisabled = false;
+                                        }else{
+                                            value.SetDisabled = true;
+                                        }
+                                    })
+                                }else{
+                                    value.SetDisabled = true;
                                 }
-                                $scope.DataTotal += parseInt(value.Nominal);
-                                value.Check = true;
-                                value.SetDisabled = false;
                             })
+                            $scope.StatusUpdate = true;
                             $scope.ShowDataKhusus = true;
                             $scope.HideDataKhusus = false;
                         } else {
