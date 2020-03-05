@@ -772,10 +772,15 @@ angular
         $scope.HideIdentitas2 = true;
         $scope.DataCari;
         $scope.StatusUpdate = false;
+        $scope.DataHapus;
 
 
 
-        $scope.CariMahasiswa = function () {
+        $scope.CariMahasiswa = function (npmmhs) {
+            if(npmmhs != undefined){
+                $scope.DataCari=npmmhs.NPM;
+                $scope.DataHapus=npmmhs;
+            }
             var CekData = false;
             angular.forEach($scope.DatasMahasiswa, function (value, key) {
                 if (value.NPM == $scope.DataCari) {
@@ -903,6 +908,7 @@ angular
             }
         }
         $scope.DataTA = [];
+        $scope.DatasBayarMahasiswa=[];
         $scope.Init = function () {
             var UrlGetMahasiswa = "api/datas/read/ReadMahasiswa.php";
             $http({
@@ -922,6 +928,17 @@ angular
                 if (response.status == 200) {
                     $scope.DataTA = response.data;
                     $scope.DataTA.reverse();
+                }
+            })
+
+            var Url = "api/datas/read/ReadStatusBayar.php";
+            $http({
+                method: "GET",
+                url: Url
+            }).then(function (response) {
+                if (response.status == 200) {
+                    $scope.DatasBayarMahasiswa = response.data.records;
+                    $scope.DatasBayarMahasiswa.reverse();
                 }
             })
         }
@@ -1033,7 +1050,14 @@ angular
                     $scope.HideDataKhusus = true;
                     $scope.DataTotal = 0;
                     $scope.DataCari = "";
+                    var index = $scope.DatasBayarMahasiswa.indexOf($scope.DataHapus);
+                    $scope.DatasBayarMahasiswa.splice(index, 1);
                     notificationService.success(response.data.message);
+
+
+
+
+
                 } else {
                     notificationService.error(response.data.message);
                 }
