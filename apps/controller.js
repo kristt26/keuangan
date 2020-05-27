@@ -777,9 +777,9 @@ angular
 
 
         $scope.CariMahasiswa = function (npmmhs) {
-            if(npmmhs != undefined){
-                $scope.DataCari=npmmhs.NPM;
-                $scope.DataHapus=npmmhs;
+            if (npmmhs != undefined) {
+                $scope.DataCari = npmmhs.NPM;
+                $scope.DataHapus = npmmhs;
             }
             var CekData = false;
             angular.forEach($scope.DatasMahasiswa, function (value, key) {
@@ -837,25 +837,45 @@ angular
                             $scope.ShowData = true;
                             $scope.HideData = false;
                         } else if ($scope.SetStatus == "TampilKhusus") {
-                            $scope.DataTotal = 0;
-                            angular.forEach($scope.DatasAmbilMahasiswa.BayarKhusus, function (value, key) {
-                                if($scope.DatasAmbilMahasiswa.DetailBayarKhusus.length>0){
-                                    angular.forEach($scope.DatasAmbilMahasiswa.DetailBayarKhusus, function(detail){
-                                        if (value.IdBayarKhusus==detail.IdBayarKhusus) {
+                            var Url = "http://restsimak.stimiksepnop.ac.id/api/sksMahasiswa/AmbilSks?npm=" + $scope.DataCari;
+                            $http({
+                                method: "GET",
+                                url: Url,
+                            }).then(params => {
+                                $scope.DataTotal = 0;
+                                angular.forEach($scope.DatasAmbilMahasiswa.BayarKhusus, function (value, key) {
+                                    if ($scope.DatasAmbilMahasiswa.DetailBayarKhusus.length > 0) {
+                                        angular.forEach($scope.DatasAmbilMahasiswa.DetailBayarKhusus, function (detail) {
+                                            if (value.IdBayarKhusus == detail.IdBayarKhusus) {
+                                                $scope.DataTotal += parseInt(value.Nominal);
+                                                value.Check = true;
+                                                value.SetDisabled = false;
+                                            } else {
+                                                value.SetDisabled = true;
+                                                value.Check = false;
+                                            }
+                                        })
+                                    } else {
+                                        if ((value.JenisBayar[0].IdJenisBayar == "29" || value.JenisBayar[0].IdJenisBayar == "31") && params.data.data.Riset == true) {
+                                            $scope.DataTotal += parseInt(value.Nominal);
+                                            value.Check = true;
+                                            value.SetDisabled = false;
+                                        }else if(value.JenisBayar[0].IdJenisBayar == "30" && params.data.data.KP == true){
                                             $scope.DataTotal += parseInt(value.Nominal);
                                             value.Check = true;
                                             value.SetDisabled = false;
                                         }else{
                                             value.SetDisabled = true;
                                         }
-                                    })
-                                }else{
-                                    value.SetDisabled = true;
-                                }
+                                    }
+                                })
+                                $scope.StatusUpdate = true;
+                                $scope.ShowDataKhusus = true;
+                                $scope.HideDataKhusus = false;
+                                $scope.ShowIdentitas2 = false;
+                                $scope.HideIdentitas2 = true;
                             })
-                            $scope.StatusUpdate = true;
-                            $scope.ShowDataKhusus = true;
-                            $scope.HideDataKhusus = false;
+
                         } else {
                             $scope.ShowDataKhusus = false;
                             $scope.HideDataKhusus = true;
@@ -880,8 +900,8 @@ angular
                 $scope.HideData = true;
                 $scope.ShowIdentitas1 = true;
                 $scope.HideIdentitas1 = false;
-                $scope.ShowIdentitas2 = false;
-                $scope.HideIdentitas2 = true;
+                $scope.ShowIdentitas2 = true;
+                $scope.HideIdentitas2 = false;
                 $scope.SetStatus = angular.copy(item);
                 $scope.SetDataProses = "Umum";
             } else if (item == "TampilKhusus") {
@@ -908,7 +928,7 @@ angular
             }
         }
         $scope.DataTA = [];
-        $scope.DatasBayarMahasiswa=[];
+        $scope.DatasBayarMahasiswa = [];
         $scope.Init = function () {
             var UrlGetMahasiswa = "api/datas/read/ReadMahasiswa.php";
             $http({
@@ -937,8 +957,8 @@ angular
                 url: Url
             }).then(function (response) {
                 if (response.status == 200) {
-                    $scope.DatasBayarMahasiswa = response.data.records;
-                    $scope.DatasBayarMahasiswa.reverse();
+                    $scope.DatasBayarMahasiswa = response.data;
+                    // $scope.DatasBayarMahasiswa.reverse();
                 }
             })
         }
@@ -1048,16 +1068,19 @@ angular
                     $scope.HideData = true;
                     $scope.ShowDataKhusus = false;
                     $scope.HideDataKhusus = true;
+                    $scope.ShowIdentitas2 = true;
+                    $scope.HideIdentitas2 = false;
                     $scope.DataTotal = 0;
                     $scope.DataCari = "";
-                    var index = $scope.DatasBayarMahasiswa.indexOf($scope.DataHapus);
-                    $scope.DatasBayarMahasiswa.splice(index, 1);
-                    notificationService.success(response.data.message);
-
-
-
-
-
+                    if ($scope.SetStatus == "TampilUmum") {
+                        var index = $scope.DatasBayarMahasiswa.umum.indexOf($scope.DataHapus);
+                        $scope.DatasBayarMahasiswa.umum.splice(index, 1);
+                        notificationService.success(response.data.message);
+                    } else {
+                        var index = $scope.DatasBayarMahasiswa.khusus.indexOf($scope.DataHapus);
+                        $scope.DatasBayarMahasiswa.khusus.splice(index, 1);
+                        notificationService.success(response.data.message);
+                    }
                 } else {
                     notificationService.error(response.data.message);
                 }
@@ -1220,6 +1243,19 @@ angular
         $scope.HideInputPembayaran = true;
         $scope.ShowDetailPembayaran = false;
         $scope.HideDetailPembayaran = true;
+        $scope.Hide = true;
+        $scope.DataPrint = [];
+        $scope.total = 0;
+
+        $scope.PrintBA = function (Kartu) {
+
+            var innerContents = document.getElementById(Kartu).innerHTML;
+            var popupWinindow = window.open('', '_blank', 'width=600,height=700,scrollbars=no,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
+            popupWinindow.document.open();
+            popupWinindow.document.write('<html><head><link href="assets/css/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"><link href="assets/css/main.css" rel="stylesheet"><link href="assets/css/table.css" rel="stylesheet"></head><body onload="window.print()"><div>' + innerContents + '</html>');
+            popupWinindow.document.close();
+        }
+
         $scope.Init = function () {
             $http({
                 method: "GET",
@@ -1250,17 +1286,18 @@ angular
         }
         $scope.CariInformasi = function () {
             $scope.DataInformation = [];
+            $scope.DataPrint = [];
             $scope.DataTotal.Total = 0;
             $scope.DataTotal.Bayar = 0;
             $scope.DataTotal.Tunggakan = 0;
-            
+
             var a = false;
             angular.forEach($scope.DataPembayaran.Mahasiswa, function (value, key) {
                 if (value.NPM == $scope.DataCari) {
                     $scope.DataInformation = angular.copy(value);
                     angular.forEach($scope.DataInformation.MasterBayar, function (value1, key1) {
                         $scope.DataBayarKhusus = 0;
-                        angular.forEach(value1.BayarKhusus, function(value2){
+                        angular.forEach(value1.BayarKhusus, function (value2) {
                             $scope.DataBayarKhusus += parseInt(angular.copy(value2.Nominal));
                         })
 
@@ -1270,8 +1307,26 @@ angular
                         value1.Total = parseInt(value1.Total);
                     })
                     a = true;
+                    $http({
+                        method: "get",
+                        url: "api/datas/read/ReadTA.php"
+                    }).then(param => {
+                        param.data.forEach(response => {
+                            if (response.Status == "Aktif") {
+                                var b = response.TA.split("-");
+                                $scope.DataInformation.TA = b[0];
+                                if (b[1] == "1") {
+                                    $scope.DataInformation.Semester = "GANJIL";
+                                } else {
+                                    $scope.DataInformation.Semester = "GENAP";
+                                }
+
+                            }
+                        })
+                    })
                 }
             })
+
             if (a == true) {
                 $scope.ShowDetailPembayaran = true;
                 $scope.HideDetailPembayaran = false;
@@ -1325,42 +1380,54 @@ angular
                 $scope.CariMahasiswa();
         }
         $scope.TotalBayar = {};
+        $scope.PrintTerbayar = 0;
+        $scope.PrintTotalBayar = 0;
+        $scope.PrintTotalTunggakan = 0;
+        $scope.Piutang = 0;
         $scope.ShowDataTagihan = function (item) {
+            $scope.PrintBayar = item.Bayar;
+            $scope.PrintTotal = item.Total;
+            $scope.PrintTunggakan = item.Tunggakan;
+            $scope.DataPrint = [];
             $scope.TotalBayar = {};
             var TA = item.TA.split('-');
             var thakademik = TA[0];
             var gg = "";
-            if(TA[1]=="1"){
+            if (TA[1] == "1") {
                 gg = "GANJIL";
-            }else{
+            } else {
                 gg = "GENAP";
             }
-            
+
             var Url = "http://restsimak.stimiksepnop.ac.id/api/sksMahasiswa/AmbilSks?npm=" + $scope.DataCari + "&thakademik=" + thakademik + "&gg=" + gg;
             $http({
                 method: "GET",
                 url: Url,
             }).then(function (response) {
                 if (response.data.data.SKS != 0) {
-                    $scope.Praktikum=0;
-                    $scope.sks=0;
+                    $scope.Praktikum = 0;
+                    $scope.sks = 0;
                     if (response.data.data.SKS <= 12) {
-                        $scope.sks=0;
-                    }else{
-                        $scope.sks=parseInt(response.data.data.SKS) - 12;
+                        $scope.sks = 0;
+                    } else {
+                        $scope.sks = parseInt(response.data.data.SKS) - 12;
                     }
-                    $scope.Praktikum=parseInt(response.data.data.Praktikum);
+                    $scope.Praktikum = parseInt(response.data.data.Praktikum);
                     $scope.DatasTagihan = angular.copy(item);
                     $scope.TotalBayar.BayarKhusus = 0;
                     $scope.TotalBayar.IndexBayarKhusus;
                     $scope.TotalBayar.BayarUmum = 0;
                     $scope.TotalBayar.IndexBayarUmum;
+                    $scope.total = 0;
                     angular.forEach($scope.DatasTagihan.BayarKhusus, function (value, key) {
                         angular.forEach($scope.DataPembayaran.BayarKhusus, function (value1, key1) {
                             if (value.IdBayarKhusus == value1.IdBayarKhusus) {
                                 angular.forEach($scope.DataPembayaran.JenisBayar, function (value2, key2) {
                                     if (value1.IdJenisBayar == value2.IdJenisBayar) {
                                         value.Jenis = value2.Jenis;
+                                        $scope.DataPrint.push(angular.copy(value));
+                                    } else {
+                                        // $scope.DataPrint.push(angular.copy(value));
                                     }
                                 })
                             }
@@ -1373,23 +1440,25 @@ angular
                             if (value.IdBayarUmum == value1.IdBayarUmum) {
                                 angular.forEach($scope.DataPembayaran.JenisBayar, function (value2, key2) {
                                     if (value1.IdJenisBayar == value2.IdJenisBayar) {
-                                        if(value2.Jenis == "Variable Cost (Per SKS)"){
-                                            value.Jenis = value2.Jenis;
-                                            value.Nominal= value.Nominal*$scope.sks;
+                                        if (value2.Jenis == "Variable Cost (Per SKS)") {
+                                            value.Jenis = "Variable Cost (" + $scope.sks + ")";
+                                            value.Nominal = value.Nominal * $scope.sks;
+                                            $scope.DataPrint.push(angular.copy(value));
                                         }
-                                        else if(value2.Jenis == "Praktikum"){
+                                        else if (value2.Jenis == "Praktikum") {
+                                            value.Jenis = value2.Jenis + " (" + $scope.Praktikum + ")";
+                                            value.Nominal = value.Nominal * $scope.Praktikum;
+                                            $scope.DataPrint.push(angular.copy(value));
+                                        } else {
                                             value.Jenis = value2.Jenis;
-                                            value.Nominal=value.Nominal*$scope.Praktikum;
-                                        }else{
-                                            value.Jenis = value2.Jenis;
+                                            $scope.DataPrint.push(angular.copy(value));
                                         }
-                                        
                                     }
                                 })
                             }
-                        })
+                        });
                         $scope.TotalBayar.BayarUmum += parseInt(value.Nominal);
-                    })
+                    });
                     $scope.TotalBayar.IndexBayarUmum = $scope.DatasTagihan.BayarUmum.length + 1;
                 } else {
                     alert("Mahasiswa Belum mengajukan KRS");

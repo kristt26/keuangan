@@ -31,6 +31,15 @@ class DetailBayarKhusus
         $stmt->execute();
         return $stmt;
     }
+
+    public function GetBayarKhusus()
+    {
+        $query = "CALL GetDetailBS(:TA)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":TA", $this->TA, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt;
+    }
     
 
     public function readOne()

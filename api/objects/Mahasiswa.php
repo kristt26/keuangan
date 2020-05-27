@@ -35,6 +35,15 @@ class Mahasiswa
         $this->Angkatan = $row['Angkatan'];
     }
 
+    public function OneMhs()
+    {
+        $query = "SELECT * FROM ".$this->table_name." WHERE NPM=?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $this->NPM);
+        $stmt->execute();
+        return $stmt;
+    
+    }
 
     public function readData()
     {

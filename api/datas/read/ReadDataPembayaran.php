@@ -1,7 +1,7 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: POST");
+header("Access-Control-Allow-Methods: POST, GET, PUT, DELETE, OPTIONS");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
@@ -61,7 +61,12 @@ $DatasArray = array(
     'BayarUmum' => $DatasBayarUmum,
     'BayarKhusus'=> $DatasBayarKhusus
 );
-$stmt           = $mahasiswa->read();
+if(isset($_GET['npm'])){
+    $mahasiswa->NPM = $_GET['npm'];
+    $stmt       = $mahasiswa->OneMhs();
+}else{
+    $stmt       = $mahasiswa->read();
+}
 $row            = $stmt->fetchALL(PDO::FETCH_ASSOC);
 $DatasMahasiswa = (object)$row;
 $stmt           = null;
@@ -115,6 +120,10 @@ foreach ($DatasMahasiswa as &$value) {
 
     }
     array_push($DatasArray["Mahasiswa"], $ItemMahasiswa);
+}
+if(isset($_GET['npm'])){
+    $DatasArray["Mahasiswa"] = $DatasArray["Mahasiswa"][0];
+    unset($DatasArray['User']);
 }
 http_response_code(200);
 

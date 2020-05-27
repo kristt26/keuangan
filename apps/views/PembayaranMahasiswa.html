@@ -18,16 +18,16 @@
                 <ul class="nav nav-tabs">
                     <li class="nav-item"><a href="javascript:void(0);" class="nav-link active" data-toggle="tab"
                             ng-click="Clear(item='create')" data-target="#CreatePembayaran">Create Pembayaran</a></li>
-                    <li class="nav-item"><a href="javascript:void(0);" class="nav-link" data-toggle="tab" ng-click="Clear(item='cari')"
-                            data-target="#cekpembayaran">Detail Tagihan Mahasiswa</a></li>
+                    <li class="nav-item"><a href="javascript:void(0);" class="nav-link" data-toggle="tab"
+                            ng-click="Clear(item='cari')" data-target="#cekpembayaran">Detail Tagihan Mahasiswa</a></li>
                 </ul>
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade" id="cekpembayaran">
                         <div class="pull-right">
                             <ul class="app-breadcrumb breadcrumb">
                                 <li class="app-search">
-                                    <input class="app-search__input text-white bg-primary" type="search" ng-change="CariInformasi()"
-                                        ng-model="DataCari" placeholder="Search Mahasiswa">
+                                    <input class="app-search__input text-white bg-primary" type="search"
+                                        ng-change="CariInformasi()" ng-model="DataCari" placeholder="Search Mahasiswa">
                                     <button class="app-search__button button"><i class="fa fa-search"></i></button>
                                 </li>
                             </ul>
@@ -53,7 +53,8 @@
                                 </div>
                                 <div class="bs-component">
                                     <div data-loading></div>
-                                    <div class="table-responsive" ng-show="ShowDetailPembayaran" ng-hide="HideDetailPembayaran">
+                                    <div class="table-responsive" ng-show="ShowDetailPembayaran"
+                                        ng-hide="HideDetailPembayaran">
                                         <table datatable="ng" id="zero_config"
                                             class="table table-striped table-bordered">
                                             <thead>
@@ -68,11 +69,12 @@
                                                 <tr ng-repeat="item in DataInformation.MasterBayar">
                                                     <td>{{item.TA}}</td>
                                                     <td style="text-align:right;"><a href="" id="modal-865424"
-                                                            data-toggle="modal" data-target="#DetailTotalTagihan" title="Detail Tagihan"
-                                                            ng-click="ShowDataTagihan(item)">{{item.Total
+                                                            data-toggle="modal" data-target="#DetailTotalTagihan"
+                                                            title="Detail Tagihan" ng-click="ShowDataTagihan(item)">{{item.Total
                                                             | currency:"Rp. ":0}}</a></td>
                                                     <td style="text-align:right;"><a href="" id="modal-865424"
-                                                        ng-click="ShowDataPembayaran(item)" data-toggle="modal" data-target="#DetailTotalBayar" title="Detail Pembayaran">{{item.Bayar
+                                                            ng-click="ShowDataPembayaran(item)" data-toggle="modal"
+                                                            data-target="#DetailTotalBayar" title="Detail Pembayaran">{{item.Bayar
                                                             | currency:"Rp. ":0}}</a></td>
                                                     <td style="text-align:right;">{{item.Tunggakan | currency:"Rp.
                                                         ":0}}</td>
@@ -99,9 +101,10 @@
                         <div class="pull-right">
                             <ul class="app-breadcrumb breadcrumb">
                                 <li class="app-search">
-                                    <input class="app-search__input text-white bg-primary" type="search" ng-change="CariMahasiswa()"
-                                        ng-model="DataCari" placeholder="Search Mahasiswa">
-                                    <button class="app-search__button button"><i class="fa fa-search" ng-click="CariMahasiswa()"></i></button>
+                                    <input class="app-search__input text-white bg-primary" type="search"
+                                        ng-change="CariMahasiswa()" ng-model="DataCari" placeholder="Search Mahasiswa">
+                                    <button class="app-search__button button"><i class="fa fa-search"
+                                            ng-click="CariMahasiswa()"></i></button>
                                 </li>
                             </ul>
                         </div>
@@ -132,8 +135,9 @@
                                             <label class="control-label col-md-2">Tanggal Bayar</label>
                                             <div class="col-md-3">
                                                 <div class="input-group">
-                                                    <input class="form-control" type="date" ng-model="DataInput.TglBayar"
-                                                        aria-describedby="emailHelp" placeholder="Nominal" required>
+                                                    <input class="form-control" type="date"
+                                                        ng-model="DataInput.TglBayar" aria-describedby="emailHelp"
+                                                        placeholder="Nominal" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -141,7 +145,8 @@
                                             <label class="control-label col-md-2">TA</label>
                                             <div class="col-md-3">
                                                 <div class="input-group">
-                                                    <select class="form-control" ng-options="item as item.TA for item in DataPembayaran.DataTA track by item.TA"
+                                                    <select class="form-control"
+                                                        ng-options="item as item.TA for item in DataPembayaran.DataTA track by item.TA"
                                                         ng-model="DataInput.TA"></select>
                                                     <!-- <input class="form-control" type="text" ng-model="DataInput.TA" aria-describedby="emailHelp" placeholder="Nominal" required> -->
                                                 </div>
@@ -163,8 +168,9 @@
                                             <label class="control-label col-md-2">Keterangan</label>
                                             <div class="col-md-5">
                                                 <div class="input-group">
-                                                    <textarea class="form-control" rows="4" ng-model="DataInput.Description"
-                                                        placeholder="Description" required></textarea>
+                                                    <textarea class="form-control" rows="4"
+                                                        ng-model="DataInput.Description" placeholder="Description"
+                                                        required></textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -206,8 +212,7 @@
                             <h4>Pembayaran Khusus</h4>
                         </div>
                         <div class="table-responsive" ng-show="ShowDetailPembayaran" ng-hide="HideDetailPembayaran">
-                            <table datatable="ng" id="zero_config"
-                                class="table table-striped table-bordered">
+                            <table datatable="ng" id="zero_config" class="table table-striped table-bordered">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -223,7 +228,8 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2"><b>Total</b></td>
-                                        <td style="text-align:right;"><b>{{TotalBayar.BayarKhusus | currency:"Rp. ":0}}</b></td>
+                                        <td style="text-align:right;">
+                                            <b>{{TotalBayar.BayarKhusus | currency:"Rp. ":0}}</b></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -234,8 +240,7 @@
                             <h4>Pembayaran Umum</h4>
                         </div>
                         <div class="table-responsive" ng-show="ShowDetailPembayaran" ng-hide="HideDetailPembayaran">
-                            <table datatable="ng" id="zero_config"
-                                class="table table-striped table-bordered">
+                            <table datatable="ng" id="zero_config" class="table table-striped table-bordered">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -251,12 +256,16 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2"><b>Total</b></td>
-                                        <td style="text-align:right;"><b>{{TotalBayar.BayarUmum | currency:"Rp. ":0}}</b></td>
+                                        <td style="text-align:right;">
+                                            <b>{{TotalBayar.BayarUmum | currency:"Rp. ":0}}</b></td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
+                    <button type="button" class="btn btn-primary" ng-click="PrintBA('Kartu')">
+                        Print
+                    </button>
                     <button type="button" class="btn btn-secondary" ng-click="ClearData()" data-dismiss="modal">
                         Close
                     </button>
@@ -304,9 +313,186 @@
                     </table>
                 </div>
                 <button type="button" class="btn btn-secondary" ng-click="ClearData()" data-dismiss="modal">
-                        Close
-                    </button>
+                    Close
+                </button>
             </div>
         </div>
+    </div>
+</div>
+
+
+<div id="Kartu" ng-hide="Hide">
+    <center>
+        <h3 style="margin-bottom: 20px;">KARTU KONTROL<BR>ADMINISTRASI KEUANGAN <BR>STIMIK SEPULUH NOPEMBER
+            JAYAPURA<BR>SEMESTER {{DataInformation.Semester}} TA. {{DataInformation.TA}}</h3>
+    </center>
+    <br>
+    <div class="col-md-6" style="margin-left: 20px; margin-right: 20px;">
+        <table style="width: 40% !important;">
+            <tr>
+                <td>Nama Mahasiswa</td>
+                <td>:&nbsp;{{DataInformation.NamaMahasiswa}}</td>
+            </tr>
+            <tr>
+                <td>Nomor Pokok Mahasiswa</td>
+                <td>:&nbsp;{{DataInformation.NPM}}</td>
+            </tr>
+        </table>
+    </div>
+    <br>
+    <div class="col-md-12">
+        <table style="width: 100%;">
+            <tr>
+                <td style="vertical-align: text-top;">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th colspan="4">Rincian Biaya Kuliah Semester Genap TA. 2019/2020 :</th>
+                            </tr>
+                            <tr>
+                                <td>No</td>
+                                <td>Jenis Pembayaran</td>
+                                <td>Jumlah</td>
+                                <td>Keterangan</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in DataPrint">
+                                <td>{{$index + 1}}</td>
+                                <td>
+                                    {{item.Jenis}}
+                                </td>
+                                <td style="text-align: right;">
+                                    {{item.Nominal| currency:"":0}}
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tr>
+                            <td colspan="2"><b>Total</b></td>
+                            <td style="text-align: right;">
+                                <b>{{PrintTotal | currency:"":0}}</b></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><b>Telah di Bayar</b></td>
+                            <td style="text-align: right;"><b> {{PrintBayar | currency:"":0}}</b></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><b>Piutang</b></td>
+                            <td style="text-align: right;"><b>{{PrintTunggakan | currency:"":0}}</b></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    <table>
+                        <tr>
+                            <td>
+                                Mengetahui <br> Pembantu Ketua II Bid. Administrasi Keuangan dan SDM <br><br><br><br><br> <b><u>Budi Soepriyanto, SE., MM</u><br>NIDN. 1428096701</b>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width: 40px;">&nbsp;</td>
+                <td  style="vertical-align: text-top;">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th colspan="4">Cicilan Piutang Biaya Kuliah Semester Genap TA. 2019/2020 :</th>
+                            </tr>
+                            <tr>
+                                <th>Bulan</th>
+                                <th>Jumlah</th>
+                                <th>Tanggal Bayar</th>
+                                <th>Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td rowspan="3">Maret</td>
+                                <td style="text-align: right;">
+                                    {{PrintTunggakan /4 | currency:"":0}}
+                                </td>
+                                <td rowspan="3">
+                                    &nbsp;
+                                </td>
+                                <td rowspan="3">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td rowspan="3">April</td>
+                                <td style="text-align: right;">
+                                    {{PrintTunggakan/4 | currency:"":0}}
+                                </td>
+                                <td rowspan="3">
+                                    &nbsp;
+                                </td>
+                                <td rowspan="3">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td rowspan="3">Mei</td>
+                                <td style="text-align: right;">
+                                    {{PrintTunggakan/4 | currency:"":0}}
+                                </td>
+                                <td rowspan="3">
+                                    &nbsp;
+                                </td>
+                                <td rowspan="3">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td rowspan="3">Juni</td>
+                                <td style="text-align: right;">
+                                    {{PrintTunggakan/4 | currency:"":0}}
+                                </td>
+                                <td rowspan="3">
+                                    &nbsp;
+                                </td>
+                                <td rowspan="3">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </table>
     </div>
 </div>
