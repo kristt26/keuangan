@@ -802,7 +802,7 @@ angular
                         $scope.DatasAmbilMahasiswa = response.data;
 
                         if ($scope.SetStatus == "TampilUmum") {
-                            var Url = "http://restsimak.stimiksepnop.ac.id/api/sksMahasiswa/AmbilSks?npm=" + $scope.DataCari;
+                            var Url = "https://restsimak.stimiksepnop.ac.id/api/sksMahasiswa/AmbilSks?npm=" + $scope.DataCari;
                             $http({
                                 method: "GET",
                                 url: Url,
@@ -837,7 +837,7 @@ angular
                             $scope.ShowData = true;
                             $scope.HideData = false;
                         } else if ($scope.SetStatus == "TampilKhusus") {
-                            var Url = "http://restsimak.stimiksepnop.ac.id/api/sksMahasiswa/AmbilSks?npm=" + $scope.DataCari;
+                            var Url = "https://restsimak.stimiksepnop.ac.id/api/sksMahasiswa/AmbilSks?npm=" + $scope.DataCari;
                             $http({
                                 method: "GET",
                                 url: Url,
@@ -1399,7 +1399,7 @@ angular
                 gg = "GENAP";
             }
 
-            var Url = "http://restsimak.stimiksepnop.ac.id/api/sksMahasiswa/AmbilSks?npm=" + $scope.DataCari + "&thakademik=" + thakademik + "&gg=" + gg;
+            var Url = "https://restsimak.stimiksepnop.ac.id/api/sksMahasiswa/AmbilSks?npm=" + $scope.DataCari + "&thakademik=" + thakademik + "&gg=" + gg;
             $http({
                 method: "GET",
                 url: Url,
