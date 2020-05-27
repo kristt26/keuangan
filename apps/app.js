@@ -108,6 +108,13 @@ app.service('fileUpload', ['$http', function($http) {
     }
 }]);
 
+app.factory("AuthService", function ($window) {
+    var service = {};
+    // service.Base = "http://localhost/RestSimak/";
+    service.Base = "https://www.keuangan.stimiksepnop.ac.id/";
+    return service;
+});
+
 app.directive('currencyInput', function($filter, $browser) {
     return {
         require: 'ngModel',
@@ -191,12 +198,12 @@ function dataFactory() {
 app.factory("DataFactory", dataFactory);
 
 
-app.factory("Services", function($http, $location, $q) {
+app.factory("Services", function($http, $location, $q, AuthService) {
 
     var service = {};
     service.session = {};
     service.Authentification = function() {
-        var Urlauth = "api/datas/read/auth.php";
+        var Urlauth = AuthService.Base + "api/datas/read/auth.php";
         $http({
                 method: "get",
                 url: Urlauth,

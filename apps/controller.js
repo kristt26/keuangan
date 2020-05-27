@@ -1,8 +1,8 @@
 angular
     .module("Ctrl", ["datatables", "datatables.buttons", "jlareau.pnotify", "pdfjsViewer"])
-    .controller("UserSession", function ($scope, $http) {
+    .controller("UserSession", function ($scope, $http, AuthService) {
         $scope.session = {};
-        var Urlauth = "api/datas/read/auth.php";
+        var Urlauth = AuthService.Base + "api/datas/read/auth.php";
         $http({
             method: "get",
             url: Urlauth,
@@ -17,14 +17,14 @@ angular
 
 
 
-    .controller("MainController", function ($scope, $http) {
+    .controller("MainController", function ($scope, $http, AuthService) {
         $scope.DataMaster = {};
 
         $scope.Init = function () {
             $scope.DataMaster.Total = 0;
             $scope.DataMaster.Bayar = 0;
             $scope.DataMaster.Tunggakan = 0;
-            var Urlauth = "api/datas/read/ReadInformasi.php";
+            var Urlauth = AuthService.Base + "api/datas/read/ReadInformasi.php";
             $http({
                 method: "get",
                 url: Urlauth,
@@ -41,8 +41,8 @@ angular
         }
     })
 
-    .controller("LogController", function ($scope, $http) {
-        var Urlauth = "api/datas/read/LogOut.php";
+    .controller("LogController", function ($scope, $http, AuthService) {
+        var Urlauth = AuthService.Base + "api/datas/read/LogOut.php";
         $http({
             method: "GET",
             url: Urlauth
@@ -60,10 +60,10 @@ angular
         //     }, function (error) { })
     })
 
-    .controller("LoginController", function ($scope, $http) {
+    .controller("LoginController", function ($scope, $http, AuthService) {
         $scope.DatasLogin = {};
         $scope.Login = function () {
-            var UrlLogin = "api/datas/read/UserLogin.php";
+            var UrlLogin = AuthService.Base + "api/datas/read/UserLogin.php";
             var Data = angular.copy($scope.DatasLogin);
             $http({
                 method: "POST",
@@ -98,7 +98,7 @@ angular
         $http,
         DTOptionsBuilder,
         DTColumnBuilder,
-        notificationService
+        notificationService, AuthService
     ) {
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withPaginationType("full_numbers")
@@ -154,7 +154,7 @@ angular
         $scope.Init = function () {
             $http({
                 method: "GET",
-                url: "api/datas/read/ReadUser.php"
+                url: AuthService.Base + "api/datas/read/ReadUser.php"
             }).then(function (response) {
                 if (response.status == 200) {
                     angular.forEach(response.data, function (value, key) {
@@ -171,7 +171,7 @@ angular
             $scope.DataInput.Check = true;
             $http({
                 method: "POST",
-                url: "api/datas/create/CreateUser.php",
+                url: AuthService.Base + "api/datas/create/CreateUser.php",
                 data: $scope.DataInput
             }).then(function (response) {
                 if (response.status == 200) {
@@ -194,7 +194,7 @@ angular
             }
             $http({
                 method: "POST",
-                url: "api/datas/update/UpdateStatusUser.php",
+                url: AuthService.Base + "api/datas/update/UpdateStatusUser.php",
                 data: Data
             }).then(function (response) {
                 if (response.status == 200) {
@@ -214,7 +214,7 @@ angular
         DTOptionsBuilder,
         DTColumnBuilder,
         notificationService,
-        SweetAlert
+        SweetAlert, AuthService
     ) {
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withPaginationType("full_numbers")
@@ -268,7 +268,7 @@ angular
         $scope.DataInput = {};
         $scope.Simpan = function () {
             var Data = $scope.DataInput;
-            var InsertUrl = "api/datas/create/CreateMahasiswa.php";
+            var InsertUrl = AuthService.Base + "api/datas/create/CreateMahasiswa.php";
             $http({
                 method: "POST",
                 url: InsertUrl,
@@ -290,7 +290,7 @@ angular
         };
 
         $scope.Init = function () {
-            var UrlGetMahasiswa = "api/datas/read/ReadMahasiswa.php";
+            var UrlGetMahasiswa = AuthService.Base + "api/datas/read/ReadMahasiswa.php";
             $http({
                 method: "GET",
                 url: UrlGetMahasiswa
@@ -321,7 +321,7 @@ angular
                     if (isConfirm) {
                         $http({
                             method: "POST",
-                            url: "api/datas/update/UpdateMahasiswa.php",
+                            url: AuthService.Base + "api/datas/update/UpdateMahasiswa.php",
                             data: $scope.DataInput
                         }).then(function (response) {
                             if (response.status == 200) {
@@ -361,7 +361,7 @@ angular
                     if (isConfirm) {
                         $http({
                             method: "POST",
-                            url: "api/datas/delete/DeleteMahasiswa.php",
+                            url: AuthService.Base + "api/datas/delete/DeleteMahasiswa.php",
                             data: item
                         }).then(function (response) {
                             if (response.status == 200) {
@@ -385,7 +385,7 @@ angular
         $http,
         DTOptionsBuilder,
         DTColumnBuilder,
-        notificationService
+        notificationService, AuthService
     ) {
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withPaginationType("full_numbers")
@@ -441,7 +441,7 @@ angular
         $scope.Sifats = [{ Sifat: "Umum" }, { Sifat: "Khusus" }];
         $scope.SelectedSifats = {};
         $scope.Init = function () {
-            var UrlJenisBayar = "api/datas/read/ReadJenisBayar.php";
+            var UrlJenisBayar = AuthService.Base + "api/datas/read/ReadJenisBayar.php";
             $http({
                 method: "GET",
                 url: UrlJenisBayar,
@@ -456,7 +456,7 @@ angular
         $scope.Simpan = function () {
             $scope.DataInput.Sifat = $scope.SelectedSifats.Sifat;
             var Data = $scope.DataInput;
-            var UrlSimpan = "api/datas/create/CreateJenisBayar.php";
+            var UrlSimpan = AuthService.Base + "api/datas/create/CreateJenisBayar.php";
             $http({
                 method: "POST",
                 url: UrlSimpan,
@@ -482,7 +482,7 @@ angular
         $scope.Update = function () {
             $scope.DataInput.Sifat = $scope.SelectedSifats.Sifat;
             var Data = $scope.DataInput;
-            var UrlUpdate = "api/datas/update/UpdateJenisBayar.php";
+            var UrlUpdate = AuthService.Base + "api/datas/update/UpdateJenisBayar.php";
             $http({
                 method: "POST",
                 url: UrlUpdate,
@@ -512,7 +512,7 @@ angular
         $http,
         DTOptionsBuilder,
         DTColumnBuilder,
-        notificationService
+        notificationService, AuthService
     ) {
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withPaginationType("full_numbers")
@@ -569,7 +569,7 @@ angular
         $scope.DatasBayarKhusus = [];
 
         $scope.Init = function () {
-            var UrlTahun = "api/datas/read/ReadTahun.php";
+            var UrlTahun = AuthService.Base + "api/datas/read/ReadTahun.php";
             $http({
                 method: "GET",
                 url: UrlTahun
@@ -579,7 +579,7 @@ angular
                 // notificationService.error("Gagal Mengambil Data");
             })
 
-            var UrlBayarUmum = "api/datas/read/ReadBayarUmum.php";
+            var UrlBayarUmum = AuthService.Base + "api/datas/read/ReadBayarUmum.php";
             $http({
                 method: "GET",
                 url: UrlBayarUmum
@@ -589,7 +589,7 @@ angular
                 // notificationService.error("Gagal Mengambil Data");
             })
 
-            var UrlBayarKhusus = "api/datas/read/ReadBayarKhusus.php";
+            var UrlBayarKhusus = AuthService.Base + "api/datas/read/ReadBayarKhusus.php";
             $http({
                 method: "GET",
                 url: UrlBayarKhusus
@@ -611,7 +611,7 @@ angular
 
         $scope.TambahAngkatan = function () {
             if ($scope.JenisMenu == "Umum") {
-                var UrlTambahAngkatan = "api/datas/create/CreateBayarUmum.php";
+                var UrlTambahAngkatan = AuthService.Base + "api/datas/create/CreateBayarUmum.php";
                 var Data = $scope.DataInput;
                 $http({
                     method: "POST",
@@ -630,7 +630,7 @@ angular
                     notificationService.error("Data Gagal di Tambah");
                 })
             } else {
-                var UrlTambahTA = "api/datas/create/CreateBayarKhusus.php";
+                var UrlTambahTA = AuthService.Base + "api/datas/create/CreateBayarKhusus.php";
                 var Data = $scope.DataInput;
                 $http({
                     method: "POST",
@@ -654,7 +654,7 @@ angular
 
         $scope.UpdateNominal = function () {
             var Data = $scope.DatasInput;
-            var Url = "api/datas/update/UpdateNominal.php";
+            var Url = AuthService.Base + "api/datas/update/UpdateNominal.php";
             $http({
                 method: "POST",
                 url: Url,
@@ -687,7 +687,7 @@ angular
         $http,
         DTOptionsBuilder,
         DTColumnBuilder,
-        notificationService
+        notificationService, AuthService
     ) {
 
     })
@@ -697,7 +697,7 @@ angular
         $http,
         DTOptionsBuilder,
         DTColumnBuilder,
-        notificationService
+        notificationService, AuthService
     ) {
 
     })
@@ -707,7 +707,7 @@ angular
         $http,
         DTOptionsBuilder,
         DTColumnBuilder,
-        notificationService
+        notificationService, AuthService
     ) {
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withPaginationType("full_numbers")
@@ -791,7 +791,7 @@ angular
             })
             if (CekData == true) {
                 var Data = $scope.Temp;
-                var UrlCari = "api/datas/read/ReadOneMahasiswa.php";
+                var UrlCari = AuthService.Base + "api/datas/read/ReadOneMahasiswa.php";
                 $http({
                     method: "POST",
                     url: UrlCari,
@@ -860,11 +860,11 @@ angular
                                             $scope.DataTotal += parseInt(value.Nominal);
                                             value.Check = true;
                                             value.SetDisabled = false;
-                                        }else if(value.JenisBayar[0].IdJenisBayar == "30" && params.data.data.KP == true){
+                                        } else if (value.JenisBayar[0].IdJenisBayar == "30" && params.data.data.KP == true) {
                                             $scope.DataTotal += parseInt(value.Nominal);
                                             value.Check = true;
                                             value.SetDisabled = false;
-                                        }else{
+                                        } else {
                                             value.SetDisabled = true;
                                         }
                                     }
@@ -930,7 +930,7 @@ angular
         $scope.DataTA = [];
         $scope.DatasBayarMahasiswa = [];
         $scope.Init = function () {
-            var UrlGetMahasiswa = "api/datas/read/ReadMahasiswa.php";
+            var UrlGetMahasiswa = AuthService.Base + "api/datas/read/ReadMahasiswa.php";
             $http({
                 method: "GET",
                 url: UrlGetMahasiswa
@@ -940,7 +940,7 @@ angular
                 }
             })
 
-            var UrlGetDataTA = "api/datas/read/ReadTA.php";
+            var UrlGetDataTA = AuthService.Base + "api/datas/read/ReadTA.php";
             $http({
                 method: "GET",
                 url: UrlGetDataTA
@@ -951,7 +951,7 @@ angular
                 }
             })
 
-            var Url = "api/datas/read/ReadStatusBayar.php";
+            var Url = AuthService.Base + "api/datas/read/ReadStatusBayar.php";
             $http({
                 method: "GET",
                 url: Url
@@ -964,7 +964,7 @@ angular
         }
         $scope.Simpan = function () {
             var Data = $scope.DataInput;
-            var UrlCreateMahasiswa = "api/datas/create/CreateMahasiswa.php";
+            var UrlCreateMahasiswa = AuthService.Base + "api/datas/create/CreateMahasiswa.php";
             $http({
                 method: "POST",
                 url: UrlCreateMahasiswa,
@@ -1041,14 +1041,14 @@ angular
             var UrlProses;
             if ($scope.SetDataProses == "Umum") {
                 $scope.DataInput.SendBayarUmum = $scope.DatasAmbilMahasiswa.BayarUmum;
-                UrlProses = "api/datas/create/CreateDetailBayar.php";
+                UrlProses = AuthService.Base + "api/datas/create/CreateDetailBayar.php";
             } else {
                 if ($scope.StatusUpdate == false) {
                     $scope.DataInput.SendBayarKhusus = $scope.DatasAmbilMahasiswa.BayarKhusus;
-                    UrlProses = "api/datas/update/UpdateDetailBayar.php";
+                    UrlProses = AuthService.Base + "api/datas/update/UpdateDetailBayar.php";
                 } else {
                     $scope.DataInput.SendBayarKhusus = $scope.DatasAmbilMahasiswa.BayarKhusus;
-                    UrlProses = "api/datas/update/UpdateBayarKhusus.php";
+                    UrlProses = AuthService.Base + "api/datas/update/UpdateBayarKhusus.php";
                 }
             }
             $http({
@@ -1093,7 +1093,7 @@ angular
             $scope.DatasAmbilMahasiswa.TotalTunggakan = $scope.DataInput.TotalTunggakan;
             $scope.DatasAmbilMahasiswa.TA = $scope.DataInput.TA.TA;
             var Data = $scope.DatasAmbilMahasiswa;
-            var Url = "api/datas/create/CreateMasterBayar.php";
+            var Url = AuthService.Base + "api/datas/create/CreateMasterBayar.php";
             $http({
                 method: "POST",
                 url: Url,
@@ -1126,7 +1126,7 @@ angular
             $scope.DataInput = {};
         }
         $scope.Update = function () {
-            var UrlUpdateMahasiswa = "api/datas/update/UpdateMahasiswa.php";
+            var UrlUpdateMahasiswa = AuthService.Base + "api/datas/update/UpdateMahasiswa.php";
             $http({
                 method: "POST",
                 url: UrlUpdateMahasiswa,
@@ -1156,7 +1156,7 @@ angular
         $http,
         DTOptionsBuilder,
         DTColumnBuilder,
-        notificationService
+        notificationService, AuthService
     ) {
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withPaginationType("full_numbers")
@@ -1191,7 +1191,7 @@ angular
         $scope.DatasPengguna = [];
         $scope.DataInput = {};
         $scope.Init = function () {
-            var Kategoriurl = "api/datas/read/ReadPengguna.php";
+            var Kategoriurl = AuthService.Base + "api/datas/read/ReadPengguna.php";
             $http({
                 method: "Get",
                 url: Kategoriurl
@@ -1206,7 +1206,7 @@ angular
         };
         $scope.Simpan = function () {
             var Data = $scope.DataInput;
-            var InsertUrl = "api/datas/create/CreatePengguna.php";
+            var InsertUrl = AuthService.Base + "api/datas/create/CreatePengguna.php";
             $http({
                 method: "POST",
                 url: InsertUrl,
@@ -1231,7 +1231,7 @@ angular
         $http,
         DTOptionsBuilder,
         DTColumnBuilder,
-        notificationService
+        notificationService, AuthService
     ) {
         $scope.DataPembayaran = {};
         $scope.DataCari;
@@ -1259,7 +1259,7 @@ angular
         $scope.Init = function () {
             $http({
                 method: "GET",
-                url: "api/datas/read/ReadDataPembayaran.php"
+                url: AuthService.Base + "api/datas/read/ReadDataPembayaran.php"
             }).then(function (response) {
                 if (response.status == 200) {
                     $scope.DataPembayaran = response.data;
@@ -1309,7 +1309,7 @@ angular
                     a = true;
                     $http({
                         method: "get",
-                        url: "api/datas/read/ReadTA.php"
+                        url: AuthService.Base + "api/datas/read/ReadTA.php"
                     }).then(param => {
                         param.data.forEach(response => {
                             if (response.Status == "Aktif") {
@@ -1338,7 +1338,7 @@ angular
         $scope.Simpan = function () {
             $http({
                 method: "POST",
-                url: "api/datas/create/CreatePembayaran.php",
+                url: AuthService.Base + "api/datas/create/CreatePembayaran.php",
                 data: $scope.DataInput
             }).then(function (response) {
                 if (response.status == 200) {
@@ -1480,7 +1480,7 @@ angular
         $http,
         DTOptionsBuilder,
         DTColumnBuilder,
-        notificationService
+        notificationService, AuthService
     ) {
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withPaginationType("full_numbers")
@@ -1530,7 +1530,7 @@ angular
         $scope.Init = function () {
             $http({
                 method: "GET",
-                url: "api/datas/read/ReadDataPembayaran.php"
+                url: AuthService.Base + "api/datas/read/ReadDataPembayaran.php"
             }).then(function (response) {
                 if (response.status == 200) {
                     $scope.DataPembayaran = response.data;
@@ -1642,7 +1642,7 @@ angular
     .controller("IndexController", function (
         $scope,
         $http,
-        notificationService
+        notificationService, AuthService
     ) {
         $scope.DataInformation = [];
         $scope.DataPembayaran = [];
@@ -1655,7 +1655,7 @@ angular
         $scope.Init = function () {
             $http({
                 method: "GET",
-                url: "api/datas/read/ReadDataPembayaran.php"
+                url: AuthService.Base + "api/datas/read/ReadDataPembayaran.php"
             }).then(function (response) {
                 if (response.status == 200) {
                     $scope.DataPembayaran = response.data;
