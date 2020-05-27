@@ -16,7 +16,6 @@ angular
     })
 
 
-
     .controller("MainController", function ($scope, $http) {
         $scope.DataMaster = {};
 
@@ -774,6 +773,29 @@ angular
         $scope.StatusUpdate = false;
         $scope.DataHapus;
 
+        $scope.UpdateNominal = function () {
+            var Data = $scope.DatasInput;
+            var Url = "api/datas/update/UpdateNominal.php";
+            $http({
+                method: "POST",
+                url: Url,
+                data: Data
+            }).then(function (response) {
+                if (response.data.message == "Khusus") {
+                    angular.forEach($scope.DatasBayarKhusus, function (value, key) {
+                        if (value.IdBayarKhusus == $scope.DatasInput.IdBayarKhusus) {
+                            value.Nominal = $scope.DatasInput.Nominal;
+                            notificationService.success("Berhasil");
+                        }
+                    })
+                } else {
+                    angular.forEach($scope.DatasBayarUmum, function (value, key) {
+                        if (value.IdBayarUmum == $scope.DatasInput.IdBayarUmum) {
+                            value.Nominal = $scope.DatasInput.Nominal;
+                            notificationService.success("Berhasil")
+                        }
+                    })
+                }
 
 
         $scope.CariMahasiswa = function (npmmhs) {

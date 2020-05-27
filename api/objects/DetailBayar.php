@@ -30,6 +30,16 @@ class DetailBayar
         $stmt->execute();
         return $stmt;
     }
+
+    public function CekRegistrasiKhusus()
+    {
+        $query = "CALL CekBayarkhusus(:TAValue, :Mahasiswa)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":TAValue", $this->TA, PDO::PARAM_STR);
+        $stmt->bindParam(":Mahasiswa", $this->IdMahasiswa, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt;
+    }
     
 
     public function readOne()
