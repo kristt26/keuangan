@@ -12,6 +12,11 @@ class Database{
     private $username = "u3011751_root";
     private $password = "Stimik@1011";
     public $conn;
+
+    // private $host = "192.168.5.101";
+    // private $db_name = "dbkeuangan";
+    // private $username = "root";
+    // private $password = "admin@db1011";
  
     // get the database connection
     public function getConnection(){

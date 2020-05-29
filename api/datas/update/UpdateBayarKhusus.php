@@ -22,15 +22,16 @@ foreach ($data->SendBayarKhusus as &$value) {
     $detailbayarkhusus->Nominal = $value->Nominal;
     $detailbayarkhusus->IdBayarKhusus = $value->IdBayarKhusus;
     if (property_exists($value, "Check")) {
-        if($value->Check){
-            if ($detailbayarkhusus->CekData() == 0) {
-                $Jumlah += (int)$value->Nominal;
-                $detailbayarkhusus->create();
-            }
+        if ($detailbayarkhusus->CekData() == 0 && $value->Check) {
+            $Jumlah += (int) $value->Nominal;
+            $detailbayarkhusus->create();
+        }else if ($detailbayarkhusus->CekData() > 0 && $value->Check==false){
+            $Jumlah -= (int) $value->Nominal;
+            $detailbayarkhusus->delete();
         }
     } else {
         if ($detailbayarkhusus->CekData() != 0) {
-            $Jumlah -= (int)$value->Nominal;
+            $Jumlah -= (int) $value->Nominal;
             $detailbayarkhusus->delete();
         }
     }

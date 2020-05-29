@@ -575,29 +575,26 @@ angular
                 url: UrlTahun
             }).then(function (response) {
                 $scope.DatasTahun = response.data.records;
+                var UrlBayarUmum = AuthService.Base + "api/datas/read/ReadBayarUmum.php";
+                $http({
+                    method: "GET",
+                    url: UrlBayarUmum
+                }).then(function (response) {
+                    $scope.DatasBayarUmum = response.data.records;
+                    var UrlBayarKhusus = AuthService.Base + "api/datas/read/ReadBayarKhusus.php";
+                    $http({
+                        method: "GET",
+                        url: UrlBayarKhusus
+                    }).then(function (response) {
+                        $scope.DatasBayarKhusus = response.data.records;
+                    }, function (error) {
+                    })
+                }, function (error) {
+                })
             }, function (error) {
-                // notificationService.error("Gagal Mengambil Data");
             })
 
-            var UrlBayarUmum = AuthService.Base + "api/datas/read/ReadBayarUmum.php";
-            $http({
-                method: "GET",
-                url: UrlBayarUmum
-            }).then(function (response) {
-                $scope.DatasBayarUmum = response.data.records;
-            }, function (error) {
-                // notificationService.error("Gagal Mengambil Data");
-            })
 
-            var UrlBayarKhusus = AuthService.Base + "api/datas/read/ReadBayarKhusus.php";
-            $http({
-                method: "GET",
-                url: UrlBayarKhusus
-            }).then(function (response) {
-                $scope.DatasBayarKhusus = response.data.records;
-            }, function (error) {
-                // notificationService.error("Gagal Mengambil Data");
-            })
         }
         $scope.JenisMenu;
 
@@ -1154,40 +1151,8 @@ angular
     .controller("PenggunaController", function (
         $scope,
         $http,
-        DTOptionsBuilder,
-        DTColumnBuilder,
         notificationService, AuthService
     ) {
-        $scope.dtOptions = DTOptionsBuilder.newOptions()
-            .withPaginationType("full_numbers")
-            .withOption("order", [1, "desc"])
-            .withButtons([{
-                extend: 'excelHtml5',
-                customize: function (xlsx) {
-                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
-
-                    // jQuery selector to add a border to the third row
-                    $('row c[r*="3"]', sheet).attr('s', '25');
-                    // jQuery selector to set the forth row's background gray
-                    $('row c[r*="4"]', sheet).attr('s', '5');
-                }
-            },
-            {
-                extend: 'print',
-                //text: 'Print current page',
-                autoPrint: true,
-                title: "Data Seleksi",
-                exportOptions: {
-                    columns: ':visible'
-                }
-            }
-
-            ]);
-        $scope.dtColumns = [
-            DTColumnBuilder.newColumn("id").withTitle("ID"),
-            DTColumnBuilder.newColumn("firstName").withTitle("First name"),
-            DTColumnBuilder.newColumn("lastName").withTitle("Last name")
-        ];
         $scope.DatasPengguna = [];
         $scope.DataInput = {};
         $scope.Init = function () {
@@ -1229,8 +1194,6 @@ angular
     .controller("PembayaranMahasiswaController", function (
         $scope,
         $http,
-        DTOptionsBuilder,
-        DTColumnBuilder,
         notificationService, AuthService
     ) {
         $scope.DataPembayaran = {};
@@ -1257,31 +1220,39 @@ angular
         }
 
         $scope.Init = function () {
-            $http({
-                method: "GET",
-                url: AuthService.Base + "api/datas/read/ReadDataPembayaran.php"
-            }).then(function (response) {
-                if (response.status == 200) {
-                    $scope.DataPembayaran = response.data;
-                }
-            })
+            // $http({
+            //     method: "GET",
+            //     url: AuthService.Base + "api/datas/read/ReadDataPembayaran.php"
+            // }).then(function (response) {
+            //     if (response.status == 200) {
+            //         $scope.DataPembayaran = response.data;
+            //     }
+            // })
         }
         $scope.CariMahasiswa = function () {
-            $scope.DataInput = {};
+            if ($scope.DataCari.length == 9) {
+                $scope.DataInput = {};
+                var a = false;
+                $http({
+                    method: "GET",
+                    url: AuthService.Base + "api/datas/read/ReadDataPembayaran.php?npm=" + $scope.DataCari
+                }).then(function (response) {
+                    if (response.status == 200) {
+                        $scope.DataPembayaran = response.data;
+                        if ($scope.DataPembayaran.Mahasiswa.NPM == $scope.DataCari) {
+                            $scope.DataInput = angular.copy($scope.DataPembayaran.Mahasiswa);
+                            a = true;
+                        }
+                        if (a == true) {
+                            $scope.ShowInputPembayaran = true;
+                            $scope.HideInputPembayaran = false;
+                        } else {
+                            $scope.ShowInputPembayaran = false;
+                            $scope.HideInputPembayaran = true;
+                        }
+                    }
+                })
 
-            var a = false;
-            angular.forEach($scope.DataPembayaran.Mahasiswa, function (value, key) {
-                if (value.NPM == $scope.DataCari) {
-                    $scope.DataInput = angular.copy(value);
-                    a = true;
-                }
-            })
-            if (a == true) {
-                $scope.ShowInputPembayaran = true;
-                $scope.HideInputPembayaran = false;
-            } else {
-                $scope.ShowInputPembayaran = false;
-                $scope.HideInputPembayaran = true;
             }
         }
         $scope.CariInformasi = function () {
@@ -1290,49 +1261,56 @@ angular
             $scope.DataTotal.Total = 0;
             $scope.DataTotal.Bayar = 0;
             $scope.DataTotal.Tunggakan = 0;
+            if ($scope.DataCari.length == 9) {
+                $http({
+                    method: "GET",
+                    url: AuthService.Base + "api/datas/read/ReadDataPembayaran.php?npm=" + $scope.DataCari
+                }).then(function (response) {
+                    if (response.status == 200) {
+                        $scope.DataPembayaran = response.data;
+                        var a = false;
+                        if ($scope.DataPembayaran.Mahasiswa.NPM == $scope.DataCari) {
+                            $scope.DataInformation = angular.copy($scope.DataPembayaran.Mahasiswa);
+                            angular.forEach($scope.DataInformation.MasterBayar, function (value1, key1) {
+                                $scope.DataBayarKhusus = 0;
+                                angular.forEach(value1.BayarKhusus, function (value2) {
+                                    $scope.DataBayarKhusus += parseInt(angular.copy(value2.Nominal));
+                                })
 
-            var a = false;
-            angular.forEach($scope.DataPembayaran.Mahasiswa, function (value, key) {
-                if (value.NPM == $scope.DataCari) {
-                    $scope.DataInformation = angular.copy(value);
-                    angular.forEach($scope.DataInformation.MasterBayar, function (value1, key1) {
-                        $scope.DataBayarKhusus = 0;
-                        angular.forEach(value1.BayarKhusus, function (value2) {
-                            $scope.DataBayarKhusus += parseInt(angular.copy(value2.Nominal));
-                        })
+                                $scope.DataTotal.Total += parseInt(value1.Total);
+                                $scope.DataTotal.Bayar += parseInt(value1.Bayar);
+                                $scope.DataTotal.Tunggakan += parseInt(value1.Tunggakan);
+                                value1.Total = parseInt(value1.Total);
+                            })
+                            a = true;
+                            $http({
+                                method: "get",
+                                url: AuthService.Base + "api/datas/read/ReadTA.php"
+                            }).then(param => {
+                                param.data.forEach(response => {
+                                    if (response.Status == "Aktif") {
+                                        var b = response.TA.split("-");
+                                        $scope.DataInformation.TA = b[0];
+                                        if (b[1] == "1") {
+                                            $scope.DataInformation.Semester = "GANJIL";
+                                        } else {
+                                            $scope.DataInformation.Semester = "GENAP";
+                                        }
 
-                        $scope.DataTotal.Total += parseInt(value1.Total);
-                        $scope.DataTotal.Bayar += parseInt(value1.Bayar);
-                        $scope.DataTotal.Tunggakan += parseInt(value1.Tunggakan);
-                        value1.Total = parseInt(value1.Total);
-                    })
-                    a = true;
-                    $http({
-                        method: "get",
-                        url: AuthService.Base + "api/datas/read/ReadTA.php"
-                    }).then(param => {
-                        param.data.forEach(response => {
-                            if (response.Status == "Aktif") {
-                                var b = response.TA.split("-");
-                                $scope.DataInformation.TA = b[0];
-                                if (b[1] == "1") {
-                                    $scope.DataInformation.Semester = "GANJIL";
-                                } else {
-                                    $scope.DataInformation.Semester = "GENAP";
-                                }
+                                    }
+                                })
+                            })
+                        }
 
-                            }
-                        })
-                    })
-                }
-            })
-
-            if (a == true) {
-                $scope.ShowDetailPembayaran = true;
-                $scope.HideDetailPembayaran = false;
-            } else {
-                $scope.ShowDetailPembayaran = false;
-                $scope.HideDetailPembayaran = true;
+                        if (a == true) {
+                            $scope.ShowDetailPembayaran = true;
+                            $scope.HideDetailPembayaran = false;
+                        } else {
+                            $scope.ShowDetailPembayaran = false;
+                            $scope.HideDetailPembayaran = true;
+                        }
+                    }
+                })
             }
         }
         $scope.Simpan = function () {
