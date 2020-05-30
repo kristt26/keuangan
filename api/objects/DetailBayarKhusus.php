@@ -113,6 +113,22 @@ class DetailBayarKhusus
         }
     }
 
+    public function updateNominal()
+    {
+        $query = "UPDATE ".$this->table_name." SET Nominal=? WHERE IdBayarKhusus=? AND TA=?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $this->Nominal);
+        $stmt->bindParam(2, $this->IdBayarKhusus);
+        $stmt->bindParam(3, $this->TA);
+
+        if($stmt->execute()){
+            return true;
+        }else
+        {
+            return false;
+        }
+    }
+
     public function delete()
     {
         $query = "CALL DeleteDetailBayarKhusus(:IdMahasiswa, :TA, :IdBayarKhusus)";
@@ -126,7 +142,22 @@ class DetailBayarKhusus
         {
             return false;
         }
-    }   
+    }
+    
+    public function deletebyIdJenis()
+    {
+        $query = "CALL DeleteDetailBayarKhusus(:IdMahasiswa, :TA, :IdBayarKhusus)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":IdMahasiswa", $this->IdMahasiswa, PDO::PARAM_INT);
+        $stmt->bindParam(":TA", $this->TA, PDO::PARAM_STR);
+        $stmt->bindParam(":IdBayarKhusus", $this->IdBayarKhusus, PDO::PARAM_INT);
+        if($stmt->execute()){
+            return true;
+        }else
+        {
+            return false;
+        }
+    }
 }
 
 ?>

@@ -90,6 +90,23 @@ class DetailBayar
         }
     }
 
+    public function updateByJenis()
+    {
+        $query = "UPDATE ".$this->table_name." SET Jumlah=? WHERE IdDetail=?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $this->TA);
+        $stmt->bindParam(2, $this->Jumlah);
+        $stmt->bindParam(3, $this->IdMahasiswa);
+        $stmt->bindParam(4, $this->IdDetail);
+
+        if($stmt->execute()){
+            return true;
+        }else
+        {
+            return false;
+        }
+    }
+
     public function delete()
     {
         $query = "DELETE FROM ".$this->table_name." WHERE IdDetail=?";

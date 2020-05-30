@@ -603,7 +603,7 @@ angular
         }
         $scope.SelectedEdit = function (item) {
             $scope.DatasInput = angular.copy(item);
-
+            $scope.Nilaiawal = angular.copy(item.Nominal);
         }
 
         $scope.TambahAngkatan = function () {
@@ -840,6 +840,10 @@ angular
                                 url: Url,
                             }).then(params => {
                                 $scope.DataTotal = 0;
+                                $scope.DatasAmbilMahasiswa.BayarKhusus.forEach(x=>{
+                                    x.SetDisabled = true;
+                                    x.Check = false;
+                                })
                                 angular.forEach($scope.DatasAmbilMahasiswa.BayarKhusus, function (value, key) {
                                     if ($scope.DatasAmbilMahasiswa.DetailBayarKhusus.length > 0) {
                                         angular.forEach($scope.DatasAmbilMahasiswa.DetailBayarKhusus, function (detail) {
@@ -847,9 +851,6 @@ angular
                                                 $scope.DataTotal += parseInt(value.Nominal);
                                                 value.Check = true;
                                                 value.SetDisabled = false;
-                                            } else {
-                                                value.SetDisabled = true;
-                                                value.Check = false;
                                             }
                                         })
                                     } else {

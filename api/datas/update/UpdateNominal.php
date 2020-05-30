@@ -8,18 +8,26 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 include_once '../../../api/config/database.php';
 include_once '../../../api/objects/BayarUmum.php';
 include_once '../../../api/objects/BayarKhusus.php';
+include_once '../../../api/objects/DetailBayarKhusus.php';
 
 $database = new Database();
 $db = $database->getConnection();
 $bayarumum = new BayarUmum($db);
 $bayarkhusus = new BayarKhusus($db);
+$detailbayarkhusus = new DetailBayarKhusus($db);
 $data =json_decode(file_get_contents("php://input"));
 if($data->JenisBayar[0]->Sifat=="Khusus"){
     $bayarkhusus->IdBayarKhusus = $data->IdBayarKhusus;
     $bayarkhusus->Nominal = $data->Nominal;
     if($bayarkhusus->updateNominal()){
-        http_response_code(201);
-        echo json_encode(array("message" => $data->JenisBayar[0]->Sifat));
+        $detailbayarkhusus->IdBayarKhusus = $data->IdBayarKhusus;
+        $detailbayarkhusus->Nominal = $data->Nominal;
+        $detailbayarkhusus->TA = $data->TA;
+        if($detailbayarkhusus->updateNominal());
+        {
+            http_response_code(201);
+            echo json_encode(array("message" => $data->JenisBayar[0]->Sifat));
+        }
     }else{
         http_response_code(503);
         echo json_encode(array("message" => "Unable to update Nominal"));

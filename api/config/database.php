@@ -7,6 +7,7 @@ class Database{
     // private $username = "root";
     // private $password = "";
     // public $conn;
+    
     private $host = "localhost";
     private $db_name = "u3011751_keuangan";
     private $username = "u3011751_root";
