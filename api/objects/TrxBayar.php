@@ -10,6 +10,7 @@ class TrxBayar
     public $Description;
     public $IdMahasiswa;
     public $IdPetugas;
+    public $Berkas;
 
     public function __construct($db) 
     {
@@ -59,6 +60,25 @@ class TrxBayar
         $stmt->bindParam(4, $this->Description);
         $stmt->bindParam(5, $this->IdMahasiswa);
         $stmt->bindParam(6, $this->IdPetugas);
+        if($stmt->execute()){
+            $this->IdTrxBayar= $this->conn->lastInsertId();
+            return true;
+        }else
+        {
+            return false;
+        }
+    }
+
+    public function CreateBymhs()
+    {
+        $query = "INSERT INTO ".$this->table_name." SET TA=?, TglBayar=?, JumlahBayar=?, Description=?, IdMahasiswa=?, Berkas=?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $this->TA);
+        $stmt->bindParam(2, $this->TglBayar);
+        $stmt->bindParam(3, $this->JumlahBayar);
+        $stmt->bindParam(4, $this->Description);
+        $stmt->bindParam(5, $this->IdMahasiswa);
+        $stmt->bindParam(6, $this->Berkas);
         if($stmt->execute()){
             $this->IdTrxBayar= $this->conn->lastInsertId();
             return true;
