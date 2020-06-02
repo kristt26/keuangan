@@ -14,6 +14,7 @@ include_once '../../../api/objects/Mahasiswa.php';
 include_once '../../../api/objects/Lib.php';
 
 $data = json_decode(file_get_contents("php://input"));
+$data1 = $_POST;
 if (!is_null($data)) {
     $database = new Database();
     $db = $database->getConnection();
