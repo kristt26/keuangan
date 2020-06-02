@@ -9,6 +9,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
  
 // include database and object file
 include_once '../../../api/objects/Lib.php';
+$data = json_decode(file_get_contents("php://input"));
 
 $lib = new Lib();
 $lib->file = $_FILES;
