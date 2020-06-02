@@ -1,10 +1,10 @@
 <?php
-
-header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+header('Access-Control-Allow-Credentials: true');
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: POST");
-header("Access-Control-Max-Age: 3600");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
+header("Access-Control-Max-Age: 86400");
+header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
  
 // include database and object file
 include_once '../../../api/config/database.php';
