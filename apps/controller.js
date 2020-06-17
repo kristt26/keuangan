@@ -773,6 +773,7 @@ angular
         $scope.Listkategori=["Bayar Umum", "Bayar Khusus"];
         $scope.ListJenisBayar=[];
         $scope.showdisc=false;
+        $scope.model={};
         
 
 
@@ -1086,7 +1087,26 @@ angular
 
             })
         }
-
+        $scope.SimpanPotongan = (item)=>{
+            item.IdMahasiswa = $scope.DatasAmbilMahasiswa.IdMahasiswa;
+            item.TA = $scope.DatasAmbilMahasiswa.TAAktif.TA;
+            console.log(item);
+            
+            var Data = angular.copy(item);
+            var UrlCreate = AuthService.Base + "api/datas/create/CreatePotonganUmum.php";
+            $http({
+                method: "POST",
+                url: UrlCreate,
+                data: Data
+            }).then(function (response) {
+                if (response.status == 200) {
+                    notificationService.success("Mahasiswa berhasil ditambahkan!!!");
+                    $scope.DataInput = {};
+                }
+            }, error=>{
+                notificationService.error(error.data.message);
+            })
+        }
         $scope.DataProses = {};
         $scope.DataTampung = {};
         $scope.HitungTotal = function () {
@@ -1317,6 +1337,7 @@ angular
         $scope.Hide = true;
         $scope.DataPrint = [];
         $scope.total = 0;
+        $scope.ListPotongan=[];
 
         $scope.PrintBA = function (Kartu) {
 
@@ -1384,11 +1405,19 @@ angular
                                 angular.forEach(value1.BayarKhusus, function (value2) {
                                     $scope.DataBayarKhusus += parseInt(angular.copy(value2.Nominal));
                                 })
-
+                                
+                                value1.Total = parseInt(value1.Total);
+                                angular.forEach(value1.BayarUmum, function (value3) {
+                                    if(value3.Potongan){
+                                        $scope.ListPotongan.push(angular.copy(value3))
+                                        value1.Total -= parseInt(angular.copy(value3.Potongan.Nominal));
+                                    }
+                                    
+                                })
                                 $scope.DataTotal.Total += parseInt(value1.Total);
                                 $scope.DataTotal.Bayar += parseInt(value1.Bayar);
+                                value1.Tunggakan = value1.Total - parseInt(value1.Bayar);
                                 $scope.DataTotal.Tunggakan += parseInt(value1.Tunggakan);
-                                value1.Total = parseInt(value1.Total);
                             })
                             a = true;
                             $http({
