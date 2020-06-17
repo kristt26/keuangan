@@ -786,13 +786,26 @@ angular
         }
 
         $scope.SetDisc = ()=>{
-            $scope.showdisc=true;
-            if($scope.SelectedJenisBayar.Disc){
-                $scope.SelectedJenisBayar.Total = (parseInt($scope.SelectedJenisBayar.Nominal)*parseInt($scope.SelectedJenisBayar.Jumlah))-((parseInt($scope.SelectedJenisBayar.Nominal)*parseInt($scope.SelectedJenisBayar.Jumlah))*(parseInt($scope.SelectedJenisBayar.Disc)/100));
+            $scope.Karyawan = false;
+            var num = $scope.SelectedJenisBayar.Angkatan.length>4;
+            if(num){
+                $scope.showdisc=true;
+                $scope.Karyawan = true;
+                $scope.titledisc = "Potongan (Rp.)";
+                if($scope.SelectedJenisBayar.Disc){
+                    $scope.SelectedJenisBayar.Total = parseInt($scope.SelectedJenisBayar.Disc);
+                }else{
+                    $scope.SelectedJenisBayar.Total = parseInt($scope.SelectedJenisBayar.Disc);
+                }
             }else{
-                $scope.SelectedJenisBayar.Total = (parseInt($scope.SelectedJenisBayar.Nominal)*parseInt($scope.SelectedJenisBayar.Jumlah));
+                $scope.showdisc=true;
+                $scope.titledisc = "Potongan (%)";
+                if($scope.SelectedJenisBayar.Disc){
+                    $scope.SelectedJenisBayar.Total = (parseInt($scope.SelectedJenisBayar.Nominal)*parseInt($scope.SelectedJenisBayar.Jumlah))-((parseInt($scope.SelectedJenisBayar.Nominal)*parseInt($scope.SelectedJenisBayar.Jumlah))*(parseInt($scope.SelectedJenisBayar.Disc)/100));
+                }else{
+                    $scope.SelectedJenisBayar.Total = (parseInt($scope.SelectedJenisBayar.Nominal)*parseInt($scope.SelectedJenisBayar.Jumlah));
+                }
             }
-            
         }
 
         $scope.CariMahasiswa = function (npmmhs) {
