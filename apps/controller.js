@@ -770,8 +770,29 @@ angular
         $scope.DataCari;
         $scope.StatusUpdate = false;
         $scope.DataHapus;
+        $scope.Listkategori=["Bayar Umum", "Bayar Khusus"];
+        $scope.ListJenisBayar=[];
+        $scope.showdisc=false;
+        
 
 
+        $scope.SetJenis = (item)=>{
+            if(item == "Bayar Umum"){
+                $scope.ListJenisBayar = $scope.DatasAmbilMahasiswa.BayarUmum;
+            }else{
+                $scope.ListJenisBayar = $scope.DatasAmbilMahasiswa.BayarKhusus;
+            }
+        }
+
+        $scope.SetDisc = ()=>{
+            $scope.showdisc=true;
+            if($scope.SelectedJenisBayar.Disc){
+                $scope.SelectedJenisBayar.Total = (parseInt($scope.SelectedJenisBayar.Nominal)*parseInt($scope.SelectedJenisBayar.Jumlah))-((parseInt($scope.SelectedJenisBayar.Nominal)*parseInt($scope.SelectedJenisBayar.Jumlah))*(parseInt($scope.SelectedJenisBayar.Disc)/100));
+            }else{
+                $scope.SelectedJenisBayar.Total = (parseInt($scope.SelectedJenisBayar.Nominal)*parseInt($scope.SelectedJenisBayar.Jumlah));
+            }
+            
+        }
 
         $scope.CariMahasiswa = function (npmmhs) {
             if (npmmhs != undefined) {
@@ -795,55 +816,39 @@ angular
                     data: Data
 
                 }).then(function (response) {
-                    if (response.status == 200) {
+                    if ($scope.Potongan) {
                         $scope.DatasAmbilMahasiswa = response.data;
-
-                        if ($scope.SetStatus == "TampilUmum") {
-                            var Url = "https://restsimak.stimiksepnop.ac.id/api/sksMahasiswa/AmbilSks?npm=" + $scope.DataCari;
-                            $http({
-                                method: "GET",
-                                url: Url,
-                            }).then(function (response) {
-                                if (response.data.data.SKS != 0) {
-                                    angular.forEach($scope.DatasAmbilMahasiswa.BayarUmum, function (value, key) {
-                                        $scope.DataTotal += parseInt(value.Nominal);
-                                        value.Check = true;
-                                        value.SetDisabled = false;
-                                        value.JenisBayar.forEach(x => {
-                                            if (x.Jenis == "Variable Cost (Per SKS)") {
-                                                if (response.data.data.SKS <= 12) {
-                                                    value.Jumlah = 0;
-                                                    $scope.HitungTotal();
-                                                } else {
-                                                    value.Jumlah = parseInt(response.data.data.SKS) - 12;
-                                                    $scope.HitungTotal();
-                                                }
-
-                                            }
-                                            if (x.Jenis == "Praktikum") {
-                                                value.Jumlah = parseInt(response.data.data.Praktikum);
+                        var Url = "https://restsimak.stimiksepnop.ac.id/api/sksMahasiswa/AmbilSks?npm=" + $scope.DataCari;
+                        $http({
+                            method: "GET",
+                            url: Url,
+                        }).then(function (param) {
+                            if (param.data.data.SKS != 0) {
+                                angular.forEach($scope.DatasAmbilMahasiswa.BayarUmum, function (value, key) {
+                                    value.Check = true;
+                                    value.SetDisabled = false;
+                                    value.JenisBayar.forEach(x => {
+                                        if (x.Jenis == "Variable Cost (Per SKS)") {
+                                            if (param.data.data.SKS <= 12) {
+                                                value.Jumlah = 0;
+                                                $scope.HitungTotal();
+                                            } else {
+                                                value.Jumlah = parseInt(param.data.data.SKS) - 12;
                                                 $scope.HitungTotal();
                                             }
-                                        })
-                                    })
-                                } else {
-                                    alert("Mahasiswa Belum mengajukan KRS");
-                                }
-                            })
 
-                            $scope.ShowData = true;
-                            $scope.HideData = false;
-                        } else if ($scope.SetStatus == "TampilKhusus") {
-                            var Url = "https://restsimak.stimiksepnop.ac.id/api/sksMahasiswa/AmbilSks?npm=" + $scope.DataCari;
-                            $http({
-                                method: "GET",
-                                url: Url,
-                            }).then(params => {
-                                $scope.DataTotal = 0;
-                                $scope.DatasAmbilMahasiswa.BayarKhusus.forEach(x=>{
+                                        }
+                                        if (x.Jenis == "Praktikum") {
+                                            value.Jumlah = parseInt(param.data.data.Praktikum);
+                                            $scope.HitungTotal();
+                                        }
+                                    })
+                                })
+                                $scope.DatasAmbilMahasiswa.BayarKhusus.forEach(x => {
                                     x.SetDisabled = true;
                                     x.Check = false;
                                 })
+                                
                                 angular.forEach($scope.DatasAmbilMahasiswa.BayarKhusus, function (value, key) {
                                     if ($scope.DatasAmbilMahasiswa.DetailBayarKhusus.length > 0) {
                                         angular.forEach($scope.DatasAmbilMahasiswa.DetailBayarKhusus, function (detail) {
@@ -854,11 +859,11 @@ angular
                                             }
                                         })
                                     } else {
-                                        if ((value.JenisBayar[0].IdJenisBayar == "29" || value.JenisBayar[0].IdJenisBayar == "31") && params.data.data.Riset == true) {
+                                        if ((value.JenisBayar[0].IdJenisBayar == "29" || value.JenisBayar[0].IdJenisBayar == "31") && param.data.data.Riset == true) {
                                             $scope.DataTotal += parseInt(value.Nominal);
                                             value.Check = true;
                                             value.SetDisabled = false;
-                                        } else if (value.JenisBayar[0].IdJenisBayar == "30" && params.data.data.KP == true) {
+                                        } else if (value.JenisBayar[0].IdJenisBayar == "30" && param.data.data.KP == true) {
                                             $scope.DataTotal += parseInt(value.Nominal);
                                             value.Check = true;
                                             value.SetDisabled = false;
@@ -867,24 +872,105 @@ angular
                                         }
                                     }
                                 })
-                                $scope.StatusUpdate = true;
-                                $scope.ShowDataKhusus = true;
-                                $scope.HideDataKhusus = false;
-                                $scope.ShowIdentitas2 = false;
-                                $scope.HideIdentitas2 = true;
-                            })
+                                // $scope.ListJenisBayar=[{"Bayar Umum":$scope.DatasAmbilMahasiswa.BayarUmum}, {"Bayar Khusus":$scope.DatasAmbilMahasiswa.BayarKhusus}];
+                            } else {
+                                alert("Mahasiswa Belum mengajukan KRS");
+                            }
+                        })
+
+                        $scope.ShowData = true;
+                        $scope.HideData = false;
+                    } else {
+                        if (response.status == 200) {
+                            $scope.DatasAmbilMahasiswa = response.data;
+
+                            if ($scope.SetStatus == "TampilUmum") {
+                                var Url = "https://restsimak.stimiksepnop.ac.id/api/sksMahasiswa/AmbilSks?npm=" + $scope.DataCari;
+                                $http({
+                                    method: "GET",
+                                    url: Url,
+                                }).then(function (response) {
+                                    if (response.data.data.SKS != 0) {
+                                        angular.forEach($scope.DatasAmbilMahasiswa.BayarUmum, function (value, key) {
+                                            $scope.DataTotal += parseInt(value.Nominal);
+                                            value.Check = true;
+                                            value.SetDisabled = false;
+                                            value.JenisBayar.forEach(x => {
+                                                if (x.Jenis == "Variable Cost (Per SKS)") {
+                                                    if (response.data.data.SKS <= 12) {
+                                                        value.Jumlah = 0;
+                                                        $scope.HitungTotal();
+                                                    } else {
+                                                        value.Jumlah = parseInt(response.data.data.SKS) - 12;
+                                                        $scope.HitungTotal();
+                                                    }
+
+                                                }
+                                                if (x.Jenis == "Praktikum") {
+                                                    value.Jumlah = parseInt(response.data.data.Praktikum);
+                                                    $scope.HitungTotal();
+                                                }
+                                            })
+                                        })
+                                    } else {
+                                        alert("Mahasiswa Belum mengajukan KRS");
+                                    }
+                                })
+
+                                $scope.ShowData = true;
+                                $scope.HideData = false;
+                            } else if ($scope.SetStatus == "TampilKhusus") {
+                                var Url = "https://restsimak.stimiksepnop.ac.id/api/sksMahasiswa/AmbilSks?npm=" + $scope.DataCari;
+                                $http({
+                                    method: "GET",
+                                    url: Url,
+                                }).then(params => {
+                                    $scope.DataTotal = 0;
+                                    $scope.DatasAmbilMahasiswa.BayarKhusus.forEach(x => {
+                                        x.SetDisabled = true;
+                                        x.Check = false;
+                                    })
+                                    angular.forEach($scope.DatasAmbilMahasiswa.BayarKhusus, function (value, key) {
+                                        if ($scope.DatasAmbilMahasiswa.DetailBayarKhusus.length > 0) {
+                                            angular.forEach($scope.DatasAmbilMahasiswa.DetailBayarKhusus, function (detail) {
+                                                if (value.IdBayarKhusus == detail.IdBayarKhusus) {
+                                                    $scope.DataTotal += parseInt(value.Nominal);
+                                                    value.Check = true;
+                                                    value.SetDisabled = false;
+                                                }
+                                            })
+                                        } else {
+                                            if ((value.JenisBayar[0].IdJenisBayar == "29" || value.JenisBayar[0].IdJenisBayar == "31") && params.data.data.Riset == true) {
+                                                $scope.DataTotal += parseInt(value.Nominal);
+                                                value.Check = true;
+                                                value.SetDisabled = false;
+                                            } else if (value.JenisBayar[0].IdJenisBayar == "30" && params.data.data.KP == true) {
+                                                $scope.DataTotal += parseInt(value.Nominal);
+                                                value.Check = true;
+                                                value.SetDisabled = false;
+                                            } else {
+                                                value.SetDisabled = true;
+                                            }
+                                        }
+                                    })
+                                    $scope.StatusUpdate = true;
+                                    $scope.ShowDataKhusus = true;
+                                    $scope.HideDataKhusus = false;
+                                    $scope.ShowIdentitas2 = false;
+                                    $scope.HideIdentitas2 = true;
+                                })
+
+                            } else {
+                                $scope.ShowDataKhusus = false;
+                                $scope.HideDataKhusus = true;
+                                $scope.ShowData = false;
+                                $scope.HideData = true;
+                            }
 
                         } else {
-                            $scope.ShowDataKhusus = false;
-                            $scope.HideDataKhusus = true;
-                            $scope.ShowData = false;
-                            $scope.HideData = true;
+                            alert(response.data.message);
                         }
-
-                    } else {
-                        alert(response.data.message);
                     }
-
                 })
             } else {
                 notificationService.error("Mahasiswa Belum Terdaftar");
@@ -902,6 +988,7 @@ angular
                 $scope.HideIdentitas2 = false;
                 $scope.SetStatus = angular.copy(item);
                 $scope.SetDataProses = "Umum";
+                $scope.Potongan = false;
             } else if (item == "TampilKhusus") {
                 $scope.ShowCari == true;
                 $scope.HideCari = false;
@@ -913,6 +1000,21 @@ angular
                 $scope.HideIdentitas1 = true;
                 $scope.SetStatus = angular.copy(item);
                 $scope.SetDataProses = "Khusus";
+                $scope.Potongan = false;
+            } else if (item == "TampilPotongan") {
+                $scope.ShowCari = true;
+                $scope.HideCari = false;
+                $scope.ShowData = false;
+                $scope.HideData = true;
+                $scope.ShowDataKhusus = false;
+                $scope.HideDataKhusus = true;
+                $scope.ShowIdentitas2 = false;
+                $scope.HideIdentitas2 = true;
+                $scope.ShowIdentitas1 = false;
+                $scope.HideIdentitas1 = true;
+                $scope.SetStatus = angular.copy(item);
+                $scope.Potongan = true;
+                $scope.SetDataProses;
             } else {
                 $scope.SetStatus = "Tambahan";
                 $scope.ShowCari = true;
@@ -921,8 +1023,13 @@ angular
                 $scope.HideData = true;
                 $scope.ShowDataKhusus = false;
                 $scope.HideDataKhusus = true;
+                $scope.ShowIdentitas2 = false;
+                $scope.HideIdentitas2 = true;
+                $scope.ShowIdentitas1 = false;
+                $scope.HideIdentitas1 = true
                 $scope.SetStatus;
                 $scope.SetDataProses;
+                $scope.Potongan = false;
             }
         }
         $scope.DataTA = [];
@@ -1480,6 +1587,7 @@ angular
                 //text: 'Print current page',
                 autoPrint: true,
                 title: "Data Seleksi",
+                footer: true,
                 exportOptions: {
                     columns: ':visible'
                 }

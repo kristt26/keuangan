@@ -19,15 +19,15 @@ $db = $database->getConnection();
 $ta = new TahunAkademik($db);
 $bayarumum = new BayarUmum($db);
 $bayarkhusus = new BayarKhusus($db);
-$detailbayar= new DetailBayar($db);
+$detailbayar = new DetailBayar($db);
 $jenisbayar = new JenisBayar($db);
 $detailBayarKhusus = new DetailBayarKhusus($db);
 
 $data = json_decode(file_get_contents("php://input"));
-$stmt= $ta->GetTAAktif();
-$row =  $stmt->fetchALL(PDO::FETCH_ASSOC);
+$stmt = $ta->GetTAAktif();
+$row = $stmt->fetchALL(PDO::FETCH_ASSOC);
 $TaAktif = (object) $row[0];
-$stmt=null;
+$stmt = null;
 $ItemMahasiswa = array(
     "IdMahasiswa" => $data->IdMahasiswa,
     "NPM" => $data->NPM,
@@ -38,83 +38,129 @@ $ItemMahasiswa = array(
     "TAAktif" => $TaAktif,
     "BayarUmum" => array(),
     "BayarKhusus" => array(),
-    "DetailBayarKhusus"=>array()
+    "DetailBayarKhusus" => array(),
 );
 $stmt = $jenisbayar->GetJenisBayar();
 $DataJenisBayar = $stmt->fetchALL(PDO::FETCH_ASSOC);
-$stmt=null;
-$detailbayar->IdMahasiswa=$data->IdMahasiswa;
+$stmt = null;
+$detailbayar->IdMahasiswa = $data->IdMahasiswa;
 $detailbayar->TA = $TaAktif->TA;
-$stmt= $detailbayar->CekRegistrasi();
+$stmt = $detailbayar->CekRegistrasi();
 $Cek = $stmt->rowCount();
-$stmt=null;
-if($data->SetStatus==="TampilUmum"){
-    if($Cek>0){
+$stmt = null;
+if ($data->SetStatus === "TampilUmum") {
+    if ($Cek > 0) {
         http_response_code(201);
         echo json_encode(
-            array("message" => "Mahasiswa Sudah diregistrasikan pada TA '".$TaAktif->TA."', Cek Detail Pembayaran Mahasiswa")
+            array("message" => "Mahasiswa Sudah diregistrasikan pada TA '" . $TaAktif->TA . "', Cek Detail Pembayaran Mahasiswa")
         );
-    }else{
-        $bayarumum->Angkatan=$data->Angkatan;
+    } else {
+        $bayarumum->Angkatan = $data->Angkatan;
         $stmt = $bayarumum->GetBayarUmumByAngkatan();
         $Cek = $stmt->rowCount();
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
-            {
-                extract($row);
-        
-                $ItemBayarUmum=array(
-                    "IdBayarUmum"=> $IdBayarUmum,
-                    "Angkatan" => $Angkatan,
-                    "Nominal"=>$Nominal,
-                    "Jumlah"=>1,
-                    "JenisBayar"=>array()
-                );
-                foreach ($DataJenisBayar as &$value) {
-                    if($IdJenisBayar==$value['IdJenisBayar']){
-                        array_push($ItemBayarUmum["JenisBayar"], $value);
-                    }
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            extract($row);
+
+            $ItemBayarUmum = array(
+                "IdBayarUmum" => $IdBayarUmum,
+                "Angkatan" => $Angkatan,
+                "Nominal" => $Nominal,
+                "Jumlah" => 1,
+                "JenisBayar" => array(),
+            );
+            foreach ($DataJenisBayar as &$value) {
+                if ($IdJenisBayar == $value['IdJenisBayar']) {
+                    array_push($ItemBayarUmum["JenisBayar"], $value);
                 }
-                array_push($ItemMahasiswa["BayarUmum"], $ItemBayarUmum);
             }
+            array_push($ItemMahasiswa["BayarUmum"], $ItemBayarUmum);
+        }
 
         http_response_code(200);
-     
+
         // show products data in json format
         echo json_encode($ItemMahasiswa);
     }
-}else{
-        $detailBayarKhusus->IdMahasiswa = $data->IdMahasiswa;
-        $detailBayarKhusus->TA = $TaAktif->TA;
-        $stmt = $detailBayarKhusus->readOne();
-        $ItemMahasiswa['DetailBayarKhusus'] = $stmt->fetchALL(PDO::FETCH_ASSOC);
-        $stmt = null;
-        $bayarkhusus->TA = $TaAktif->TA;
-        $stmt = $bayarkhusus->GetBayarKhususByAngkatan();
-        
-        $Cek = $stmt->rowCount();
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
-            {
-                extract($row);
-        
-                $ItemBayarKhusus=array(
-                    "IdBayarKhusus"=> $IdBayarKhusus,
-                    "TA" => $TA,
-                    "Nominal"=>$Nominal,
-                    "JenisBayar"=>array()
-                );
-                foreach ($DataJenisBayar as &$value) {
-                    if($IdJenisBayar==$value['IdJenisBayar']){
-                        array_push($ItemBayarKhusus["JenisBayar"], $value);
-                    }
-                }
-                array_push($ItemMahasiswa["BayarKhusus"], $ItemBayarKhusus);
+} else if ($data->SetStatus === "TampilPotongan") {
+    $bayarumum->Angkatan = $data->Angkatan;
+    $stmt = $bayarumum->GetBayarUmumByAngkatan();
+    $Cek = $stmt->rowCount();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        extract($row);
+
+        $ItemBayarUmum = array(
+            "IdBayarUmum" => $IdBayarUmum,
+            "Angkatan" => $Angkatan,
+            "Nominal" => $Nominal,
+            "Jumlah" => 1,
+            "JenisBayar" => array(),
+        );
+        foreach ($DataJenisBayar as &$value) {
+            if ($IdJenisBayar == $value['IdJenisBayar']) {
+                array_push($ItemBayarUmum["JenisBayar"], $value);
             }
-        
-            http_response_code(200);
-     
-        // show products data in json format
-        echo json_encode($ItemMahasiswa);
+        }
+        array_push($ItemMahasiswa["BayarUmum"], $ItemBayarUmum);
+    }
+    $detailBayarKhusus->IdMahasiswa = $data->IdMahasiswa;
+    $detailBayarKhusus->TA = $TaAktif->TA;
+    $stmt = $detailBayarKhusus->readOne();
+    $ItemMahasiswa['DetailBayarKhusus'] = $stmt->fetchALL(PDO::FETCH_ASSOC);
+    $stmt = null;
+    $bayarkhusus->TA = $TaAktif->TA;
+    $stmt = $bayarkhusus->GetBayarKhususByAngkatan();
+
+    $Cek = $stmt->rowCount();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        extract($row);
+
+        $ItemBayarKhusus = array(
+            "IdBayarKhusus" => $IdBayarKhusus,
+            "TA" => $TA,
+            "Nominal" => $Nominal,
+            "JenisBayar" => array(),
+        );
+        foreach ($DataJenisBayar as &$value) {
+            if ($IdJenisBayar == $value['IdJenisBayar']) {
+                array_push($ItemBayarKhusus["JenisBayar"], $value);
+            }
+        }
+        array_push($ItemMahasiswa["BayarKhusus"], $ItemBayarKhusus);
+    }
+
+    http_response_code(200);
+
+    // show products data in json format
+    echo json_encode($ItemMahasiswa);
+} else {
+    $detailBayarKhusus->IdMahasiswa = $data->IdMahasiswa;
+    $detailBayarKhusus->TA = $TaAktif->TA;
+    $stmt = $detailBayarKhusus->readOne();
+    $ItemMahasiswa['DetailBayarKhusus'] = $stmt->fetchALL(PDO::FETCH_ASSOC);
+    $stmt = null;
+    $bayarkhusus->TA = $TaAktif->TA;
+    $stmt = $bayarkhusus->GetBayarKhususByAngkatan();
+
+    $Cek = $stmt->rowCount();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        extract($row);
+
+        $ItemBayarKhusus = array(
+            "IdBayarKhusus" => $IdBayarKhusus,
+            "TA" => $TA,
+            "Nominal" => $Nominal,
+            "JenisBayar" => array(),
+        );
+        foreach ($DataJenisBayar as &$value) {
+            if ($IdJenisBayar == $value['IdJenisBayar']) {
+                array_push($ItemBayarKhusus["JenisBayar"], $value);
+            }
+        }
+        array_push($ItemMahasiswa["BayarKhusus"], $ItemBayarKhusus);
+    }
+
+    http_response_code(200);
+
+    // show products data in json format
+    echo json_encode($ItemMahasiswa);
 }
-
-
-?>
