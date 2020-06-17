@@ -1099,10 +1099,8 @@ angular
                 url: UrlCreate,
                 data: Data
             }).then(function (response) {
-                if (response.status == 200) {
-                    notificationService.success("Mahasiswa berhasil ditambahkan!!!");
-                    $scope.DataInput = {};
-                }
+                $scope.SetShowCari("TampilPotongan");
+                notificationService.success("Mahasiswa berhasil ditambahkan!!!");
             }, error=>{
                 notificationService.error(error.data.message);
             })
