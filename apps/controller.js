@@ -1573,6 +1573,7 @@ angular
             .withOption("order", [0, "asc"])
             .withButtons([{
                 extend: 'excelHtml5',
+                footer: true,
                 customize: function (xlsx) {
                     var sheet = xlsx.xl.worksheets['sheet1.xml'];
 
@@ -1586,7 +1587,7 @@ angular
                 extend: 'print',
                 //text: 'Print current page',
                 autoPrint: true,
-                title: "Data Seleksi",
+                title: "Laporan Kuangan",
                 footer: true,
                 exportOptions: {
                     columns: ':visible'
