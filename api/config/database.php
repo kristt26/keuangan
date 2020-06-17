@@ -7,8 +7,8 @@ class Database{
     // private $username = "root";
     // private $password = "";
     // public $conn;
-    private $host = "stimiksepnop.ac.id";
-    // private $host = "localhost";
+    // private $host = "stimiksepnop.ac.id";
+    private $host = "localhost";
     private $db_name = "u3011751_keuangan";
     private $username = "u3011751_root";
     private $password = "Stimik@1011";
