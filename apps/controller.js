@@ -770,42 +770,55 @@ angular
         $scope.DataCari;
         $scope.StatusUpdate = false;
         $scope.DataHapus;
-        $scope.Listkategori=["Bayar Umum", "Bayar Khusus"];
-        $scope.ListJenisBayar=[];
-        $scope.showdisc=false;
-        $scope.model={};
-        
+        $scope.Listkategori = ["Bayar Umum", "Bayar Khusus"];
+        $scope.ListJenisBayar = [];
+        $scope.showdisc = false;
+        $scope.model = {};
+        $scope.Instant = false;
 
 
-        $scope.SetJenis = (item)=>{
-            if(item == "Bayar Umum"){
+
+        $scope.SetJenis = (item) => {
+            if (item == "Bayar Umum") {
                 $scope.ListJenisBayar = $scope.DatasAmbilMahasiswa.BayarUmum;
-            }else{
-                $scope.ListJenisBayar = $scope.DatasAmbilMahasiswa.BayarKhusus;
+                $scope.Instant = false;
+            } else {
+                alert("Content ini item tersebut belum tersedia");
+                $scope.Instant = false;
+                $scope.SelectedJenisBayar = {};
             }
         }
 
-        $scope.SetDisc = ()=>{
+        $scope.SetDisc = () => {
             $scope.Karyawan = false;
-            var num = $scope.SelectedJenisBayar.Angkatan.length>4;
-            if(num){
-                $scope.showdisc=true;
-                $scope.Karyawan = true;
-                $scope.titledisc = "Potongan (Rp.)";
-                if($scope.SelectedJenisBayar.Disc){
-                    $scope.SelectedJenisBayar.Total = parseInt($scope.SelectedJenisBayar.Disc);
-                }else{
-                    $scope.SelectedJenisBayar.Total = parseInt($scope.SelectedJenisBayar.Disc);
+            var num = $scope.SelectedJenisBayar.Angkatan.length > 4;
+            if ($scope.DatasAmbilMahasiswa.Potongan && $scope.DatasAmbilMahasiswa.Potongan.find(x => x.IdBayarUmum == $scope.SelectedJenisBayar.IdBayarUmum)) {
+                alert("Item " + $scope.SelectedJenisBayar.JenisBayar[0].Jenis + " sudah di proses");
+                $scope.Instant = false;
+                $scope.showdisc = false;
+            } else {
+                if (num) {
+                    $scope.showdisc = true;
+                    $scope.Karyawan = true;
+                    $scope.titledisc = "Potongan (Rp.)";
+                    if ($scope.SelectedJenisBayar.Disc) {
+                        $scope.SelectedJenisBayar.Total = parseInt($scope.SelectedJenisBayar.Disc);
+                    } else {
+                        $scope.SelectedJenisBayar.Total = parseInt($scope.SelectedJenisBayar.Disc);
+                    }
+                } else {
+                    $scope.showdisc = true;
+                    $scope.titledisc = "Potongan (%)";
+                    if ($scope.SelectedJenisBayar.Disc) {
+                        $scope.SelectedJenisBayar.Total = (parseInt($scope.SelectedJenisBayar.Nominal) * parseInt($scope.SelectedJenisBayar.Jumlah)) - ((parseInt($scope.SelectedJenisBayar.Nominal) * parseInt($scope.SelectedJenisBayar.Jumlah)) * (parseInt($scope.SelectedJenisBayar.Disc) / 100));
+                    } else {
+                        $scope.SelectedJenisBayar.Total = (parseInt($scope.SelectedJenisBayar.Nominal) * parseInt($scope.SelectedJenisBayar.Jumlah));
+                    }
                 }
-            }else{
-                $scope.showdisc=true;
-                $scope.titledisc = "Potongan (%)";
-                if($scope.SelectedJenisBayar.Disc){
-                    $scope.SelectedJenisBayar.Total = (parseInt($scope.SelectedJenisBayar.Nominal)*parseInt($scope.SelectedJenisBayar.Jumlah))-((parseInt($scope.SelectedJenisBayar.Nominal)*parseInt($scope.SelectedJenisBayar.Jumlah))*(parseInt($scope.SelectedJenisBayar.Disc)/100));
-                }else{
-                    $scope.SelectedJenisBayar.Total = (parseInt($scope.SelectedJenisBayar.Nominal)*parseInt($scope.SelectedJenisBayar.Jumlah));
-                }
+                $scope.Instant = true;
             }
+
+
         }
 
         $scope.CariMahasiswa = function (npmmhs) {
@@ -862,7 +875,7 @@ angular
                                     x.SetDisabled = true;
                                     x.Check = false;
                                 })
-                                
+
                                 angular.forEach($scope.DatasAmbilMahasiswa.BayarKhusus, function (value, key) {
                                     if ($scope.DatasAmbilMahasiswa.DetailBayarKhusus.length > 0) {
                                         angular.forEach($scope.DatasAmbilMahasiswa.DetailBayarKhusus, function (detail) {
@@ -1100,11 +1113,11 @@ angular
 
             })
         }
-        $scope.SimpanPotongan = (item)=>{
+        $scope.SimpanPotongan = (item) => {
             item.IdMahasiswa = $scope.DatasAmbilMahasiswa.IdMahasiswa;
             item.TA = $scope.DatasAmbilMahasiswa.TAAktif.TA;
             console.log(item);
-            
+
             var Data = angular.copy(item);
             var UrlCreate = AuthService.Base + "api/datas/create/CreatePotonganUmum.php";
             $http({
@@ -1114,7 +1127,7 @@ angular
             }).then(function (response) {
                 $scope.SetShowCari("TampilPotongan");
                 notificationService.success("Mahasiswa berhasil ditambahkan!!!");
-            }, error=>{
+            }, error => {
                 notificationService.error(error.data.message);
             })
         }
@@ -1348,7 +1361,7 @@ angular
         $scope.Hide = true;
         $scope.DataPrint = [];
         $scope.total = 0;
-        $scope.ListPotongan=[];
+        $scope.ListPotongan = [];
 
         $scope.PrintBA = function (Kartu) {
 
@@ -1416,14 +1429,14 @@ angular
                                 angular.forEach(value1.BayarKhusus, function (value2) {
                                     $scope.DataBayarKhusus += parseInt(angular.copy(value2.Nominal));
                                 })
-                                
+
                                 value1.Total = parseInt(value1.Total);
                                 angular.forEach(value1.BayarUmum, function (value3) {
-                                    if(value3.Potongan){
+                                    if (value3.Potongan) {
                                         $scope.ListPotongan.push(angular.copy(value3))
                                         value1.Total -= parseInt(angular.copy(value3.Potongan.Nominal));
                                     }
-                                    
+
                                 })
                                 $scope.DataTotal.Total += parseInt(value1.Total);
                                 $scope.DataTotal.Bayar += parseInt(value1.Bayar);

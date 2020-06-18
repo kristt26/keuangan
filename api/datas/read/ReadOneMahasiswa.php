@@ -12,6 +12,7 @@ include_once '../../objects/BayarKhusus.php';
 include_once '../../objects/DetailBayarKhusus.php';
 include_once '../../objects/DetailBayar.php';
 include_once '../../objects/JenisBayar.php';
+include_once '../../objects/PotonganUmum.php';
 
 $database = new Database();
 $db = $database->getConnection();
@@ -22,11 +23,18 @@ $bayarkhusus = new BayarKhusus($db);
 $detailbayar = new DetailBayar($db);
 $jenisbayar = new JenisBayar($db);
 $detailBayarKhusus = new DetailBayarKhusus($db);
+$potonganumum = new PotonganUmum($db);
 
 $data = json_decode(file_get_contents("php://input"));
 $stmt = $ta->GetTAAktif();
 $row = $stmt->fetchALL(PDO::FETCH_ASSOC);
 $TaAktif = (object) $row[0];
+$stmt = null;
+$potonganumum->IdMahasiswa = $data->IdMahasiswa;
+$potonganumum->TA = $TaAktif->TA;
+$stmt = $potonganumum->readOne();
+$row = $stmt->fetchALL(PDO::FETCH_ASSOC);
+$DatasPotonganUmum = $row;
 $stmt = null;
 $ItemMahasiswa = array(
     "IdMahasiswa" => $data->IdMahasiswa,
@@ -39,6 +47,7 @@ $ItemMahasiswa = array(
     "BayarUmum" => array(),
     "BayarKhusus" => array(),
     "DetailBayarKhusus" => array(),
+    "Potongan" => $DatasPotonganUmum
 );
 $stmt = $jenisbayar->GetJenisBayar();
 $DataJenisBayar = $stmt->fetchALL(PDO::FETCH_ASSOC);
@@ -82,6 +91,7 @@ if ($data->SetStatus === "TampilUmum") {
         echo json_encode($ItemMahasiswa);
     }
 } else if ($data->SetStatus === "TampilPotongan") {
+
     $bayarumum->Angkatan = $data->Angkatan;
     $stmt = $bayarumum->GetBayarUmumByAngkatan();
     $Cek = $stmt->rowCount();

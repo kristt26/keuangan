@@ -57,7 +57,7 @@
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Kategori Pembayaran</label>
                                         <select class="form-control" ng-options="item as item for item in Listkategori"
-                                            ng-model="SelectedKategori" ng-change="SetJenis(SelectedKategori); model.Kategori=SelectedKategori"></select>
+                                            ng-model="SelectedKategori" ng-change="SetJenis(SelectedKategori); showdisc=false"></select>
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Jenis Pembayaran</label>
@@ -85,7 +85,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">{{titledisc}}</label>
-                                            <input class="form-control" ng-change="SetDisc()" type="text" placeholder="dalam %"
+                                            <input class="form-control" ng-change="SetDisc()" type="text"
                                                 ng-model="SelectedJenisBayar.Disc" />
                                         </div>
                                         <div class="form-group">
