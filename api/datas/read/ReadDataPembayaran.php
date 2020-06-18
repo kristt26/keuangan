@@ -118,7 +118,7 @@ foreach ($DatasMahasiswa as &$value) {
         foreach ($DataBayarUmum as $key => $ItemUmum) {
             foreach ($DatasPotonganUmum as $key => $ItemPotongan) {
                 if($ItemUmum['IdBayarUmum']==$ItemPotongan['IdBayarUmum']){
-                    $DataBayarUmum->$index['Potongan'] = $ItemPotongan;
+                    $$ItemUmum->Potongan = $ItemPotongan;
                 }
             }
             $index++;
