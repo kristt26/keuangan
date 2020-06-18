@@ -1597,6 +1597,16 @@ angular
                             }
                         });
                         $scope.TotalBayar.BayarUmum += parseInt(value.Nominal);
+                        if(value.Potongan){
+                            $scope.TotalBayar.BayarUmum -= parseInt(value.Potongan.Nominal);
+                            if($scope.DataPembayaran.Mahasiswa.Angkatan.length>4){
+                                value.Jenis = value.Jenis + ", Disc Rp. " + value.Potongan.Disc;
+                                
+                            }else{
+                                value.Jenis = value.Jenis + ", Disc " + value.Potongan.Disc + "%";
+                                value.Nominal -= parseInt(value.Potongan.Nominal);
+                            }
+                        }
                     });
                     $scope.TotalBayar.IndexBayarUmum = $scope.DatasTagihan.BayarUmum.length + 1;
                 } else {
