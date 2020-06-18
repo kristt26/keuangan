@@ -114,14 +114,12 @@ foreach ($DatasMahasiswa as &$value) {
         $row = $stmt->fetchALL(PDO::FETCH_ASSOC);
         $DatasPotonganUmum = (object)$row;
         $stmt = null;
-        $index = 0;
         foreach ($DataBayarUmum as $key => $ItemUmum) {
-            foreach ($DatasPotonganUmum as $key => $ItemPotongan) {
+            foreach ($DatasPotonganUmum as $key1 => $ItemPotongan) {
                 if($ItemUmum['IdBayarUmum']==$ItemPotongan['IdBayarUmum']){
-                    $$ItemUmum->Potongan = $ItemPotongan;
+                    $DataBayarUmum->$key['Potongan'] = $ItemPotongan;
                 }
             }
-            $index++;
         }
         $ItemMaster = array(
             "IdMasterBayar" => $value1["IdMasterBayar"],
