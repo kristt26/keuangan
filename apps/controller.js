@@ -1734,6 +1734,8 @@ angular
                             angular.forEach(value1.Potongan, function(x){
                                 value1.Total = parseInt(value1.Total) - parseInt(x.Nominal);
                             })
+                        }else{
+                            value1.Total = parseInt(value1.Total);
                         }
                         value1.Tunggakan= value1.Total -  parseInt(value1.Bayar);
                         value1.Bayar = parseInt(value1.Bayar);
