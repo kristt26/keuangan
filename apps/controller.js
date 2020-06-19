@@ -1730,8 +1730,7 @@ angular
 
                 angular.forEach(value.MasterBayar, function (value1, key1) {
                     if (value1.TA == $scope.DataInput.TA) {
-                        var panjang = Object.entries(value1.Potongan).length;
-                        if(value1.Potongan){
+                        if(Object.entries(value1.Potongan).length>0){
                             value1.Potongan.forEach(x=>{
                                 value1.Total = parseInt(value1.Total) - parseInt(x.Nominal);
                             })
