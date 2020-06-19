@@ -1730,12 +1730,19 @@ angular
 
                 angular.forEach(value.MasterBayar, function (value1, key1) {
                     if (value1.TA == $scope.DataInput.TA) {
+                        if(value1.Potongan){
+                            value1.Potongan.forEach(x=>{
+                                value1.Total = parseInt(value1.Total) - parseInt(x.Nominal);
+                            })
+                        }
+                        value1.Tunggakan= value1.Total -  parseInt(value1.Bayar);
+                        value1.Bayar = parseInt(value1.Bayar);
                         a.Total = value1.Total;
                         a.Bayar = value1.Bayar;
                         a.Tunggakan = value1.Tunggakan;
-                        $scope.TotalTA.Total += parseInt(value1.Total);
-                        $scope.TotalTA.Bayar += parseInt(value1.Bayar);
-                        $scope.TotalTA.Tunggakan += parseInt(value1.Tunggakan);
+                        $scope.TotalTA.Total += value1.Total;
+                        $scope.TotalTA.Bayar += value1.Bayar;
+                        $scope.TotalTA.Tunggakan += value1.Tunggakan;
                         $scope.DataTA.push(angular.copy(a));
                         b = true;
                     }
