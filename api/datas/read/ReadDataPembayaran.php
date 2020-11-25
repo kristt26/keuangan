@@ -100,7 +100,7 @@ foreach ($DatasMahasiswa as &$value) {
         $detailbayarumum->IdMahasiswa = $value1["IdMahasiswa"];
         $stmt = $detailbayarumum->readOne();
         $row = $stmt->fetchALL(PDO::FETCH_ASSOC);
-        $DataBayarUmum = (object)$row;
+        $DataBayarUmum = (object) $row;
         $stmt = null;
         $detailbayarkhusus->TA = $value1["TA"];
         $detailbayarkhusus->IdMahasiswa = $value1["IdMahasiswa"];
@@ -112,11 +112,11 @@ foreach ($DatasMahasiswa as &$value) {
         $potonganumum->TA = $value1["TA"];
         $stmt = $potonganumum->readOne();
         $row = $stmt->fetchALL(PDO::FETCH_ASSOC);
-        $DatasPotonganUmum = (object)$row;
+        $DatasPotonganUmum = (object) $row;
         $stmt = null;
         foreach ($DataBayarUmum as $key => $ItemUmum) {
             foreach ($DatasPotonganUmum as $key1 => $ItemPotongan) {
-                if($ItemUmum['IdBayarUmum']==$ItemPotongan['IdBayarUmum']){
+                if ($ItemUmum['IdBayarUmum'] == $ItemPotongan['IdBayarUmum']) {
                     $ItemUmum['Potongan'] = $ItemPotongan;
                     $DataBayarUmum->$key = $ItemUmum;
 
@@ -132,7 +132,7 @@ foreach ($DatasMahasiswa as &$value) {
             "TrxBayar" => $DataBayar,
             "BayarUmum" => $DataBayarUmum,
             "BayarKhusus" => $DataBayarKhusus,
-            "Potongan" => $DatasPotonganUmum
+            "Potongan" => $DatasPotonganUmum,
         );
         array_push($ItemMahasiswa["MasterBayar"], $ItemMaster);
 

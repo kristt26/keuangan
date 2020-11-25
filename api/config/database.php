@@ -1,6 +1,7 @@
 <?php
-class Database{
- 
+class Database
+{
+
     // specify your own database credentials
     // private $host = "localhost";
     // private $db_name = "dbkeuangan";
@@ -8,7 +9,7 @@ class Database{
     // private $password = "";
     // public $conn;
     // private $host = "stimiksepnop.ac.id";
-    private $host = "localhost";
+    private $host = "stimiksepnop.ac.id";
     private $db_name = "u3011751_keuangan";
     private $username = "u3011751_root";
     private $password = "Stimik@1011";
@@ -18,22 +19,22 @@ class Database{
     // private $db_name = "dbkeuangan";
     // private $username = "root";
     // private $password = "admin@db1011";
- 
+
     // get the database connection
-    public function getConnection(){
- 
+    public function getConnection()
+    {
+
         $this->conn = null;
- 
-        try{
+
+        try {
             $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, $this->username, $this->password);
             $this->conn->exec("set names utf8");
             // $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            
-        }catch(PDOException $exception){
+
+        } catch (PDOException $exception) {
             echo "Connection error: " . $exception->getMessage();
         }
- 
+
         return $this->conn;
     }
 }
-?>

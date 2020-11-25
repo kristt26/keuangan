@@ -75,7 +75,7 @@ angular
                         window.location.href = "admin.html";
                     else if (response.data.Session.Level == "Ketua") {
                         window.location.href = "ketua.html";
-                    } else if (response.data.Session.Level == "Puket III") {
+                    } else if (response.data.Session.Level == "Puket II") {
                         window.location.href = "puketkeuangan.html";
                     } else if (response.data.Session.Level == "Pendataan") {
                         window.location.href = "pendataan.html";
@@ -1362,6 +1362,7 @@ angular
         $scope.DataPrint = [];
         $scope.total = 0;
         $scope.ListPotongan = [];
+        $scope.DataHitung ={};
 
         $scope.PrintBA = function (Kartu) {
 
@@ -1436,12 +1437,14 @@ angular
                                         $scope.ListPotongan.push(angular.copy(value3))
                                         value1.Total -= parseInt(angular.copy(value3.Potongan.Nominal));
                                     }
-
                                 })
                                 $scope.DataTotal.Total += parseInt(value1.Total);
                                 $scope.DataTotal.Bayar += parseInt(value1.Bayar);
                                 value1.Tunggakan = value1.Total - parseInt(value1.Bayar);
                                 $scope.DataTotal.Tunggakan += parseInt(value1.Tunggakan);
+                                $scope.ShowDataTagihan(value1);
+                                value1.DataHitung = $scope.DataHitung;
+                                console.log(value1.DataHitung);
                             })
                             a = true;
                             $http({
@@ -1457,7 +1460,6 @@ angular
                                         } else {
                                             $scope.DataInformation.Semester = "GENAP";
                                         }
-
                                     }
                                 })
                             })
@@ -1524,6 +1526,7 @@ angular
         $scope.PrintTotalTunggakan = 0;
         $scope.Piutang = 0;
         $scope.ShowDataTagihan = function (item) {
+            $scope.DataHitung = {};
             $scope.PrintBayar = item.Bayar;
             $scope.PrintTotal = item.Total;
             $scope.PrintTunggakan = item.Tunggakan;
@@ -1573,6 +1576,7 @@ angular
                         })
                         $scope.TotalBayar.BayarKhusus += parseInt(value.Nominal);
                     })
+                    $scope.DatasTagihan.TotalBayarKhusus = $scope.TotalBayar.BayarKhusus;
                     $scope.TotalBayar.IndexBayarKhusus = $scope.DatasTagihan.BayarKhusus.length;
                     angular.forEach($scope.DatasTagihan.BayarUmum, function (value, key) {
                         angular.forEach($scope.DataPembayaran.BayarUmum, function (value1, key1) {
@@ -1597,6 +1601,7 @@ angular
                             }
                         });
                         $scope.TotalBayar.BayarUmum += parseInt(value.Nominal);
+                        
                         if(value.Potongan){
                             $scope.TotalBayar.BayarUmum -= parseInt(value.Potongan.Nominal);
                             if($scope.DataPembayaran.Mahasiswa.Angkatan.length>4){
@@ -1609,6 +1614,8 @@ angular
                         }
                     });
                     $scope.TotalBayar.IndexBayarUmum = $scope.DatasTagihan.BayarUmum.length + 1;
+                    $scope.DatasTagihan.TotalBayarUmum = $scope.TotalBayar.BayarUmum;
+                    $scope.DataHitung =  $scope.DatasTagihan;
                 } else {
                     alert("Mahasiswa Belum mengajukan KRS");
                 }
