@@ -17,9 +17,9 @@ angular
             }
             return "";
         }
-        var a  = JSON.parse($scope.getCookie('data'));
+        var a  = $scope.getCookie('data');
         if(a)
-        $scope.session = a;
+        $scope.session =  JSON.parse(a);
         else
         window.location.href = 'index.html';
         // var Urlauth = AuthService.Base + "api/datas/read/auth.php";
