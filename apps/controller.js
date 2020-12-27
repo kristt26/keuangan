@@ -17,11 +17,11 @@ angular
             }
             return "";
         }
-        var a  = $scope.getCookie('data');
-        if(a)
-        $scope.session =  JSON.parse(a);
+        var a = $scope.getCookie('data');
+        if (a)
+            $scope.session = JSON.parse(a);
         else
-        window.location.href = 'index.html';
+            window.location.href = 'index.html';
         // var Urlauth = AuthService.Base + "api/datas/read/auth.php";
         // $http({
         //     method: "get",
@@ -84,7 +84,7 @@ angular
             var expires = "expires=" + d.toGMTString();
             document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
         }
-        
+
         $scope.Login = function () {
             var UrlLogin = AuthService.Base + "api/datas/read/UserLogin.php";
             var Data = angular.copy($scope.DatasLogin);
@@ -1379,7 +1379,7 @@ angular
         $scope.DataPrint = [];
         $scope.total = 0;
         $scope.ListPotongan = [];
-        $scope.DataHitung ={};
+        $scope.DataHitung = {};
 
         $scope.PrintBA = function (Kartu) {
 
@@ -1618,13 +1618,13 @@ angular
                             }
                         });
                         $scope.TotalBayar.BayarUmum += parseInt(value.Nominal);
-                        
-                        if(value.Potongan){
+
+                        if (value.Potongan) {
                             $scope.TotalBayar.BayarUmum -= parseInt(value.Potongan.Nominal);
-                            if($scope.DataPembayaran.Mahasiswa.Angkatan.length>4){
+                            if ($scope.DataPembayaran.Mahasiswa.Angkatan.length > 4) {
                                 value.Jenis = value.Jenis + ", Disc Rp. " + value.Potongan.Disc;
-                                
-                            }else{
+
+                            } else {
                                 value.Jenis = value.Jenis + ", Disc " + value.Potongan.Disc + "%";
                                 value.Nominal -= parseInt(value.Potongan.Nominal);
                             }
@@ -1632,7 +1632,7 @@ angular
                     });
                     $scope.TotalBayar.IndexBayarUmum = $scope.DatasTagihan.BayarUmum.length + 1;
                     $scope.DatasTagihan.TotalBayarUmum = $scope.TotalBayar.BayarUmum;
-                    $scope.DataHitung =  $scope.DatasTagihan;
+                    $scope.DataHitung = $scope.DatasTagihan;
                 } else {
                     alert("Mahasiswa Belum mengajukan KRS");
                 }
@@ -1701,14 +1701,21 @@ angular
         $scope.HideDetailPembayaran = true;
         $scope.ShowLaporanTA = false;
         $scope.HideLaporanTA = true;
+        $scope.model = {};
 
         $scope.Init = function () {
             $http({
                 method: "GET",
-                url: AuthService.Base + "api/datas/read/ReadDataPembayaran.php"
+                url: AuthService.Base + "api/datas/read/ReadLaporan.php"
             }).then(function (response) {
                 if (response.status == 200) {
                     $scope.DataPembayaran = response.data;
+                    $('#reservation').daterangepicker({
+                        timePicker: false,
+                        locale: {
+                            format: 'YYYY-MM-DD'
+                        }
+                    })
                 }
 
             })
@@ -1744,36 +1751,26 @@ angular
             $scope.TotalTA.Bayar = 0;
             $scope.TotalTA.Tunggakan = 0;
             var b = false;
-            angular.forEach($scope.DataPembayaran.Mahasiswa, function (value, key) {
-                var a = {};
-                a.NPM = value.NPM;
-                a.NamaMahasiswa = value.NamaMahasiswa;
-                a.Total = 0;
-                a.Bayar = 0;
-                a.Tunggakan = 0;
-
-                angular.forEach(value.MasterBayar, function (value1, key1) {
-                    if (value1.TA == $scope.DataInput.TA) {
-                        if(Object.entries(value1.Potongan).length>0){
-                            angular.forEach(value1.Potongan, function(x){
-                                value1.Total = parseInt(value1.Total) - parseInt(x.Nominal);
-                            })
-                        }else{
-                            value1.Total = parseInt(value1.Total);
-                        }
-                        value1.Tunggakan= value1.Total -  parseInt(value1.Bayar);
-                        value1.Bayar = parseInt(value1.Bayar);
-                        a.Total = value1.Total;
-                        a.Bayar = value1.Bayar;
-                        a.Tunggakan = value1.Tunggakan;
+            angular.forEach($scope.DataPembayaran.Laporan, function (value1, key1) {
+                if (value1.TA == $scope.DataInput.TA) {
+                    value1.Total = parseInt(value1.Total);
+                    value1.Potongan = value1.Potongan == null || value1.Potongan == 0 ? 0 : parseInt(value1.Potongan);
+                    value1.Bayar = value1.Bayar == null || value1.Bayar == 0 ? 0 : parseInt(value1.Bayar);
+                    value1.Tunggakan = value1.Tunggakan == null || value1.Tunggakan == 0 ? 0 : parseInt(value1.Tunggakan);
+                    if (value1.Potongan) {
+                        $scope.TotalTA.Total += (value1.Total - value1.Potongan);
+                        $scope.TotalTA.Tunggakan += (value1.Total - value1.Potongan) - value1.Bayar;
+                    } else {
+                        value1.Total = value1.Total;
                         $scope.TotalTA.Total += value1.Total;
-                        $scope.TotalTA.Bayar += value1.Bayar;
-                        $scope.TotalTA.Tunggakan += value1.Tunggakan;
-                        $scope.DataTA.push(angular.copy(a));
-                        b = true;
+                        $scope.TotalTA.Tunggakan += value1.Total - value1.Bayar;
                     }
-                })
-            });
+
+                    $scope.TotalTA.Bayar += value1.Bayar == null ? 0 : value1.Bayar;
+                    $scope.DataTA.push(angular.copy(value1));
+                    b = true;
+                }
+            })
             if (b == true) {
                 $scope.ShowLaporanTA = true;
                 $scope.HideLaporanTA = false;
@@ -1790,25 +1787,44 @@ angular
             $scope.TotalTA.Total = 0;
             $scope.TotalTA.Bayar = 0;
             $scope.TotalTA.Tunggakan = 0;
-            angular.forEach($scope.DataPembayaran.DataTA, function (valueTA, KeyTA) {
+            angular.forEach($scope.DataPembayaran.TA, function (valueTA, KeyTA) {
                 temp.TA = angular.copy(valueTA.TA);
                 temp.Total = 0;
                 temp.Bayar = 0;
                 temp.Tunggakan = 0;
-                angular.forEach($scope.DataPembayaran.Mahasiswa, function (valueMahasiswa, keyMahasiswa) {
-                    angular.forEach(valueMahasiswa.MasterBayar, function (valueMasterBayar, KeyMasterbayar) {
-                        if (valueTA.TA == valueMasterBayar.TA) {
+                var data = $scope.DataPembayaran.Laporan.filter(x => x.TA == valueTA.TA);
+                temp.Total = data.reduce((prev, cur) => {
+                    return prev + (parseFloat(cur.Total) - (cur.Potongan == null || cur.Potongan == 0 ? 0 : parseFloat(cur.Potongan)));
+                }, 0);
+                temp.Bayar = data.reduce((prev, cur) => {
+                    return prev + (cur.Bayar == null || cur.Bayar == 0 ? 0 : parseFloat(cur.Bayar));
+                }, 0);
+                temp.Tunggakan = temp.Total - temp.Bayar;
 
-                            temp.Total += parseInt(angular.copy(valueMasterBayar.Total));
-                            temp.Bayar += parseInt(angular.copy(valueMasterBayar.Bayar));
-                            temp.Tunggakan += parseInt(angular.copy(valueMasterBayar.Tunggakan));
-                        }
-                    })
-                })
                 $scope.TotalTA.Total += temp.Total;
                 $scope.TotalTA.Bayar += temp.Bayar;
                 $scope.TotalTA.Tunggakan += temp.Tunggakan;
                 $scope.DataTotal.push(angular.copy(temp));
+            })
+        }
+        $scope.DatasTanggal = [];
+        $scope.Tanggal = (item) => {
+            $scope.TotalPembayaran = 0
+            var a = item.split(' - ');
+            $scope.model.Awal = a[0];
+            $scope.model.Akhir = a[1];
+            $http({
+                method: "POST",
+                data: $scope.model,
+                url: AuthService.Base + "api/datas/read/ReadLaporanTanggal.php"
+            }).then(function (response) {
+                if (response.status == 200) {
+                    $scope.DatasTanggal = response.data;
+                    $scope.TotalPembayaran = $scope.DatasTanggal.reduce((awal, akhir)=>{
+                        return awal + parseFloat(akhir.JumlahBayar);
+                    }, 0)
+                }
+
             })
         }
         $scope.Clear = function (item) {
@@ -1817,9 +1833,8 @@ angular
             $scope.DataInput = {};
             if (item == "CariTA")
                 $scope.CariTA();
-            else
+            else if (item == "All")
                 $scope.DataKeseluruhan();
-
 
         }
     })

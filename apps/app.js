@@ -1,4 +1,4 @@
-var app = angular.module("Apps", ["ngRoute", "Ctrl", "datatables.buttons", "datatables", "oitozero.ngSweetAlert"]);
+var app = angular.module("Apps", ["ngRoute", "Ctrl", "datatables.buttons", "datatables", "oitozero.ngSweetAlert", "ngLocale"]);
 app.config(function($routeProvider) {
     $routeProvider
         .when("/Main", {
