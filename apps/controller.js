@@ -40,18 +40,18 @@ angular
         $scope.Init = function () {
             $scope.DataMaster.Total = 0;
             $scope.DataMaster.Bayar = 0;
-            $scope.DataMaster.Tunggakan = 0;
-            var Urlauth = AuthService.Base + "api/datas/read/ReadInformasi.php";
+            // $scope.DataMaster.Tunggakan = 0;
+            var Urlauth = AuthService.Base + "api/datas/read/ReadLaporan.php";
             $http({
                 method: "get",
                 url: Urlauth,
             })
                 .then(function (response) {
                     if (response.status == 200) {
-                        angular.forEach(response.data, function (value, key) {
-                            $scope.DataMaster.Total += parseInt(value.Total);
-                            $scope.DataMaster.Bayar += parseInt(value.Bayar);
-                            $scope.DataMaster.Tunggakan += parseInt(value.Tunggakan);
+                        angular.forEach(response.data.Laporan, function (value, key) {
+                            $scope.DataMaster.Total += value.Potongan == null || value.Potongan == 0 ? parseInt(value.Total)  : parseInt(value.Total) - parseFloat(value.Potongan);
+                            $scope.DataMaster.Bayar += value.Bayar == null || value.Bayar == 0 ? 0 : parseInt(value.Bayar);
+                            // $scope.DataMaster.Tunggakan += value.Bayar == null || value.Bayar == 0 ? parseInt(value.Total) :parseInt(value.Total) - parseInt(value.Bayar);
                         })
                     }
                 })
