@@ -17,22 +17,22 @@ angular
             }
             return "";
         }
-        // var a  = $scope.getCookie('data');
-        // if(a)
-        // $scope.session =  JSON.parse(a);
-        // else
-        // window.location.href = 'index.html';
-        var Urlauth = AuthService.Base + "api/datas/read/auth.php";
-        $http({
-            method: "get",
-            url: Urlauth,
-        })
-            .then(function (response) {
-                if (response.data.Session == false) {
-                    window.location.href = 'index.html';
-                } else
-                    $scope.session = response.data.Session;
-            }, function (error) { })
+        var a  = $scope.getCookie('data');
+        if(a)
+        $scope.session =  JSON.parse(a);
+        else
+        window.location.href = 'index.html';
+        // var Urlauth = AuthService.Base + "api/datas/read/auth.php";
+        // $http({
+        //     method: "get",
+        //     url: Urlauth,
+        // })
+        //     .then(function (response) {
+        //         if (response.data.Session == false) {
+        //             // window.location.href = 'index.html';
+        //         } else
+        //             $scope.session = response.data.Session;
+        //     }, function (error) { })
     })
     .controller("MainController", function ($scope, $http, AuthService) {
         $scope.DataMaster = {};
