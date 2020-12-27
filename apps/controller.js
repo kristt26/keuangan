@@ -14,9 +14,6 @@ angular
                     $scope.session = response.data.Session;
             }, function (error) { })
     })
-
-
-
     .controller("MainController", function ($scope, $http, AuthService) {
         $scope.DataMaster = {};
 
@@ -40,7 +37,6 @@ angular
                 })
         }
     })
-
     .controller("LogController", function ($scope, $http, AuthService) {
         var Urlauth = AuthService.Base + "api/datas/read/LogOut.php";
         $http({
@@ -59,7 +55,6 @@ angular
         //         
         //     }, function (error) { })
     })
-
     .controller("LoginController", function ($scope, $http, AuthService) {
         $scope.DatasLogin = {};
         $scope.Login = function () {
@@ -379,7 +374,6 @@ angular
 
         }
     })
-
     .controller("JenisBayarController", function (
         $scope,
         $http,
@@ -506,7 +500,6 @@ angular
             })
         }
     })
-
     .controller("KelolahPembayaranController", function (
         $scope,
         $http,
@@ -678,7 +671,6 @@ angular
             })
         }
     })
-
     .controller("BayarKhususController", function (
         $scope,
         $http,
@@ -688,7 +680,6 @@ angular
     ) {
 
     })
-
     .controller("CreateTAController", function (
         $scope,
         $http,
@@ -698,7 +689,6 @@ angular
     ) {
 
     })
-
     .controller("RegistrasiController", function (
         $scope,
         $http,
@@ -1299,7 +1289,6 @@ angular
             })
         }
     })
-
     .controller("PenggunaController", function (
         $scope,
         $http,
@@ -1342,7 +1331,6 @@ angular
             );
         };
     })
-
     .controller("PembayaranMahasiswaController", function (
         $scope,
         $http,
