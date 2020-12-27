@@ -9,7 +9,7 @@ angular
         })
             .then(function (response) {
                 if (response.data.Session == false) {
-                    window.location.href = 'index.html';
+                    // window.location.href = 'index.html';
                 } else
                     $scope.session = response.data.Session;
             }, function (error) { })
