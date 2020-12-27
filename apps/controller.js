@@ -63,6 +63,7 @@ angular
             method: "GET",
             url: Urlauth
         }).then(function (response) {
+            document.cookie = "data=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
             window.location.href = "index.html";
         }, function (error) {
             alert(error.message);
