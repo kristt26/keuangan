@@ -2,17 +2,33 @@ angular
     .module("Ctrl", ["datatables", "datatables.buttons", "jlareau.pnotify", "pdfjsViewer"])
     .controller("UserSession", function ($scope, $http, AuthService) {
         $scope.session = {};
-        var Urlauth = AuthService.Base + "api/datas/read/auth.php";
-        $http({
-            method: "get",
-            url: Urlauth,
-        })
-            .then(function (response) {
-                if (response.data.Session == false) {
-                    // window.location.href = 'index.html';
-                } else
-                    $scope.session = response.data.Session;
-            }, function (error) { })
+        $scope.getCookie = (cname) => {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+        $scope.session = $scope.getCookie('data');
+        // var Urlauth = AuthService.Base + "api/datas/read/auth.php";
+        // $http({
+        //     method: "get",
+        //     url: Urlauth,
+        // })
+        //     .then(function (response) {
+        //         if (response.data.Session == false) {
+        //             // window.location.href = 'index.html';
+        //         } else
+        //             $scope.session = response.data.Session;
+        //     }, function (error) { })
     })
     .controller("MainController", function ($scope, $http, AuthService) {
         $scope.DataMaster = {};
@@ -57,6 +73,13 @@ angular
     })
     .controller("LoginController", function ($scope, $http, AuthService) {
         $scope.DatasLogin = {};
+        $scope.setCookie = (cname, cvalue, exdays) => {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toGMTString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+        
         $scope.Login = function () {
             var UrlLogin = AuthService.Base + "api/datas/read/UserLogin.php";
             var Data = angular.copy($scope.DatasLogin);
@@ -77,6 +100,7 @@ angular
                     } else {
                         window.location.href = "pembayaran.html";
                     }
+                    $scope.setCookie('data', JSON.stringify(response.data.Session), 1);
 
 
                 } else
