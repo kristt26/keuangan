@@ -19,6 +19,7 @@ $user = new User($db);
 //$num = $stmt->rowCount();
  
 // check if more than 0 record found
+ini_set('display_errors', 1);
 session_start();
 echo json_encode(array("Session" => $_SESSION));
 ?>
