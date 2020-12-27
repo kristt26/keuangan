@@ -19,5 +19,5 @@ $user = new User($db);
 //$num = $stmt->rowCount();
  
 // check if more than 0 record found
-echo json_encode(array("Session" => $user->CheckSession()));
+echo json_encode(array("Session" => $_SESSION));
 ?>
