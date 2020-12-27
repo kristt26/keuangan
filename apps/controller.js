@@ -1443,6 +1443,8 @@ angular
                         if ($scope.DataPembayaran.Mahasiswa.NPM == $scope.DataCari) {
                             $scope.DataInformation = angular.copy($scope.DataPembayaran.Mahasiswa);
                             angular.forEach($scope.DataInformation.MasterBayar, function (value1, key1) {
+                                value1.Bayar = value1.Bayar ==null || value1.Bayar == 0 ? 0 : parseFloat(value1.Bayar);
+                                value1.Tunggakan = value1.Tunggakan ==null || value1.Tunggakan == 0 ? 0 : parseFloat(value1.Tunggakan);
                                 $scope.DataBayarKhusus = 0;
                                 angular.forEach(value1.BayarKhusus, function (value2) {
                                     $scope.DataBayarKhusus += parseInt(angular.copy(value2.Nominal));
@@ -1493,40 +1495,60 @@ angular
                 })
             }
         }
-        $scope.Simpan = function () {
-            $http({
-                method: "POST",
-                url: AuthService.Base + "api/datas/create/CreatePembayaran.php",
-                data: $scope.DataInput
-            }).then(function (response) {
-                if (response.status == 200) {
-                    // $scope.DataInput.IdTrxBayar=response.data.message;
-                    $scope.getdata = {};
-                    $scope.getdata.IdTrxBayar = response.data.IdTrxBayar;
-                    $scope.getdata.TA = $scope.DataInput.TA.TA;
-                    $scope.getdata.TglBayar = $scope.DataInput.TglBayar;
-                    $scope.getdata.JumlahBayar = $scope.DataInput.JumlahBayar;
-                    $scope.getdata.Description = $scope.DataInput.Description;
-                    $scope.getdata.IdMahasiswa = $scope.DataInput.IdMahasiswa;
-                    $scope.getdata.IdPetugas = response.data.IdPetugas;
-                    angular.forEach($scope.DataPembayaran.Mahasiswa, function (value, key) {
-                        if (value.IdMahasiswa == $scope.DataInput.IdMahasiswa) {
-                            angular.forEach(value.MasterBayar, function (value1, key1) {
-                                if (value1.TA == $scope.DataInput.TA.TA) {
-                                    value1.Bayar = parseInt(angular.copy(value1.Bayar)) + parseInt(angular.copy($scope.getdata.JumlahBayar));
-                                    value1.Tunggakan = parseInt(angular.copy(value1.Tunggakan)) - parseInt(angular.copy($scope.getdata.JumlahBayar));
-                                    value1.TrxBayar.push(angular.copy($scope.getdata));
-                                }
-                            })
-                        }
-                    })
-                    notificationService.success("Success Membayar");
-                    $scope.DataInput = {};
-                    $scope.DataCari;
-                    $scope.ShowInputPembayaran = false;
-                    $scope.HideInputPembayaran = true;
+        $scope.getCookie = (cname) => {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
                 }
-            })
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+        $scope.Simpan = function () {
+            var a = $scope.getCookie('data');
+            if(a){
+                var session = JSON.parse(a);
+                $scope.DataInput.IdPetugas = session.IdUser;
+                $http({
+                    method: "POST",
+                    url: AuthService.Base + "api/datas/create/CreatePembayaran.php",
+                    data: $scope.DataInput
+                }).then(function (response) {
+                    if (response.status == 200) {
+                        // $scope.DataInput.IdTrxBayar=response.data.message;
+                        $scope.getdata = {};
+                        $scope.getdata.IdTrxBayar = response.data.IdTrxBayar;
+                        $scope.getdata.TA = $scope.DataInput.TA.TA;
+                        $scope.getdata.TglBayar = $scope.DataInput.TglBayar;
+                        $scope.getdata.JumlahBayar = $scope.DataInput.JumlahBayar;
+                        $scope.getdata.Description = $scope.DataInput.Description;
+                        $scope.getdata.IdMahasiswa = $scope.DataInput.IdMahasiswa;
+                        $scope.getdata.IdPetugas = response.data.IdPetugas;
+                        angular.forEach($scope.DataPembayaran.Mahasiswa, function (value, key) {
+                            if (value.IdMahasiswa == $scope.DataInput.IdMahasiswa) {
+                                angular.forEach(value.MasterBayar, function (value1, key1) {
+                                    if (value1.TA == $scope.DataInput.TA.TA) {
+                                        value1.Bayar = parseInt(angular.copy(value1.Bayar)) + parseInt(angular.copy($scope.getdata.JumlahBayar));
+                                        value1.Tunggakan = parseInt(angular.copy(value1.Tunggakan)) - parseInt(angular.copy($scope.getdata.JumlahBayar));
+                                        value1.TrxBayar.push(angular.copy($scope.getdata));
+                                    }
+                                })
+                            }
+                        })
+                        notificationService.success("Success Membayar");
+                        $scope.DataInput = {};
+                        $scope.DataCari;
+                        $scope.ShowInputPembayaran = false;
+                        $scope.HideInputPembayaran = true;
+                    }
+                })
+            }
         }
         $scope.Clear = function (item) {
             // $scope.DataInput={};
