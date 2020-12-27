@@ -17,7 +17,7 @@ angular
             }
             return "";
         }
-        var a  = $scope.getCookie('data');
+        var a  = JSON.parse($scope.getCookie('data'));
         $scope.session = a;
         // var Urlauth = AuthService.Base + "api/datas/read/auth.php";
         // $http({
