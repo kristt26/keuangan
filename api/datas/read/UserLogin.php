@@ -18,7 +18,7 @@ $row = $stmt->rowCount();
 
 if($row>0)
 {
-    // session_start();
+    session_start();
     $_SESSION["IdUser"] = $user->IdUser;
     $_SESSION["Nama"] = $user->Nama;
     $_SESSION["Level"] = $user->Level;
