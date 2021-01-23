@@ -1445,6 +1445,7 @@ angular
                                 $scope.ShowDataTagihan(value1);
                                 value1.DataHitung = $scope.DataHitung;
                                 console.log(value1.DataHitung);
+                                
                             })
                             a = true;
                             $http({
