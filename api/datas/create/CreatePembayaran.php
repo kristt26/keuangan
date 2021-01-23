@@ -21,7 +21,7 @@ $trxbayar->TglBayar = $aaa;
 $trxbayar->TA = $data->TA->TA;
 $trxbayar->JumlahBayar = $data->JumlahBayar;
 $trxbayar->IdMahasiswa = $data->IdMahasiswa;
-$trxbayar->IdPetugas = $_SESSION["IdUser"];
+$trxbayar->IdPetugas = $data->IdPetugas;
 $trxbayar->Description = $data->Description;
 if($trxbayar->create()){
     http_response_code(200);

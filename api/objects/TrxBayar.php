@@ -35,6 +35,16 @@ class TrxBayar
         return $stmt;
     }
 
+    public function readByTanggal($awal, $akhir)
+    {
+        $query = "CALL getLaporanByTanggal(:Awal, :Akhir)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":Awal", $awal, PDO::PARAM_STR);
+        $stmt->bindParam(":Akhir", $akhir, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt;
+    }
+
     public function readOne()
     {
         $query = "SELECT * FROM ".$this->table_name." WHERE IdTrxBayar=?";

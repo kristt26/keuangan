@@ -1,4 +1,4 @@
-var app = angular.module("Apps", ["ngRoute", "Ctrl", "datatables.buttons", "datatables", "oitozero.ngSweetAlert"]);
+var app = angular.module("Apps", ["ngRoute", "Ctrl", "datatables.buttons", "datatables", "oitozero.ngSweetAlert", "ngLocale", "ui.utils.masks"]);
 app.config(function($routeProvider) {
     $routeProvider
         .when("/Main", {
@@ -111,9 +111,9 @@ app.service('fileUpload', ['$http', function($http) {
 app.factory("AuthService", function ($window) {
     var service = {};
     
-    service.Base = "http://localhost/keuangan/";
+    // service.Base = "http://localhost/keuangan/";
     // service.Base = "http://127.0.0.1:5500/";
-    // service.Base = "https://www.keuangan.stimiksepnop.ac.id/";
+    service.Base = "https://www.keuangan.stimiksepnop.ac.id/";
     return service;
 });
 
