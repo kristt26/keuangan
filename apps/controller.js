@@ -1381,6 +1381,22 @@ angular
         $scope.ListPotongan = [];
         $scope.DataHitung = {};
 
+        $scope.getCookie = (cname) => {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
         $scope.PrintBA = function (Kartu) {
 
             var innerContents = document.getElementById(Kartu).innerHTML;
@@ -1425,6 +1441,48 @@ angular
                 })
 
             }
+        }
+        $scope.Login = function () {
+            var UrlLogin = AuthService.Base + "api/datas/read/UserLogin.php";
+            var Data = angular.copy($scope.DatasLogin);
+            $http({
+                method: "POST",
+                url: UrlLogin,
+                data: Data
+            }).then(function (response) {
+                if (response.data.Session != undefined) {
+                    if (response.data.Session.Level == "Administrator")
+                        window.location.href = "admin.html";
+                    else if (response.data.Session.Level == "Ketua") {
+                        window.location.href = "ketua.html";
+                    } else if (response.data.Session.Level == "Puket II") {
+                        window.location.href = "puketkeuangan.html";
+                    } else if (response.data.Session.Level == "Pendataan") {
+                        window.location.href = "pendataan.html";
+                    } else {
+                        window.location.href = "pembayaran.html";
+                    }
+                    $scope.setCookie('data', JSON.stringify(response.data.Session), 1);
+
+
+                } else
+                    alert(response.data.message);
+
+            }, function (error) {
+                alert(error.data.message);
+            })
+        }
+        $scope.hapusPembayaran = (item)=>{
+            var Url = AuthService.Base + "api/datas/delete/DeletePembayaran.php";
+            var Data = angular.copy(item);
+            $http({
+                method: "POST",
+                url: Url,
+                data: Data
+            }).then(x=>{
+                $("#DetailTotalBayar").modal('hide');
+                $scope.CariInformasi();
+            })
         }
         $scope.CariInformasi = function () {
             $scope.DataInformation = [];

@@ -2,7 +2,7 @@
 class TrxBayar
 {
     private $conn;
-    private $table_name="trxbayar";
+    private $table_name = "trxbayar";
     public $IdTrxBayar;
     public $TA;
     public $TglBayar;
@@ -12,14 +12,14 @@ class TrxBayar
     public $IdPetugas;
     public $Berkas;
 
-    public function __construct($db) 
+    public function __construct($db)
     {
         $this->conn = $db;
     }
 
     public function read()
     {
-        $query = "SELECT * FROM ".$this->table_name."";
+        $query = "SELECT * FROM " . $this->table_name . "";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt;
@@ -47,7 +47,7 @@ class TrxBayar
 
     public function readOne()
     {
-        $query = "SELECT * FROM ".$this->table_name." WHERE IdTrxBayar=?";
+        $query = "SELECT * FROM " . $this->table_name . " WHERE IdTrxBayar=?";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $this->IdTrxBayar);
         $stmt->execute();
@@ -62,7 +62,7 @@ class TrxBayar
 
     public function create()
     {
-        $query = "INSERT INTO ".$this->table_name." SET TA=?, TglBayar=?, JumlahBayar=?, Description=?, IdMahasiswa=?, IdPetugas=?";
+        $query = "INSERT INTO " . $this->table_name . " SET TA=?, TglBayar=?, JumlahBayar=?, Description=?, IdMahasiswa=?, IdPetugas=?";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $this->TA);
         $stmt->bindParam(2, $this->TglBayar);
@@ -70,18 +70,17 @@ class TrxBayar
         $stmt->bindParam(4, $this->Description);
         $stmt->bindParam(5, $this->IdMahasiswa);
         $stmt->bindParam(6, $this->IdPetugas);
-        if($stmt->execute()){
-            $this->IdTrxBayar= $this->conn->lastInsertId();
+        if ($stmt->execute()) {
+            $this->IdTrxBayar = $this->conn->lastInsertId();
             return true;
-        }else
-        {
+        } else {
             return false;
         }
     }
 
     public function CreateBymhs()
     {
-        $query = "INSERT INTO ".$this->table_name." SET TA=?, TglBayar=?, JumlahBayar=?, Description=?, IdMahasiswa=?, Berkas=?";
+        $query = "INSERT INTO " . $this->table_name . " SET TA=?, TglBayar=?, JumlahBayar=?, Description=?, IdMahasiswa=?, Berkas=?";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $this->TA);
         $stmt->bindParam(2, $this->TglBayar);
@@ -89,18 +88,17 @@ class TrxBayar
         $stmt->bindParam(4, $this->Description);
         $stmt->bindParam(5, $this->IdMahasiswa);
         $stmt->bindParam(6, $this->Berkas);
-        if($stmt->execute()){
-            $this->IdTrxBayar= $this->conn->lastInsertId();
+        if ($stmt->execute()) {
+            $this->IdTrxBayar = $this->conn->lastInsertId();
             return true;
-        }else
-        {
+        } else {
             return false;
         }
     }
 
     public function update()
     {
-        $query = "UPDATE ".$this->table_name." SET TA=?, TglBayar=?, JumlahBayar=?, Description=?, IdMahasiswa=?, IdPetugas=?";
+        $query = "UPDATE " . $this->table_name . " SET TA=?, TglBayar=?, JumlahBayar=?, Description=?, IdMahasiswa=?, IdPetugas=?";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $this->TA);
         $stmt->bindParam(2, $this->TglBayar);
@@ -110,27 +108,23 @@ class TrxBayar
         $stmt->bindParam(6, $this->IdPetugas);
         $stmt->bindParam(7, $this->IdTrxBayar);
 
-        if($stmt->execute()){
+        if ($stmt->execute()) {
             return true;
-        }else
-        {
+        } else {
             return false;
         }
     }
 
     public function delete()
     {
-        $query = "DELETE FROM ".$this->table_name." WHERE IdTrxBayar=?";
+        $query = "DELETE FROM " . $this->table_name . " WHERE IdTrxBayar=?";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $this->IdTrxBayar);
 
-        if($stmt->execute()){
+        if ($stmt->execute()) {
             return true;
-        }else
-        {
+        } else {
             return false;
         }
-    }   
+    }
 }
-
-?>

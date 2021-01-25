@@ -295,6 +295,7 @@
                                 <th style="text-align:center;">Tgl. Bayar</th>
                                 <th style="text-align:center;">Keterangan</th>
                                 <th style="text-align:center;">Jumlah Bayar</th>
+                                <th style="text-align:center;"><i class="fas fa-cog"></i></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -303,6 +304,7 @@
                                 <td>{{item.TglBayar}}</td>
                                 <td>{{item.Description}}</td>
                                 <td style="text-align:right;">{{item.JumlahBayar | currency:"Rp. ":0}}</td>
+                                <td><button class="btn btn-danger btn-sm" ng-click="hapusPembayaran(item)"><i class="fa fa-trash"></i></button></td>
                             </tr>
                             <tr>
                                 <td colspan="3"><b>Total</b></td>
