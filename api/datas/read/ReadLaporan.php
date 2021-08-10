@@ -8,12 +8,14 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 include_once '../../config/database.php';
 include_once '../../objects/Laporan.php';
 include_once '../../objects/TahunAkademik.php';
+include_once '../../objects/Mahasiswa.php';
 
 $database = new Database();
 $db       = $database->getConnection();
 
 $laporan = new Laporan($db);
 $ta = new TahunAkademik($db);
+$mahasiswa = new Mahasiswa($db);
 $stmt               = $laporan->read();
 $row                = $stmt->fetchALL(PDO::FETCH_ASSOC);
 $data['Laporan']    = $row;
@@ -21,6 +23,10 @@ $stmt               = null;
 $stmt               = $ta->read();
 $row                = $stmt->fetchALL(PDO::FETCH_ASSOC);
 $data['TA']         = $row;
+$stmt               = null;
+$stmt               = $mahasiswa->readAktif();
+$row                = $stmt->fetchALL(PDO::FETCH_ASSOC);
+$data['mahasiswa']  = $row;
 // set response code - 200 OK
 http_response_code(200);
 

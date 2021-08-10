@@ -18,7 +18,7 @@
                 <p><a class="btn btn-primary icon-btn" href="" id="modal-865424" data-toggle="modal" data-target="#TambahMahasiswa" ng-click="ReadJenis('Umum')" title="Tambah Angkatan"><i class="fa fa-plus"></i>Add Mahasiswa</a></p>
             </div>
             <div class="table-responsive" style="margin-top:20px;">
-                <table datatable="ng" class="table table-striped table-bordered">
+                <table datatable="ng" class="table table-bordered">
                     <thead>
                         <tr>
                             <th>NPM</th>
@@ -26,19 +26,21 @@
                             <th>Angkatan</th>
                             <th>Alamat</th>
                             <th>Kontak</th>
-                            <th>Action</th>
+                            <th>Status</th>
+                            <th width ="15%">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="item in DatasMahasiswa">
+                        <tr ng-repeat="item in DatasMahasiswa" ng-class="{'aktif': item.Status == 'Tidak Aktif'}">
                             <td>{{item.NPM}}</td>
                             <td>{{item.NamaMahasiswa}}</td>
                             <td>{{item.Angkatan}}</td>
                             <td>{{item.Alamat}}</td>
                             <td>{{item.Kontak}}</td>
+                            <td>{{item.Status}}</td>
                             <td>
                                 <button id="modal-865424" data-toggle="modal" data-target="#EditMahasiswa" ng-click="SelectItem(item)" title="Edit" class="btn btn-success">Ubah</button>
-                                <button ng-click="Delete(item)" title="Delete" class="btn btn-danger">Edit</button>
+                                <button ng-click="Delete(item)" title="Delete" class="btn btn-danger">Hapus</button>
                             </td>
                         </tr>
                     </tbody>
@@ -133,6 +135,13 @@
                         <label for="">Alamat</label>
                         <textarea class="form-control" ng-model="DataInput.Alamat" rows="4" required></textarea>
                     </div>
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select id="status" ng-model="DataInput.Status" class="form-control">
+                            <option value="Aktif">Aktif</option>
+                            <option value="Tidak Aktif">Tidak Aktif</option>
+                        </select>
+                    </div>
                     <div>
                         <input type="submit" class="btn btn-primary" value="Simpan">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -146,3 +155,10 @@
     </div>
 
 </div>
+
+<style>
+    .aktif{
+        background-color: maroon;
+        color: white;
+    }
+</style>

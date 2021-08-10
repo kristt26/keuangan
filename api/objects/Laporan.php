@@ -25,6 +25,7 @@ class Laporan
         return $stmt;
     }
 
+    
     public function readByTA()
     {
         $query = "CALL getLaporanByTA(:TA)";

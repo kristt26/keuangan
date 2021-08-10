@@ -29,7 +29,8 @@ if($num>0)
             "NamaMahasiswa" => $NamaMahasiswa,
             "Angkatan" => $Angkatan,
             "Alamat" => $Alamat,
-            "Kontak" => $Kontak
+            "Kontak" => $Kontak,
+            "Status" => $Status
         );
  
         array_push($Datas["records"], $Item);

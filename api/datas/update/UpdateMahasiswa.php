@@ -18,6 +18,7 @@ $mahasiswa->NamaMahasiswa = $data->NamaMahasiswa;
 $mahasiswa->Angkatan = $data->Angkatan;
 $mahasiswa->Alamat =  $data->Alamat;
 $mahasiswa->Kontak = $data->Kontak;
+$mahasiswa->Status= $data->Status;
 $mahasiswa->IdMahasiswa= $data->IdMahasiswa;
 if($mahasiswa->update()){
     http_response_code(200);

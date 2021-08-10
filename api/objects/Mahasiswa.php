@@ -9,6 +9,7 @@ class Mahasiswa
     public $Angkatan;
     public $Alamat;
     public $Kontak;
+    public $Status;
 
     public function __construct($db) 
     {
@@ -18,6 +19,14 @@ class Mahasiswa
     public function read()
     {
         $query = "CALL GetMahasiswa()";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt;
+    }
+
+    public function readAktif()
+    {
+        $query = "SELECT * FROM getmhs";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt;
@@ -75,14 +84,15 @@ class Mahasiswa
 
     public function update()
     {
-        $query = "UPDATE ".$this->table_name." SET NPM=?, NamaMahasiswa=?, Angkatan=?, Alamat=?, Kontak=? WHERE IdMahasiswa=?";
+        $query = "UPDATE ".$this->table_name." SET NPM=?, NamaMahasiswa=?, Angkatan=?, Alamat=?, Kontak=?, Status=? WHERE IdMahasiswa=?";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $this->NPM);
         $stmt->bindParam(2, $this->NamaMahasiswa);
         $stmt->bindParam(3, $this->Angkatan);
         $stmt->bindParam(4, $this->Alamat);
         $stmt->bindParam(5, $this->Kontak);
-        $stmt->bindParam(6, $this->IdMahasiswa);
+        $stmt->bindParam(6, $this->Status);
+        $stmt->bindParam(7, $this->IdMahasiswa);
 
         if($stmt->execute()){
             return true;

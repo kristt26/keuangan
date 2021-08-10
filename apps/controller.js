@@ -49,7 +49,7 @@ angular
                 .then(function (response) {
                     if (response.status == 200) {
                         angular.forEach(response.data.Laporan, function (value, key) {
-                            $scope.DataMaster.Total += value.Potongan == null || value.Potongan == 0 ? parseInt(value.Total)  : parseInt(value.Total) - parseFloat(value.Potongan);
+                            $scope.DataMaster.Total += value.Potongan == null || value.Potongan == 0 ? parseInt(value.Total) : parseInt(value.Total) - parseFloat(value.Potongan);
                             $scope.DataMaster.Bayar += value.Bayar == null || value.Bayar == 0 ? 0 : parseInt(value.Bayar);
                             // $scope.DataMaster.Tunggakan += value.Bayar == null || value.Bayar == 0 ? parseInt(value.Total) :parseInt(value.Total) - parseInt(value.Bayar);
                         })
@@ -356,6 +356,7 @@ angular
                                         value.Angkatan = $scope.DataInput.Angkatan;
                                         value.Alamat = $scope.DataInput.Alamat;
                                         value.Kontak = $scope.DataInput.Kontak;
+                                        value.Status = $scope.DataInput.Status;
                                     }
                                 })
                                 notificationService.success(response.data.message);
@@ -1472,14 +1473,14 @@ angular
                 alert(error.data.message);
             })
         }
-        $scope.hapusPembayaran = (item)=>{
+        $scope.hapusPembayaran = (item) => {
             var Url = AuthService.Base + "api/datas/delete/DeletePembayaran.php";
             var Data = angular.copy(item);
             $http({
                 method: "POST",
                 url: Url,
                 data: Data
-            }).then(x=>{
+            }).then(x => {
                 $("#DetailTotalBayar").modal('hide');
                 $scope.CariInformasi();
             })
@@ -1501,8 +1502,8 @@ angular
                         if ($scope.DataPembayaran.Mahasiswa.NPM == $scope.DataCari) {
                             $scope.DataInformation = angular.copy($scope.DataPembayaran.Mahasiswa);
                             angular.forEach($scope.DataInformation.MasterBayar, function (value1, key1) {
-                                value1.Bayar = value1.Bayar ==null || value1.Bayar == 0 ? 0 : parseFloat(value1.Bayar);
-                                value1.Tunggakan = value1.Tunggakan ==null || value1.Tunggakan == 0 ? 0 : parseFloat(value1.Tunggakan);
+                                value1.Bayar = value1.Bayar == null || value1.Bayar == 0 ? 0 : parseFloat(value1.Bayar);
+                                value1.Tunggakan = value1.Tunggakan == null || value1.Tunggakan == 0 ? 0 : parseFloat(value1.Tunggakan);
                                 $scope.DataBayarKhusus = 0;
                                 angular.forEach(value1.BayarKhusus, function (value2) {
                                     $scope.DataBayarKhusus += parseInt(angular.copy(value2.Nominal));
@@ -1522,7 +1523,7 @@ angular
                                 $scope.ShowDataTagihan(value1);
                                 value1.DataHitung = $scope.DataHitung;
                                 console.log(value1.DataHitung);
-                                
+
                             })
                             a = true;
                             $http({
@@ -1571,7 +1572,7 @@ angular
         }
         $scope.Simpan = function () {
             var a = $scope.getCookie('data');
-            if(a){
+            if (a) {
                 var session = JSON.parse(a);
                 $scope.DataInput.IdPetugas = session.IdUser;
                 $http({
@@ -1841,6 +1842,7 @@ angular
                     if (value1.Potongan) {
                         $scope.TotalTA.Total += (value1.Total - value1.Potongan);
                         $scope.TotalTA.Tunggakan += (value1.Total - value1.Potongan) - value1.Bayar;
+                        value1.Tunggakan = (value1.Total - value1.Potongan) - value1.Bayar;
                     } else {
                         value1.Total = value1.Total;
                         $scope.TotalTA.Total += value1.Total;
@@ -1901,7 +1903,7 @@ angular
             }).then(function (response) {
                 if (response.status == 200) {
                     $scope.DatasTanggal = response.data;
-                    $scope.TotalPembayaran = $scope.DatasTanggal.reduce((awal, akhir)=>{
+                    $scope.TotalPembayaran = $scope.DatasTanggal.reduce((awal, akhir) => {
                         return awal + parseFloat(akhir.JumlahBayar);
                     }, 0)
                 }
@@ -1916,7 +1918,53 @@ angular
                 $scope.CariTA();
             else if (item == "All")
                 $scope.DataKeseluruhan();
+            else if (item == "RekapTunggakan")
+                $scope.rekapTunggakan();
+        }
 
+        $scope.rekapTunggakan = () => {
+            $scope.totalTagihan = 0;
+            $scope.totalBayar = 0;
+            $scope.totalTunggakan = 0;
+            $scope.DataInput.TA = $scope.DataPembayaran.TA[0].TA;
+            // console.log($scope.DataPembayaran.mahasiswa);
+            $scope.dataRekap = [];
+            $scope.DataPembayaran.mahasiswa.forEach(mhs => {
+                mhs.tagihan = 0;
+                mhs.bayar = 0;
+                mhs.tunggakan = 0;
+                $scope.DataPembayaran.TA.forEach(ta => {
+                    angular.forEach($scope.DataPembayaran.Laporan, function (value1, key1) {
+                        if (mhs.NPM == value1.NPM && ta.TA == value1.TA) {
+                            // console.log(value1.NPM == '201811001'?value1 : '');
+                            
+                            if (value1.NPM == '201811005') {
+                                console.log(value1);
+                            }
+                            if (value1.Potongan) {
+                                $scope.totalTagihan += (parseFloat(value1.Total) - parseFloat(value1.Potongan));
+                                mhs.tagihan += (parseFloat(value1.Total) - parseFloat(value1.Potongan));
+                                value1.Tunggakan = (parseFloat(value1.Total) - parseFloat(value1.Potongan)) - (value1.Bayar == null ? 0 : parseFloat(value1.Bayar));
+                                $scope.totalTunggakan += value1.Tunggakan;
+                                mhs.tunggakan += value1.Tunggakan;
+                            } else {
+                                mhs.Total = parseFloat(value1.Total);
+                                mhs.tagihan += parseFloat(value1.Total);
+                                $scope.totalTagihan += parseFloat(value1.Total);
+                                $scope.totalTunggakan += parseFloat(value1.Total) - (value1.Bayar == null ? 0 : parseFloat(value1.Bayar));
+                                mhs.tunggakan += parseFloat(value1.Total) - (value1.Bayar == null ? 0 : parseFloat(value1.Bayar));
+                            }
+                            mhs.bayar += value1.Bayar == null ? 0 : parseFloat(value1.Bayar);
+                            $scope.totalBayar += value1.Bayar == null ? 0 : parseFloat(value1.Bayar);
+                        }
+                    })
+                });
+                $scope.dataRekap.push(angular.copy(mhs));
+            });
+            console.log($scope.totalTagihan);
+            console.log($scope.totalBayar);
+            console.log($scope.totalTunggakan);
+            // console.log($scope.DataPembayaran.mahasiswa);
         }
     })
     .controller("IndexController", function (

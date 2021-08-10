@@ -20,6 +20,8 @@
                     <li class="nav-item"><a href="javascript:void(0);" class="nav-link" data-toggle="tab"
                             ng-click="Clear(item='Tanggal')" data-target="#LaporanTanggal">Laporan Berdasarkan
                             Tanggal</a></li>
+                    <li class="nav-item"><a href="javascript:void(0);" class="nav-link" data-toggle="tab"
+                            ng-click="Clear(item='RekapTunggakan')" data-target="#rekapitulasiTunggakan">Rekapitulasi Tunggakan</a></li>
                 </ul>
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade active show" id="LaporanTA">
@@ -170,6 +172,58 @@
                                                     <td colspan="5"><b>Total</b></td>
                                                     <td><b>{{TotalPembayaran | currency}}</b></td>
 
+                                                </tr>
+                                            </tfood>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="line-head">
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="tab-pane fade" id="rekapitulasiTunggakan">
+                        <div class="card border-primary col-md-12">
+                            <div class="card-body">
+                                <div class="bs-component">
+                                    <div data-loading></div>
+                                    <div class="table-responsive">
+                                        <table datatable="ng" id="zero_config" dt-options="dtOptions"
+                                            dt-column-defs="dtColumnDefs" class="table table-striped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>NPM</th>
+                                                    <th>Nama Mahasiswa</th>
+                                                    <th>Tagihan</th>
+                                                    <th>Bayar</th>
+                                                    <th>Tunggakan</th>
+                                                    <th>Keterangan</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="item in dataRekap">
+                                                    <td>{{$index+1}}</td>
+                                                    <td>{{item.NPM}}</td>
+                                                    <td>{{item.NamaMahasiswa}}</td>
+                                                    <td class="text-right">{{item.tagihan | currency:"Rp. ":0}}</td>
+                                                    <td class="text-right">{{item.bayar | currency:"Rp. ":0}}</td>
+                                                    <td class="text-right">{{item.tunggakan | currency:"Rp. ":0}}</td>
+                                                    <td>{{item.tunggakan<0 ? 'Kelebihan': ''}}</td>
+
+                                                </tr>
+                                            </tbody>
+                                            <tfood>
+                                                <tr>
+                                                    <td colspan="3"><b>Total</b></td>
+                                                    <td class="text-right"><b>{{totalTagihan | currency:"Rp. ":0}}</b></td>
+                                                    <td class="text-right"><b>{{totalBayar | currency:"Rp. ":0}}</b></td>
+                                                    <td class="text-right"><b>{{totalTunggakan | currency:"Rp. ":0}}</b></td>
+                                                    <td class="text-right"><b></b></td>
                                                 </tr>
                                             </tfood>
                                         </table>
