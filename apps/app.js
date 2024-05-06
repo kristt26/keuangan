@@ -113,7 +113,7 @@ app.factory("AuthService", function ($window) {
     
     // service.Base = "http://localhost/keuangan/";
     // service.Base = "http://127.0.0.1:5500/";
-    service.Base = "https://www.keuangan.stimiksepnop.ac.id/";
+    service.Base = "https://www.keuangan.usn-papua.ac.id/";
     return service;
 });
 
