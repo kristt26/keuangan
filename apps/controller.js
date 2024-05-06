@@ -865,7 +865,7 @@ angular
                 }).then(function (response) {
                     if ($scope.Potongan) {
                         $scope.DatasAmbilMahasiswa = response.data;
-                        var Url = "https://restsimak.stimiksepnop.ac.id/api/sksMahasiswa/AmbilSks?npm=" + $scope.DataCari;
+                        var Url = "https://restsimak.usn-papua.ac.id/api/sksMahasiswa/AmbilSks?npm=" + $scope.DataCari;
                         $http({
                             method: "GET",
                             url: Url,
